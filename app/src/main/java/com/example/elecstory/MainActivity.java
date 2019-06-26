@@ -1,7 +1,9 @@
 package com.example.elecstory;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -9,37 +11,88 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    public int ElecPoint;
-    public TextView ElecPoints;
+    public TextView ElecStockage;
+    public TextView Coins;
+    public TextView Factorys;
+
     public Button UpElecPoint;
+
+    public ConstraintLayout currentLayout;
+
+    public Factory Fact;
+    public Player Toto = new Player("Toto", 0, null, 0);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        currentLayout = findViewById(R.id.activity_main);
         UpElecPoint = findViewById(R.id.ElecUp);
-        ElecPoints = findViewById(R.id.ElecCount);
-        ElecPoints.setText(String.valueOf(0));
+        ElecStockage = findViewById(R.id.ElecCount);
+        Coins = findViewById(R.id.ElecCoins);
+        Factorys = findViewById(R.id.Factory);
+
+        Factorys.setText("You don't have an Factory");
+        ElecStockage.setText("Energy Stock " + String.valueOf(0));
+        Coins.setText("Coin " + String.valueOf(0));
 
         UpElecPoint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ElecPoint ++;
-                ElecPoints.setText(String.valueOf(ElecPoint));
+                Toto.setElectricityStockage(Toto.getElectricityStockage()+1);
+                Toto.setCoin(Toto.getCoin() + 1);
+
+                ElecStockage.setText("Energy Stock " + Toto.getElectricityStockage());
+                Coins.setText("Coin " + Toto.getCoin());
+                stage(Toto.getElectricityStockage());
+
+                if(Toto.getElectricityStockage() == 10){
+                    Fact = new Factory(-1);
+                    Toto.setMyFact(Fact);
+                    Factorys.setText(Toto.getMyFact().getName());
+                }
             }
         });
-        test(1500);
+
+        AutoIncrement();
     }
 
-    public void test(int milliseconds){
-        if(ElecPoint >= 10) {
-            ElecPoint++;
+    public void AutoIncrement(){
+
+        if(Toto.getMyFact() != null) {
+            Toto.setElectricityStockage(Toto.getElectricityStockage() + Toto.getMyFact().getElecGenerate());
         }
 
-        ElecPoints.setText(String.valueOf(ElecPoint));
+        stage(Toto.getElectricityStockage());
 
-        refresh(milliseconds);
+        ElecStockage.setText("Energy Stock " + String.valueOf(Toto.getElectricityStockage()));
+
+        if(Toto.getMyFact() != null){
+            refresh(Toto.getMyFact().getElecByMillisecond());
+        } else {
+            refresh(5000);
+        }
+    }
+
+    public void stage(int Point){
+        switch (Point){
+            case 10 :
+                currentLayout.setBackgroundColor(Color.GREEN);
+                break;
+            case 20 :
+                currentLayout.setBackgroundColor(Color.RED);
+                break;
+            case 30 :
+                currentLayout.setBackgroundColor(Color.YELLOW);
+                break;
+            case 40 :
+                currentLayout.setBackgroundColor(Color.CYAN);
+                break;
+            case 50 :
+                currentLayout.setBackgroundColor(Color.WHITE);
+                break;
+        }
     }
 
     private void refresh(final int milli){
@@ -48,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
         final Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                test(milli);
+                AutoIncrement();
             }
         };
 
