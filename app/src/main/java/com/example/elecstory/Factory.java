@@ -1,5 +1,7 @@
 package com.example.elecstory;
 
+import android.util.Log;
+
 public class Factory {
 
     protected String Name; /*Nom de l'usine*/
@@ -97,6 +99,7 @@ public class Factory {
     }
 
     public Factory Upgrade2(Factory Fact){
+        Log.i("#Upgrade2#","");
         switch (Fact.getName()){
             case "Centrale Solaire" :
                 Fact.setFactoryLevel(2);
@@ -138,6 +141,7 @@ public class Factory {
     }
 
     public Factory Upgrade3(Factory Fact){
+        Log.i("#Upgrade2#","");
         switch (Fact.getName()){
             case "Centrale Solaire" :
                 Fact.setFactoryLevel(3);

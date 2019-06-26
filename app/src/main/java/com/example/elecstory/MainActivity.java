@@ -1,5 +1,6 @@
 package com.example.elecstory;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -7,7 +8,9 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -16,6 +19,8 @@ public class MainActivity extends AppCompatActivity {
     public TextView Factorys;
 
     public Button UpElecPoint;
+    public Button FactoryUpgrade;
+    public ImageButton Shop;
 
     public ConstraintLayout currentLayout;
 
@@ -28,14 +33,35 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         currentLayout = findViewById(R.id.activity_main);
-        UpElecPoint = findViewById(R.id.ElecUp);
-        ElecStockage = findViewById(R.id.ElecCount);
-        Coins = findViewById(R.id.ElecCoins);
-        Factorys = findViewById(R.id.Factory);
 
-        Factorys.setText("You don't have an Factory");
-        ElecStockage.setText("Energy Stock " + String.valueOf(0));
-        Coins.setText("Coin " + String.valueOf(0));
+        FactoryUpgrade = findViewById(R.id.FactoryUpgrade);
+        FactoryUpgrade.setText("Upgrade");
+        FactoryUpgrade.setVisibility(View.INVISIBLE);
+        UpElecPoint = findViewById(R.id.ElecUp);
+        UpElecPoint.setText("+1 Energy");
+        Shop = findViewById(R.id.ShopButton);
+
+        ElecStockage = findViewById(R.id.ElecCount);
+        ElecStockage.setText("Energy Stock " + 0);
+        Coins = findViewById(R.id.ElecCoins);
+        Coins.setText("Coin " + 0);
+        Factorys = findViewById(R.id.Factory);
+        Factorys.setText("You don't have a Factory");
+
+        FactoryUpgrade.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                upgradeFactory();
+            }
+        });
+
+        Shop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(MainActivity.this, ShopActivity.class);
+                startActivity(myIntent);
+            }
+        });
 
         UpElecPoint.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,38 +70,57 @@ public class MainActivity extends AppCompatActivity {
                 Toto.setCoin(Toto.getCoin() + 1);
 
                 ElecStockage.setText("Energy Stock " + Toto.getElectricityStockage());
-                Coins.setText("Coin " + Toto.getCoin());
-                stage(Toto.getElectricityStockage());
 
-                if(Toto.getElectricityStockage() == 10){
-                    Fact = new Factory(-1);
+                Coins.setText("Coin " + Toto.getCoin());
+
+                stageEnergy(Toto.getElectricityStockage());
+
+                if(Toto.getElectricityStockage() == 10 && Toto.getMyFact() == null){
+                    Fact = new Factory(5);
                     Toto.setMyFact(Fact);
-                    Factorys.setText(Toto.getMyFact().getName());
+                    Factorys.setText(Toto.getMyFact().getName() + " " + Toto.getMyFact().getFactoryLevel());
+                    FactoryUpgrade.setVisibility(View.VISIBLE);
                 }
             }
         });
-
-        AutoIncrement();
+        incrementEnergy();
     }
 
-    public void AutoIncrement(){
+    public void upgradeFactory(){
+        if(Toto.getMyFact() != null){
+            if(Toto.getCoin() >= Toto.getMyFact().getUpgradeCost()) {
+                if (Toto.getMyFact().getFactoryLevel() == 1) {
+                    Toto.setMyFact(Toto.getMyFact().Upgrade2(Toto.getMyFact()));
+                } else if (Toto.getMyFact().getFactoryLevel() == 2) {
+                    Toto.setMyFact(Toto.getMyFact().Upgrade3(Toto.getMyFact()));
+                } else {
+                    Toast.makeText(MainActivity.this, "You have reached the maximum level !", Toast.LENGTH_SHORT).show();
+                }
+                Factorys.setText(Toto.getMyFact().getName() + " " + Toto.getMyFact().getFactoryLevel());
+            } else {
+                Toast.makeText(MainActivity.this, "Not enough money !", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    public void incrementEnergy(){
 
         if(Toto.getMyFact() != null) {
             Toto.setElectricityStockage(Toto.getElectricityStockage() + Toto.getMyFact().getElecGenerate());
         }
 
-        stage(Toto.getElectricityStockage());
+        stageEnergy(Toto.getElectricityStockage());
 
-        ElecStockage.setText("Energy Stock " + String.valueOf(Toto.getElectricityStockage()));
+        ElecStockage.setText("Energy Stock " + Toto.getElectricityStockage());
 
         if(Toto.getMyFact() != null){
-            refresh(Toto.getMyFact().getElecByMillisecond());
+            refreshEnergy(Toto.getMyFact().getElecByMillisecond());
         } else {
-            refresh(5000);
+            refreshEnergy(5000);
         }
     }
 
-    public void stage(int Point){
+    public void stageEnergy(int Point){
         switch (Point){
             case 10 :
                 currentLayout.setBackgroundColor(Color.GREEN);
@@ -95,13 +140,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void refresh(final int milli){
+    private void refreshEnergy(final int milli){
         final Handler handler = new Handler();
 
         final Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                AutoIncrement();
+                incrementEnergy();
             }
         };
 
