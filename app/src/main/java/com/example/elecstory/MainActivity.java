@@ -12,6 +12,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.elecstory.Object.Factory;
+import com.example.elecstory.Object.Player;
+
 public class MainActivity extends AppCompatActivity {
 
     public TextView ElecStockage;
@@ -89,10 +92,11 @@ public class MainActivity extends AppCompatActivity {
     public void upgradeFactory(){
         if(Toto.getMyFact() != null){
             if(Toto.getCoin() >= Toto.getMyFact().getUpgradeCost()) {
-                if (Toto.getMyFact().getFactoryLevel() == 1) {
-                    Toto.setMyFact(Toto.getMyFact().Upgrade2(Toto.getMyFact()));
-                } else if (Toto.getMyFact().getFactoryLevel() == 2) {
-                    Toto.setMyFact(Toto.getMyFact().Upgrade3(Toto.getMyFact()));
+                if (Toto.getMyFact().getFactoryLevel() < 10) {
+                    Toto.setMyFact(Toto.getMyFact().Upgrade(Toto.getMyFact()));
+                    if(Toto.getMyFact().getFactoryLevel() == 10){
+                        FactoryUpgrade.setVisibility(View.INVISIBLE);
+                    }
                 } else {
                     Toast.makeText(MainActivity.this, "You have reached the maximum level !", Toast.LENGTH_SHORT).show();
                 }
@@ -151,5 +155,9 @@ public class MainActivity extends AppCompatActivity {
         };
 
         handler.postDelayed(runnable, milli);
+    }
+
+    public static Player getToto() {
+        return Toto;
     }
 }

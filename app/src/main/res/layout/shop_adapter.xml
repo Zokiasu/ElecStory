@@ -8,37 +8,37 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/subcategorys"
+        android:id="@+id/objectName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Title"/>
 
     <ImageView
-        android:id="@+id/objectview"
+        android:id="@+id/objectView"
         android:layout_width="100dp"
         android:layout_height="100dp" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="horizontal">
 
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="10" />
+
         <TextView
-            android:id="@+id/objectprice"
+            android:id="@+id/objectCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Coût" />
 
         <Space
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="10" />
-
-        <TextView
-            android:id="@+id/dd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Coût" />
     </LinearLayout>
 
 </LinearLayout>

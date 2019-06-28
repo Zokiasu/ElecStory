@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="size_text">50sp</dimen>
+    <dimen name="size_text_btn_shop">55sp</dimen>
+    <dimen name="size_bc_text_shop">15sp</dimen>
+    <dimen name="size_text_title">60sp</dimen>
+    <dimen name="size_edittext_title">50sp</dimen>
+
+    <dimen name="list_height">500dp</dimen>
+    <dimen name="grid_height">500dp</dimen>
+    <dimen name="scroll_height">500dp</dimen>
+
+    <dimen name="frankie_width">500dp</dimen>
+    <dimen name="frankie_height">500dp</dimen>
+</resources>
