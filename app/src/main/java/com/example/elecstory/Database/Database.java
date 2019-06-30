@@ -17,13 +17,13 @@ import java.util.Locale;
 
 public class Database extends SQLiteOpenHelper {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "Database";
 
     //Database Name
     public static final String DATABASE_NAME = "GDB.db";
 
     //Database Version
-    public static final int DATABASE_VERSION = 5;
+    public static final int DATABASE_VERSION = 9;
 
     //Table Name
     public static final String TABLE_PLAYER = "player_table";
@@ -55,7 +55,6 @@ public class Database extends SQLiteOpenHelper {
     public static final String COST_FACTORY = "cost";
     public static final String UPGRADECOST_FACTORY = "upgadecost";
     public static final String POINTGENERATE_FACTORY = "pointgenerate";
-    public static final String MILLIGENERATE_FACTORY = "milligenerate";
     public static final String OPERATINGCOST_FACTORY = "operatingcost";
     public static final String POLLUTIONTAX_FACTORY = "pollutiontax";
     public static final String SKIN_FACTORY = "skin";
@@ -87,7 +86,6 @@ public class Database extends SQLiteOpenHelper {
             + COST_FACTORY + " INTEGER DEFAULT 0,"
             + UPGRADECOST_FACTORY + " INTEGER DEFAULT 0,"
             + POINTGENERATE_FACTORY + " INTEGER DEFAULT 0,"
-            + MILLIGENERATE_FACTORY + " INTEGER DEFAULT 0,"
             + OPERATINGCOST_FACTORY + " INTEGER DEFAULT 0,"
             + POLLUTIONTAX_FACTORY + " INTEGER DEFAULT 0,"
             + SKIN_FACTORY + " INTEGER DEFAULT NULL)";
@@ -117,8 +115,6 @@ public class Database extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    ////// PlayerData's function //////
-
     /* Add a new player to the internal database * Ajoute un nouveau joueur à la base de donnée interne */
     public void insertPlayer (String name, int age, int coin, int elecpoint, String uniqueid) {
         name = name.replace("'", "''");
@@ -129,12 +125,11 @@ public class Database extends SQLiteOpenHelper {
         Log.i(TAG, "Create new player");
     }
 
-    public void insertFactory (String name, int level, int cost, int upgadecost, int pointgenerate, int milligenerate, int operatingcost, int pollutiontax, int skin) {
+    public void insertFactory (String name, int level, int cost, int upgadecost, int pointgenerate, int operatingcost, int pollutiontax, int skin) {
         name = name.replace("'", "''");
         String strSql =
-        "INSERT INTO " +  TABLE_FACTORY_PLAYER + "(name, level, cost, upgadecost, pointgenerate, milligenerate, operatingcost, pollutiontax, skin) " +
-        "VALUES ('" + name + "', '" + level + "', '" + cost + "', '" + upgadecost + "', '" + pointgenerate + "', " +
-                "'" + milligenerate + "', '" + operatingcost + "', '" + pollutiontax + "', '" + skin + "')";
+        "INSERT INTO " +  TABLE_FACTORY_PLAYER + "(name, level, cost, upgadecost, pointgenerate, operatingcost, pollutiontax, skin) " +
+        "VALUES ('" + name + "', '" + level + "', '" + cost + "', '" + upgadecost + "', '" + pointgenerate +  "', '" + operatingcost + "', '" + pollutiontax + "', '" + skin + "')";
         this.getWritableDatabase().execSQL(strSql);
         Log.i(TAG, "Add new factory to player");
     }
@@ -146,6 +141,20 @@ public class Database extends SQLiteOpenHelper {
         "VALUES ('" + name + "', '" + category + "', '" + coinwin + "', '" + price + "', '" + energycost + "', " + "'" + level + "', '" + skin + "')";
         this.getWritableDatabase().execSQL(strSql);
         Log.i(TAG, "Add new city to player");
+    }
+
+    public void updateCoin (String name, int nbcoin) {
+        name = name.replace("'", "''");
+        String strSql = "UPDATE " + TABLE_PLAYER + " SET " + COIN_PLAYER + " = "+ COIN_PLAYER + " + " + nbcoin + " WHERE " + USERNAME_PLAYER + " = '" + name + "'";
+        this.getWritableDatabase().execSQL(strSql);
+        Log.i(TAG, "Update coin player");
+    }
+
+    public void updateElecPoint (String name, int point) {
+        name = name.replace("'", "''");
+        String strSql = "UPDATE " + TABLE_PLAYER + " SET " + ELECPOINT_PLAYER + " = "+ ELECPOINT_PLAYER + " + " + point + " WHERE " + USERNAME_PLAYER + " = '" + name + "'";
+        this.getWritableDatabase().execSQL(strSql);
+        Log.i(TAG, "Update elecpoint player");
     }
 
     /* Returns the information of the first player registered on the phone * Retourne les informations du premier joueur inscrit sur le téléphone*/
@@ -176,10 +185,9 @@ public class Database extends SQLiteOpenHelper {
                 cursor.getInt(2), //Cost
                 cursor.getInt(3), //UpgradeCost
                 cursor.getInt(4), //PointGenerate
-                cursor.getInt(5), //MilliGenerate
-                cursor.getInt(6), //OperatingCost
-                cursor.getInt(7), //PollutionTax
-                cursor.getInt(8)); //Skin
+                cursor.getInt(5), //OperatingCost
+                cursor.getInt(6), //PollutionTax
+                cursor.getInt(7)); //Skin
 
         return fact;
     }
@@ -191,7 +199,14 @@ public class Database extends SQLiteOpenHelper {
         cursor.moveToFirst();
 
         while (!cursor.isAfterLast()) {
-            CityList.add((City) cursor);
+            City citys = new City(cursor.getString(0), //Name
+                    cursor.getString(1), //Category
+                    cursor.getInt(2), //CoinWin
+                    cursor.getInt(3), //Price
+                    cursor.getInt(4), //EnergyCost
+                    cursor.getInt(5), //Level
+                    cursor.getInt(6)); //Skin
+            CityList.add(citys);
             cursor.moveToNext();
         }
 

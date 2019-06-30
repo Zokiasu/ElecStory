@@ -6,16 +6,16 @@ public class City {
     protected String Category;
     protected int CoinWin;
     protected int PriceObject;
-    protected int EnergyCount;
+    protected int EnergyCost;
     protected int Level;
     protected int Skin;
 
-    public City(String name, String category, int coinWin, int priceObject, int energyCount, int level, int skin) {
+    public City(String name, String category, int coinWin, int priceObject, int energyCost, int level, int skin) {
         Name = name;
         Category = category;
         CoinWin = coinWin;
         PriceObject = priceObject;
-        EnergyCount = energyCount;
+        EnergyCost = energyCost;
         Level = level;
         Skin = skin;
     }
@@ -52,12 +52,12 @@ public class City {
         PriceObject = priceObject;
     }
 
-    public int getEnergyCount() {
-        return EnergyCount;
+    public int getEnergyCost() {
+        return EnergyCost;
     }
 
-    public void setEnergyCount(int energyCount) {
-        EnergyCount = energyCount;
+    public void setEnergyCost(int energyCost) {
+        EnergyCost = energyCost;
     }
 
     public int getLevel() {

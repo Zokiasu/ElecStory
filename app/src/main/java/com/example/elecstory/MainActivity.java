@@ -1,8 +1,6 @@
 package com.example.elecstory;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
@@ -12,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,8 +19,6 @@ import com.example.elecstory.Object.Factory;
 import com.example.elecstory.Database.PlayerData;
 
 import java.util.ArrayList;
-
-import static com.example.elecstory.Database.Database.TABLE_CITY_PLAYER;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,37 +40,12 @@ public class MainActivity extends AppCompatActivity {
 
     private Database db;
 
-
-    public ArrayList test(ArrayList<City> mCitys){
-
-        db = new Database(this);
-
-        String strSql = " SELECT * FROM " + TABLE_CITY_PLAYER;
-        Cursor cursor = db.getReadableDatabase().rawQuery( strSql, null);
-        cursor.moveToFirst();
-
-        while (!cursor.isAfterLast()) {
-            City citys = new City(cursor.getString(0), //Name
-                                  cursor.getString(1), //Category
-                                  cursor.getInt(2), //CoinWin
-                                  cursor.getInt(3), //Price
-                                  cursor.getInt(4), //EnergyCost
-                                  cursor.getInt(5), //Level
-                                  cursor.getInt(6)); //Skin
-            Log.i("##",citys.getName());
-            mCitys.add(citys);
-            cursor.moveToNext();
-        }
-
-        db.close();
-        return mCitys;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        db = new Database(this);
         recyclerView = findViewById(R.id.recyclerViewCity);
         currentLayout = findViewById(R.id.activity_main);
         FactoryUpgrade = findViewById(R.id.FactoryUpgrade);
@@ -86,30 +56,24 @@ public class MainActivity extends AppCompatActivity {
         Factorys = findViewById(R.id.Factory);
 
         FactoryUpgrade.setText("Upgrade");
-        Coins.setText("Coin " + 0);
-        ElecStockage.setText("Energy Stock " + 0);
         UpElecPoint.setText("+1 Energy");
         Factorys.setText("You don't have a Factory");
 
-        db = new Database(this);
         Toto = db.infoFirstPlayer();
 
-        String strSql = " SELECT * FROM " + TABLE_CITY_PLAYER;
-        Cursor cursor = db.getReadableDatabase().rawQuery( strSql, null);
-        cursor.moveToFirst();
+        Coins.setText("Coin " + Toto.getCoin());
+        ElecStockage.setText("Energy Stock " + Toto.getElectricityStockage());
 
-        while (!cursor.isAfterLast()) {
-            City citys = new City(cursor.getString(0), //Name
-                    cursor.getString(1), //Category
-                    cursor.getInt(2), //CoinWin
-                    cursor.getInt(3), //Price
-                    cursor.getInt(4), //EnergyCost
-                    cursor.getInt(5), //Level
-                    cursor.getInt(6)); //Skin
-            mCity.add(citys);
-            cursor.moveToNext();
-        }
+        try {
+            if(db.infoFirstFactory() != null){
+                Log.i(TAG, "Call " + db.infoFirstFactory().getName());
+                MyFact = db.infoFirstFactory();
+                Log.i(TAG, "Call2 " + MyFact.getName());
+                Factorys.setText(MyFact.getName() + " LvL" + MyFact.getFactoryLevel());
+            }
+        } catch (Exception e) {}
 
+        mCity = db.infoCity(mCity);
         initRecyclerView();
 
         FactoryUpgrade.setOnClickListener(new View.OnClickListener() {
@@ -130,54 +94,78 @@ public class MainActivity extends AppCompatActivity {
         UpElecPoint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Toto.setElectricityStockage(Toto.getElectricityStockage()+1);
                 Toto.setCoin(Toto.getCoin() + 1);
+
                 ElecStockage.setText("Energy Stock " + Toto.getElectricityStockage());
                 Coins.setText("Coin " + Toto.getCoin());
 
-                if(Toto.getElectricityStockage() == 10 && MyFact == null){
+                db.updateCoin(Toto.getName(), Toto.getCoin());
+                db.updateElecPoint(Toto.getName(), Toto.getElectricityStockage());
+
+                if(Toto.getCoin() == 10 && MyFact == null){
                     MyFact = new Factory(-1);
-                    db.insertFactory(MyFact.getName(), MyFact.getFactoryLevel(), MyFact.getRequiredCost(), MyFact.getUpgradeCost(), MyFact.getElecGenerate(), MyFact.getElecByMillisecond(), MyFact.getOperatingCost(), MyFact.getPollutionTax(), MyFact.getSkin());
+                    db.insertFactory(MyFact.getName(), MyFact.getFactoryLevel(), MyFact.getRequiredCost(), MyFact.getUpgradeCost(), MyFact.getElecGenerate(), MyFact.getOperatingCost(), MyFact.getPollutionTax(), MyFact.getSkin());
                     Factorys.setText(MyFact.getName() + " LvL" + MyFact.getFactoryLevel());
                 }
             }
         });
-        incrementEnergy();
+
+        incrementEnergy(0);
         db.close();
     }
 
-    public void decrementEnergy(){
-
-    }
-
-    public void incrementEnergy(){
-        if(Toto.getElectricityStockage() >= 10) {
-            if (MyFact != null) {
-                Toto.setElectricityStockage(Toto.getElectricityStockage() + MyFact.getElecGenerate());
-            } else {
-                Toto.setElectricityStockage(Toto.getElectricityStockage() + 1);
-            }
-
-        }
-        ElecStockage.setText("Energy Stock " + Toto.getElectricityStockage());
+    public void incrementEnergy(int N){
+        //Augmente l'énergie en fonction de l'usine actuel
         if (MyFact != null) {
-            refreshEnergy(MyFact.getElecByMillisecond());
-        } else {
-            refreshEnergy(5000);
+            Toto.setElectricityStockage(Toto.getElectricityStockage() + MyFact.getElecGenerate());
         }
+
+        ElecStockage.setText("Energy Stock " + Toto.getElectricityStockage());
+        //Réduit l'énergie en fonction des bâtiments possédé
+        if(mCity.size() > 0){
+            int EnergyCost = 0, CoinWin = 0;
+            for (int i = 0; i < mCity.size(); i++){
+                EnergyCost = EnergyCost + mCity.get(i).getEnergyCost();
+                CoinWin = CoinWin + mCity.get(i).getCoinWin();
+            }
+            if(Toto.getElectricityStockage() > EnergyCost && Toto.getElectricityStockage() - EnergyCost > 0) {
+                Toto.setElectricityStockage(Toto.getElectricityStockage() - EnergyCost);
+                ElecStockage.setText("Energy Stock " + Toto.getElectricityStockage());
+
+                Toto.setCoin(Toto.getCoin() + CoinWin);
+                Coins.setText("Coin " + Toto.getCoin());
+            }
+        }
+        if(N == 10) {
+            decrementCoin();
+            N = 0;
+        }
+        refreshEnergy(1000, N);
     }
 
-    private void refreshEnergy(int milli){
+    private void refreshEnergy(int milli, final int N){
         final Handler handler = new Handler();
 
         final Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                incrementEnergy();
+                incrementEnergy(N+1);
             }
         };
 
         handler.postDelayed(runnable, milli);
+    }
+
+    public void decrementCoin() {
+        if(MyFact != null){
+
+            int OperatingCost = MyFact.getOperatingCost() + MyFact.getPollutionTax();
+
+            Toto.setCoin(Toto.getCoin() - OperatingCost);
+            Coins.setText("Coin " + Toto.getCoin());
+        }
     }
 
     public void upgradeFactory(){
@@ -187,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "You have reached the maximum level !", Toast.LENGTH_SHORT).show();
                 } else {
                     MyFact.Upgrade(MyFact);
-                    if(MyFact.getFactoryLevel() == 10){
+                    if(MyFact.getFactoryLevel() == 10 && MyFact.getName() == "Centrale Nucleaire"){
                         FactoryUpgrade.setVisibility(View.INVISIBLE);
                     }
                 }

@@ -11,7 +11,6 @@ public class Factory {
     protected int RequiredCost; /*Coût de son achat*/
     protected int UpgradeCost; /*Coût de l'update de l'usine*/
     protected int ElecGenerate; /*Point générer par l'usine*/
-    protected int ElecByMillisecond; /*Nombre de milliseconde auquel les points sont générer*/
     protected int OperatingCost; /*Coût d'utilisation hebdomadaire*/
     protected int PollutionTax; /*Taxe de pollution*/
     protected int Skin;
@@ -24,7 +23,6 @@ public class Factory {
                 this.FactoryLevel = 1;
                 this.UpgradeCost = 500;
                 this.ElecGenerate = 2;
-                this.ElecByMillisecond = 2500;
                 this.OperatingCost = 10;
                 this.PollutionTax = 5;
                 this.Skin = R.drawable.eclair;
@@ -35,7 +33,6 @@ public class Factory {
                 this.FactoryLevel = 1;
                 this.UpgradeCost = 1500;
                 this.ElecGenerate = 1;
-                this.ElecByMillisecond = 2500;
                 this.OperatingCost = 10;
                 this.PollutionTax = 5;
                 this.Skin = R.drawable.eclair;
@@ -46,7 +43,6 @@ public class Factory {
                 this.FactoryLevel = 1;
                 this.UpgradeCost = 2000;
                 this.ElecGenerate = 2;
-                this.ElecByMillisecond = 2500;
                 this.OperatingCost = 20;
                 this.PollutionTax = 10;
                 this.Skin = R.drawable.eclair;
@@ -57,7 +53,6 @@ public class Factory {
                 this.FactoryLevel = 1;
                 this.UpgradeCost = 2000;
                 this.ElecGenerate = 1;
-                this.ElecByMillisecond = 1500;
                 this.OperatingCost = 50;
                 this.PollutionTax = 15;
                 this.Skin = R.drawable.eclair;
@@ -68,7 +63,6 @@ public class Factory {
                 this.FactoryLevel = 1;
                 this.UpgradeCost = 2500;
                 this.ElecGenerate = 2;
-                this.ElecByMillisecond = 1000;
                 this.OperatingCost = 150;
                 this.PollutionTax = 25;
                 this.Skin = R.drawable.eclair;
@@ -79,32 +73,29 @@ public class Factory {
                 this.FactoryLevel = 1;
                 this.UpgradeCost = 5000;
                 this.ElecGenerate = 5;
-                this.ElecByMillisecond = 1000;
                 this.OperatingCost = 250;
                 this.PollutionTax = 50;
                 this.Skin = R.drawable.eclair;
                 break;
             default:
                 this.Name = "Machine de Gramme";
-                this.RequiredCost = 100;
+                this.RequiredCost = 0;
                 this.FactoryLevel = 1;
-                this.UpgradeCost = 1000;
+                this.UpgradeCost = 100;
                 this.ElecGenerate = 1;
-                this.ElecByMillisecond = 3500;
-                this.OperatingCost = 5;
-                this.PollutionTax = 5;
+                this.OperatingCost = 0;
+                this.PollutionTax = 0;
                 this.Skin = R.drawable.eclair;
                 break;
         }
     }
 
-    public Factory(String name, int factoryLevel, int requiredCost, int upgradeCost, int elecGenerate, int elecByMillisecond, int operatingCost, int pollutionTax, int skin) {
+    public Factory(String name, int factoryLevel, int requiredCost, int upgradeCost, int elecGenerate, int operatingCost, int pollutionTax, int skin) {
         Name = name;
         FactoryLevel = factoryLevel;
         RequiredCost = requiredCost;
         UpgradeCost = upgradeCost;
         ElecGenerate = elecGenerate;
-        ElecByMillisecond = elecByMillisecond;
         OperatingCost = operatingCost;
         PollutionTax = pollutionTax;
         Skin = skin;
@@ -115,7 +106,6 @@ public class Factory {
             Fact.setFactoryLevel(Fact.getFactoryLevel() + 1);
             Fact.setUpgradeCost(Fact.getUpgradeCost() * 2);
             Fact.setElecGenerate(Fact.getElecGenerate() + 1);
-            Fact.setElecByMillisecond(Fact.getElecByMillisecond() - 250);
         } else {
             int N = -1;
             switch (Fact.getName()){
@@ -167,10 +157,6 @@ public class Factory {
         return ElecGenerate;
     }
 
-    public int getElecByMillisecond() {
-        return ElecByMillisecond;
-    }
-
     public int getOperatingCost() {
         return OperatingCost;
     }
@@ -197,10 +183,6 @@ public class Factory {
 
     public void setElecGenerate(int elecGenerate) {
         ElecGenerate = elecGenerate;
-    }
-
-    public void setElecByMillisecond(int elecByMillisecond) {
-        ElecByMillisecond = elecByMillisecond;
     }
 
     public void setOperatingCost(int operatingCost) {
