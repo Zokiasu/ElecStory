@@ -2,7 +2,6 @@ package com.example.elecstory.Object;
 
 public class City {
 
-    protected int idObjectCity;
     protected String Name;
     protected String Category;
     protected int CoinWin;
@@ -11,8 +10,7 @@ public class City {
     protected int Level;
     protected int Skin;
 
-    public City(int idObjectCity, String name, String category, int coinWin, int priceObject, int energyCount, int level, int skin) {
-        this.idObjectCity = idObjectCity;
+    public City(String name, String category, int coinWin, int priceObject, int energyCount, int level, int skin) {
         Name = name;
         Category = category;
         CoinWin = coinWin;
@@ -20,14 +18,6 @@ public class City {
         EnergyCount = energyCount;
         Level = level;
         Skin = skin;
-    }
-
-    public int getIdObjectCity() {
-        return idObjectCity;
-    }
-
-    public void setIdObjectCity(int idObjectCity) {
-        this.idObjectCity = idObjectCity;
     }
 
     public String getName() {

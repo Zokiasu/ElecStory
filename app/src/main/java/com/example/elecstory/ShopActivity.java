@@ -10,7 +10,6 @@ import android.widget.GridView;
 import android.widget.Toast;
 
 import com.example.elecstory.Object.City;
-import com.example.elecstory.MainActivity.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,10 +40,9 @@ public class ShopActivity extends AppCompatActivity {
         final List<City> ListCityObject = new ArrayList<>();
 
         ///
-        ListCityObject.add(new City(1, "Lampe", "Object", 50, 10,5, 1, R.drawable.ampoule));
-        ListCityObject.add(new City(1, "Maison", "Maison", 100, 150,100, 1, R.drawable.ampoule));
-        ListCityObject.add(new City(1, "Manoir", "Maison", 250, 1000,500, 1, R.drawable.ampoule));
-        ListCityObject.add(new City(1, "Building", "Immeuble", 500, 10000,1000, 1, R.drawable.ampoule));
+        ListCityObject.add(new City( "Maison", "Maison", 100, 150,100, 1, R.drawable.ampoule));
+        ListCityObject.add(new City( "Manoir", "Maison", 250, 1000,500, 1, R.drawable.ampoule));
+        ListCityObject.add(new City( "Building", "Immeuble", 500, 10000,1000, 1, R.drawable.ampoule));
         ///
 
         GridView GV = findViewById(R.id.GridShop);

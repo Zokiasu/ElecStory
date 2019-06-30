@@ -2,26 +2,19 @@ package com.example.elecstory.Object;
 
 import android.util.Log;
 
+import com.example.elecstory.R;
+
 public class Factory {
 
     protected String Name; /*Nom de l'usine*/
-    protected int RequiredCost; /*Coût de son achat*/
     protected int FactoryLevel; /*Niveau à laquelle elle est acheter*/
+    protected int RequiredCost; /*Coût de son achat*/
     protected int UpgradeCost; /*Coût de l'update de l'usine*/
     protected int ElecGenerate; /*Point générer par l'usine*/
     protected int ElecByMillisecond; /*Nombre de milliseconde auquel les points sont générer*/
     protected int OperatingCost; /*Coût d'utilisation hebdomadaire*/
     protected int PollutionTax; /*Taxe de pollution*/
-
-    /*
-     * Machine de Gramme
-     * 0 Centrale Solaires 500k
-     * 1 Centrale Géothermique 5M
-     * 2 Centrale Eoliennes 5M
-     * 3 Centrale hydroélectrique 92M
-     * 4 Centrale thermique 500M
-     * 5 Centrale Nucléaire 1,5MM
-     * */
+    protected int Skin;
 
     public Factory(int N){
         switch (N){
@@ -34,6 +27,7 @@ public class Factory {
                 this.ElecByMillisecond = 2500;
                 this.OperatingCost = 10;
                 this.PollutionTax = 5;
+                this.Skin = R.drawable.eclair;
                 break;
             case 1 :
                 this.Name = "Centrale Geothermique";
@@ -44,6 +38,7 @@ public class Factory {
                 this.ElecByMillisecond = 2500;
                 this.OperatingCost = 10;
                 this.PollutionTax = 5;
+                this.Skin = R.drawable.eclair;
                 break;
             case 2 :
                 this.Name = "Centrale Eolienne";
@@ -54,6 +49,7 @@ public class Factory {
                 this.ElecByMillisecond = 2500;
                 this.OperatingCost = 20;
                 this.PollutionTax = 10;
+                this.Skin = R.drawable.eclair;
                 break;
             case 3 :
                 this.Name = "Centrale Hydroelectrique";
@@ -64,6 +60,7 @@ public class Factory {
                 this.ElecByMillisecond = 1500;
                 this.OperatingCost = 50;
                 this.PollutionTax = 15;
+                this.Skin = R.drawable.eclair;
                 break;
             case 4 :
                 this.Name = "Centrale Thermique";
@@ -74,6 +71,7 @@ public class Factory {
                 this.ElecByMillisecond = 1000;
                 this.OperatingCost = 150;
                 this.PollutionTax = 25;
+                this.Skin = R.drawable.eclair;
                 break;
             case 5 :
                 this.Name = "Centrale Nucleaire";
@@ -84,6 +82,7 @@ public class Factory {
                 this.ElecByMillisecond = 1000;
                 this.OperatingCost = 250;
                 this.PollutionTax = 50;
+                this.Skin = R.drawable.eclair;
                 break;
             default:
                 this.Name = "Machine de Gramme";
@@ -94,16 +93,58 @@ public class Factory {
                 this.ElecByMillisecond = 3500;
                 this.OperatingCost = 5;
                 this.PollutionTax = 5;
+                this.Skin = R.drawable.eclair;
                 break;
         }
     }
 
+    public Factory(String name, int factoryLevel, int requiredCost, int upgradeCost, int elecGenerate, int elecByMillisecond, int operatingCost, int pollutionTax, int skin) {
+        Name = name;
+        FactoryLevel = factoryLevel;
+        RequiredCost = requiredCost;
+        UpgradeCost = upgradeCost;
+        ElecGenerate = elecGenerate;
+        ElecByMillisecond = elecByMillisecond;
+        OperatingCost = operatingCost;
+        PollutionTax = pollutionTax;
+        Skin = skin;
+    }
+
     public Factory Upgrade(Factory Fact){
-        Fact.setFactoryLevel(Fact.getFactoryLevel()+1);
-        Fact.setUpgradeCost(Fact.getUpgradeCost()*2);
-        Fact.setElecGenerate(Fact.getElecGenerate()+1);
-        Fact.setElecByMillisecond(Fact.getElecByMillisecond()-250);
+        if(Fact.getFactoryLevel() < 10) {
+            Fact.setFactoryLevel(Fact.getFactoryLevel() + 1);
+            Fact.setUpgradeCost(Fact.getUpgradeCost() * 2);
+            Fact.setElecGenerate(Fact.getElecGenerate() + 1);
+            Fact.setElecByMillisecond(Fact.getElecByMillisecond() - 250);
+        } else {
+            int N = -1;
+            switch (Fact.getName()){
+                case "Machine de Gramme" : N = -1;
+                    break;
+                case "Centrale Solaire" : N = 0;
+                    break;
+                case "Centrale Geothermique" : N = 1;
+                    break;
+                case "Centrale Eolienne" : N = 2;
+                    break;
+                case "Centrale Hydroelectrique" : N = 3;
+                    break;
+                case "Centrale Thermique" : N = 4;
+                    break;
+                case "Centrale Nucleaire" : N = 5;
+                    break;
+            }
+            Fact = new Factory(N+1);
+        }
         return Fact;
+    }
+
+    public int getSkin() {
+        return Skin;
+    }
+
+    public void setSkin(int skin) {
+        Skin = skin;
     }
 
     public String getName() {
