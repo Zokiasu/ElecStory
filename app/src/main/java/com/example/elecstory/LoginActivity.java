@@ -69,6 +69,7 @@ public class LoginActivity extends AppCompatActivity {
                 db.insertPlayer(Pseudo.getText().toString(), Integer.parseInt(Age.getText().toString()), 0, 0, generateUniqueId(Pseudo.getText().toString(), Integer.parseInt(Age.getText().toString())));
                 db.insertCity("Lampe", 1, 1, 5, R.drawable.ampoule);
                 db.insertFactory("Not Factory",0,0,0,0,0,0,0);
+                db.insertFirstCraft();
                 Intent myIntent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(myIntent);
                 finish();

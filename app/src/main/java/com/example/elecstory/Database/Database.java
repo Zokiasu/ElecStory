@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.example.elecstory.Object.EarthObject;
 import com.example.elecstory.Object.Factory;
+import com.example.elecstory.R;
 
 import java.util.ArrayList;
 
@@ -24,6 +25,7 @@ public class Database extends SQLiteOpenHelper {
     public static final String TABLE_PLAYER = "player_table";
     public static final String TABLE_EARTH = "earth_table";
     public static final String TABLE_FACTORY = "factory_table";
+    public static final String TABLE_CRAFT = "craft_table";
 
     //Common Column names
     public static final String KEY_ID = "id";
@@ -52,6 +54,13 @@ public class Database extends SQLiteOpenHelper {
     public static final String OPERATINGCOST_FACTORY = "operatingcost";
     public static final String POLLUTIONTAX_FACTORY = "pollutiontax";
     public static final String SKIN_FACTORY = "skin";
+
+    //Craft Table - Column names
+    public static final String NAME_CRAFT = "name";
+    public static final String COINWIN_CRAFT = "coinwin";
+    public static final String PRICE_CRAFT = "price";
+    public static final String ENERGYCOST_CRAFT = "energycost";
+    public static final String SKIN_CRAFT = "skin";
 
 
     //PlayerData Table Create
@@ -83,6 +92,14 @@ public class Database extends SQLiteOpenHelper {
             + POLLUTIONTAX_FACTORY + " INTEGER DEFAULT 0,"
             + SKIN_FACTORY + " INTEGER DEFAULT NULL)";
 
+    //EarthObject Table Create
+    public static final String CREATE_TABLE_CRAFT = "CREATE TABLE " + TABLE_CRAFT
+            + " (" + NAME_CRAFT + " TEXT NOT NULL,"
+            + COINWIN_CRAFT + " INTEGER DEFAULT 0,"
+            + PRICE_CRAFT + " INTEGER DEFAULT 0,"
+            + ENERGYCOST_CRAFT + " INTEGER DEFAULT 0,"
+            + SKIN_CRAFT + " INTEGER DEFAULT NULL)";
+
     ////// Basic db's function //////
 
     public Database(Context context) {
@@ -94,6 +111,7 @@ public class Database extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_PLAYER);
         db.execSQL(CREATE_TABLE_EARTH);
         db.execSQL(CREATE_TABLE_FACTORY);
+        db.execSQL(CREATE_TABLE_CRAFT);
         Log.i(TAG, "onCreate DB invoked ");
     }
 
@@ -105,6 +123,7 @@ public class Database extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PLAYER);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_EARTH);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FACTORY);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CRAFT);
         onCreate(db);
     }
 
@@ -236,5 +255,46 @@ public class Database extends SQLiteOpenHelper {
         }
 
         return FactoryList;
+    }
+
+    ////// Craft function //////
+        public void insertFirstCraft() {
+        this.getWritableDatabase().execSQL("DROP TABLE IF EXISTS " + TABLE_CRAFT);
+        this.getWritableDatabase().execSQL(CREATE_TABLE_CRAFT);
+        int X = R.drawable.eclair;
+        String strSql = "INSERT INTO " + TABLE_CRAFT + "(name, coinwin, price, energycost, skin) " + "VALUES ('Lampe', 1, 10, 5, " + X + ")";
+        this.getWritableDatabase().execSQL(strSql);
+    }
+
+    public void insertCraft (String name, int coinwin, int price, int energycost, int skin) {
+        name = name.replace("'", "''");
+        String strSql =
+                "INSERT INTO " + TABLE_CRAFT + "(name, coinwin, price, energycost, skin) " +
+                        "VALUES ('" + name + "', '" + coinwin + "', '" + price + "', '" + energycost + "', " + skin + ")";
+        this.getWritableDatabase().execSQL(strSql);
+    }
+
+    public void deleteCraft(String name) {
+        String strSql = "DELETE FROM " + TABLE_CRAFT + " WHERE " + NAME_CRAFT + " = '" + name + "'";
+        this.getWritableDatabase().execSQL(strSql);
+    }
+
+    public ArrayList<EarthObject> infoCraft(ArrayList<EarthObject> earthObjectList) {
+
+        String strSql = " SELECT * FROM " + TABLE_CRAFT;
+        Cursor cursor = this.getReadableDatabase().rawQuery( strSql, null);
+        cursor.moveToFirst();
+
+        while (!cursor.isAfterLast()) {
+            EarthObject citys = new EarthObject(cursor.getString(0), //Name
+                    cursor.getInt(1), //CoinWin
+                    cursor.getInt(2), //Price
+                    cursor.getInt(3), //EnergyCost
+                    cursor.getInt(4)); //Skin
+            earthObjectList.add(citys);
+            cursor.moveToNext();
+        }
+
+        return earthObjectList;
     }
 }

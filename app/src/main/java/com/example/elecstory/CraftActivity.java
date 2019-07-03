@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import com.example.elecstory.Database.Database;
 import com.example.elecstory.Object.EarthObject;
 
 import java.util.ArrayList;
@@ -39,8 +40,11 @@ public class CraftActivity extends AppCompatActivity {
             }
         });
 
+        Database db = new Database(this);
+
         ArrayList<EarthObject> ListEarthObject = new ArrayList<>();
-        ListEarthObject.add(new EarthObject(1,""));
+        ListEarthObject = db.infoCraft(ListEarthObject);
+
         GridView GV = findViewById(R.id.GridCraft);
         GV.setAdapter(new CraftAdapter(this, ListEarthObject));
     }
