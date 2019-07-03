@@ -8,14 +8,16 @@ public class PlayerData {
     protected int Age;
     protected int Coin;
     protected int ElectricityStockage;
+    protected int QuestId;
 
-    public PlayerData(int idPlayer, String uniqueId, String name, int age, int coin, int electricityStockage) {
+    public PlayerData(int idPlayer, String uniqueId, String name, int age, int coin, int electricityStockage, int questId) {
         IdPlayer = idPlayer;
         UniqueId = uniqueId;
         Name = name;
         Age = age;
         Coin = coin;
         ElectricityStockage = electricityStockage;
+        QuestId = questId;
     }
 
     public int getIdPlayer() {
@@ -64,5 +66,13 @@ public class PlayerData {
 
     public void setElectricityStockage(int electricityStockage) {
         ElectricityStockage = electricityStockage;
+    }
+
+    public int getQuestId() {
+        return QuestId;
+    }
+
+    public void setQuestId(int questId) {
+        QuestId = questId;
     }
 }

@@ -1,26 +1,6 @@
 <resources>
-    <string name="app_name">FrankieTown English</string>
+    <string name="app_name">Elecstory</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="lorem_ipsum">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent iaculis dolor leo, et posuere sem auctor ac. Praesent elementum molestie sagittis.\n
-        Quisque vel libero eget eros elementum semper. Integer diam dui, tempus et tellus nec, vulputate bibendum nunc. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.\n
-        Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. In efficitur consequat congue. Integer vel dictum augue.\n
-        In ex urna, ultricies accumsan blandit in, pellentesque a lectus. Maecenas nec mattis urna. Sed neque dui, accumsan non ullamcorper eget, egestas at libero.\n
-        Aliquam erat volutpat. Sed in purus turpis. Ut rhoncus aliquam nibh, ac auctor arcu euismod sit amet. Morbi mi nisl, feugiat tempus magna eget, placerat pharetra ligula.\n
-        Integer pharetra mauris risus, cursus pharetra massa dignissim eget. Fusce ut sapien risus. Phasellus commodo, velit eget finibus molestie, purus lacus consequat elit, vel dictum mauris turpis a felis.\n
-        Fusce pellentesque eros sit amet augue convallis sagittis. Ut placerat faucibus augue. Sed sem lacus, tempor vitae suscipit vel, gravida sed nisl. Aliquam ut leo eu turpis vulputate malesuada eu pretium sem.\n
-        Fusce accumsan enim eu sagittis finibus. Maecenas diam enim, porta eget sapien ut, ultrices sodales arcu. Mauris laoreet ipsum sit amet porta tempor.\n
-        Ut vitae imperdiet massa. Aenean eget sollicitudin elit. Nullam sed semper ipsum. Quisque sit amet nibh rutrum, eleifend augue ut, varius elit.\n
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent iaculis dolor leo, et posuere sem auctor ac. Praesent elementum molestie sagittis.\n
-        Quisque vel libero eget eros elementum semper. Integer diam dui, tempus et tellus nec, vulputate bibendum nunc. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.\n
-        Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. In efficitur consequat congue. Integer vel dictum augue.\n
-        In ex urna, ultricies accumsan blandit in, pellentesque a lectus. Maecenas nec mattis urna. Sed neque dui, accumsan non ullamcorper eget, egestas at libero.\n
-        Aliquam erat volutpat. Sed in purus turpis. Ut rhoncus aliquam nibh, ac auctor arcu euismod sit amet. Morbi mi nisl, feugiat tempus magna eget, placerat pharetra ligula.\n
-        Integer pharetra mauris risus, cursus pharetra massa dignissim eget. Fusce ut sapien risus. Phasellus commodo, velit eget finibus molestie, purus lacus consequat elit, vel dictum mauris turpis a felis.\n
-        Fusce pellentesque eros sit amet augue convallis sagittis. Ut placerat faucibus augue. Sed sem lacus, tempor vitae suscipit vel, gravida sed nisl. Aliquam ut leo eu turpis vulputate malesuada eu pretium sem.\n
-        Fusce accumsan enim eu sagittis finibus. Maecenas diam enim, porta eget sapien ut, ultrices sodales arcu. Mauris laoreet ipsum sit amet porta tempor.\n
-        Ut vitae imperdiet massa. Aenean eget sollicitudin elit. Nullam sed semper ipsum. Quisque sit amet nibh rutrum, eleifend augue ut, varius elit.\n
-    </string>
     <string name="itemdefault">test</string>
     <string name="title_activity_temporary">TemporaryActivity</string>
 </resources>

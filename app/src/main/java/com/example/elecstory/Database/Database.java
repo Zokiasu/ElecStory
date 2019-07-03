@@ -5,30 +5,25 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.example.elecstory.Object.City;
+import com.example.elecstory.Object.EarthObject;
 import com.example.elecstory.Object.Factory;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
 public class Database extends SQLiteOpenHelper {
 
     private static final String TAG = "Database";
 
     //Database Name
-    public static final String DATABASE_NAME = "GDB.db";
+    public static final String DATABASE_NAME = "Database.db";
 
     //Database Version
-    public static final int DATABASE_VERSION = 9;
+    public static final int DATABASE_VERSION = 1;
 
     //Table Name
     public static final String TABLE_PLAYER = "player_table";
-    public static final String TABLE_CITY_PLAYER = "city_player_table";
-    public static final String TABLE_FACTORY_PLAYER = "factory_player_table";
+    public static final String TABLE_EARTH = "earth_table";
+    public static final String TABLE_FACTORY = "factory_table";
 
     //Common Column names
     public static final String KEY_ID = "id";
@@ -39,14 +34,13 @@ public class Database extends SQLiteOpenHelper {
     public static final String AGE_PLAYER = "age";
     public static final String COIN_PLAYER = "coin";
     public static final String ELECPOINT_PLAYER = "elecpoint";
+    public static final String QUEST_PLAYER = "quest";
 
-    //City Table - Column names
+    //EarthObject Table - Column names
     public static final String NAME_BUILDING = "name";
-    public static final String CATEGORY_BUILDING = "category";
     public static final String COINWIN_BUILDING = "coinwin";
     public static final String PRICE_BUILDING = "price";
     public static final String ENERGYCOST_BUILDING = "energycost";
-    public static final String LEVEL_BUILDING = "level";
     public static final String SKIN_BUILDING = "skin";
 
     //Factory Table - Column names
@@ -67,20 +61,19 @@ public class Database extends SQLiteOpenHelper {
             + USERNAME_PLAYER + " TEXT NOT NULL,"
             + AGE_PLAYER + " INTEGER NOT NULL,"
             + COIN_PLAYER + " INTEGER DEFAULT 0,"
-            + ELECPOINT_PLAYER + " INTEGER DEFAULT 0)";
+            + ELECPOINT_PLAYER + " INTEGER DEFAULT 0,"
+            + QUEST_PLAYER + " INTEGER DEFAULT 1)";
 
-    //City Table Create
-    public static final String CREATE_TABLE_CITY = "CREATE TABLE " + TABLE_CITY_PLAYER
+    //EarthObject Table Create
+    public static final String CREATE_TABLE_EARTH = "CREATE TABLE " + TABLE_EARTH
             + " (" + NAME_BUILDING + " TEXT NOT NULL,"
-            + CATEGORY_BUILDING + " TEXT NOT NULL,"
             + COINWIN_BUILDING + " INTEGER DEFAULT 0,"
             + PRICE_BUILDING + " INTEGER DEFAULT 0,"
             + ENERGYCOST_BUILDING + " INTEGER DEFAULT 0,"
-            + LEVEL_BUILDING + " INTEGER DEFAULT 0,"
             + SKIN_BUILDING + " INTEGER DEFAULT NULL)";
 
     //Factory Table Create
-    public static final String CREATE_TABLE_FACTORY = "CREATE TABLE " + TABLE_FACTORY_PLAYER
+    public static final String CREATE_TABLE_FACTORY = "CREATE TABLE " + TABLE_FACTORY
             + " (" + NAME_FACTORY + " TEXT NOT NULL,"
             + LEVEL_FACTORY + " INTEGER DEFAULT 0,"
             + COST_FACTORY + " INTEGER DEFAULT 0,"
@@ -99,7 +92,7 @@ public class Database extends SQLiteOpenHelper {
     @Override
     public void onCreate(android.database.sqlite.SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE_PLAYER);
-        db.execSQL(CREATE_TABLE_CITY);
+        db.execSQL(CREATE_TABLE_EARTH);
         db.execSQL(CREATE_TABLE_FACTORY);
         Log.i(TAG, "onCreate DB invoked ");
     }
@@ -110,56 +103,23 @@ public class Database extends SQLiteOpenHelper {
                 + " to version " + newVersion
                 + ", the old data will be destroyed.");
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PLAYER);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CITY_PLAYER);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_FACTORY_PLAYER);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_EARTH);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_FACTORY);
         onCreate(db);
     }
 
+    ////// Player function //////
     /* Add a new player to the internal database * Ajoute un nouveau joueur à la base de donnée interne */
     public void insertPlayer (String name, int age, int coin, int elecpoint, String uniqueid) {
         name = name.replace("'", "''");
         String strSql =
-            "INSERT INTO " +  TABLE_PLAYER + "(uniqueid, username, age, coin, elecpoint) " +
-            "VALUES ('" + uniqueid + "', '" + name + "', '" + age + "', '" + coin + "', " + elecpoint + ")";
+                "INSERT INTO " +  TABLE_PLAYER + "(uniqueid, username, age, coin, elecpoint) " +
+                        "VALUES ('" + uniqueid + "', '" + name + "', '" + age + "', '" + coin + "', " + elecpoint + ")";
         this.getWritableDatabase().execSQL(strSql);
-        Log.i(TAG, "Create new player");
-    }
-
-    public void insertFactory (String name, int level, int cost, int upgadecost, int pointgenerate, int operatingcost, int pollutiontax, int skin) {
-        name = name.replace("'", "''");
-        String strSql =
-        "INSERT INTO " +  TABLE_FACTORY_PLAYER + "(name, level, cost, upgadecost, pointgenerate, operatingcost, pollutiontax, skin) " +
-        "VALUES ('" + name + "', '" + level + "', '" + cost + "', '" + upgadecost + "', '" + pointgenerate +  "', '" + operatingcost + "', '" + pollutiontax + "', '" + skin + "')";
-        this.getWritableDatabase().execSQL(strSql);
-        Log.i(TAG, "Add new factory to player");
-    }
-
-    public void insertCity (String name, String category, int coinwin, int price, int energycost, int level, int skin) {
-        name = name.replace("'", "''");
-        String strSql =
-        "INSERT INTO " +  TABLE_CITY_PLAYER + "(name, category, coinwin, price, energycost, level, skin) " +
-        "VALUES ('" + name + "', '" + category + "', '" + coinwin + "', '" + price + "', '" + energycost + "', " + "'" + level + "', '" + skin + "')";
-        this.getWritableDatabase().execSQL(strSql);
-        Log.i(TAG, "Add new city to player");
-    }
-
-    public void updateCoin (String name, int nbcoin) {
-        name = name.replace("'", "''");
-        String strSql = "UPDATE " + TABLE_PLAYER + " SET " + COIN_PLAYER + " = "+ COIN_PLAYER + " + " + nbcoin + " WHERE " + USERNAME_PLAYER + " = '" + name + "'";
-        this.getWritableDatabase().execSQL(strSql);
-        Log.i(TAG, "Update coin player");
-    }
-
-    public void updateElecPoint (String name, int point) {
-        name = name.replace("'", "''");
-        String strSql = "UPDATE " + TABLE_PLAYER + " SET " + ELECPOINT_PLAYER + " = "+ ELECPOINT_PLAYER + " + " + point + " WHERE " + USERNAME_PLAYER + " = '" + name + "'";
-        this.getWritableDatabase().execSQL(strSql);
-        Log.i(TAG, "Update elecpoint player");
     }
 
     /* Returns the information of the first player registered on the phone * Retourne les informations du premier joueur inscrit sur le téléphone*/
     public PlayerData infoFirstPlayer() {
-        Log.i(TAG, "Call Info Player");
         String strSql = "select * from " + TABLE_PLAYER;
         Cursor cursor = this.getReadableDatabase().rawQuery( strSql, null);
         cursor.moveToFirst();
@@ -168,15 +128,79 @@ public class Database extends SQLiteOpenHelper {
                 cursor.getString(2), //Pseudo
                 cursor.getInt(3), //Age
                 cursor.getInt(4), //Coin
-                cursor.getInt(5)); //ElecPoint
+                cursor.getInt(5), //ElecPoint
+                cursor.getInt(6)); //QuestId
 
         return player;
     }
 
-    public Factory infoFirstFactory() {
-        Log.i(TAG, "Call Info Factory");
+    public void updateCoin (String name, int nbcoin) {
+        name = name.replace("'", "''");
+        String strSql = "UPDATE " + TABLE_PLAYER + " SET " + COIN_PLAYER + " = "+ COIN_PLAYER + " + " + nbcoin + " WHERE " + USERNAME_PLAYER + " = '" + name + "'";
+        this.getWritableDatabase().execSQL(strSql);
+    }
 
-        String strSql = " SELECT * FROM " + TABLE_FACTORY_PLAYER;
+    public void updateElecPoint (String name, int point) {
+        name = name.replace("'", "''");
+        String strSql = "UPDATE " + TABLE_PLAYER + " SET " + ELECPOINT_PLAYER + " = "+ ELECPOINT_PLAYER + " + " + point + " WHERE " + USERNAME_PLAYER + " = '" + name + "'";
+        this.getWritableDatabase().execSQL(strSql);
+    }
+
+    public void updateQuest (int newQuest) {
+        String strSql = "UPDATE " + TABLE_PLAYER + " SET " + QUEST_PLAYER + " = " + newQuest;
+        this.getWritableDatabase().execSQL(strSql);
+    }
+
+    ////// Earth function //////
+    public void insertCity (String name, int coinwin, int price, int energycost, int skin) {
+        name = name.replace("'", "''");
+        String strSql =
+                "INSERT INTO " + TABLE_EARTH + "(name, coinwin, price, energycost, skin) " +
+                        "VALUES ('" + name + "', '" + coinwin + "', '" + price + "', '" + energycost + "', " + skin + ")";
+        this.getWritableDatabase().execSQL(strSql);
+    }
+
+    public void deleteCity(String name) {
+        String strSql = "DELETE FROM " + TABLE_EARTH + " WHERE " + NAME_BUILDING + " = '" + name + "'";
+        this.getWritableDatabase().execSQL(strSql);
+    }
+
+    public ArrayList<EarthObject> infoCity(ArrayList<EarthObject> earthObjectList) {
+
+        String strSql = " SELECT * FROM " + TABLE_EARTH;
+        Cursor cursor = this.getReadableDatabase().rawQuery( strSql, null);
+        cursor.moveToFirst();
+
+        while (!cursor.isAfterLast()) {
+            EarthObject citys = new EarthObject(cursor.getString(0), //Name
+                    cursor.getInt(1), //CoinWin
+                    cursor.getInt(2), //Price
+                    cursor.getInt(3), //EnergyCost
+                    cursor.getInt(4)); //Skin
+            earthObjectList.add(citys);
+            cursor.moveToNext();
+        }
+
+        return earthObjectList;
+    }
+
+    ////// Factory function //////
+    public void insertFactory (String name, int level, int cost, int upgadecost, int pointgenerate, int operatingcost, int pollutiontax, int skin) {
+        name = name.replace("'", "''");
+        String strSql =
+        "INSERT INTO " + TABLE_FACTORY + "(name, level, cost, upgadecost, pointgenerate, operatingcost, pollutiontax, skin) " +
+        "VALUES ('" + name + "', '" + level + "', '" + cost + "', '" + upgadecost + "', '" + pointgenerate +  "', '" + operatingcost + "', '" + pollutiontax + "', '" + skin + "')";
+        this.getWritableDatabase().execSQL(strSql);
+    }
+
+    public void deleteFactory(String name) {
+        String strSql = "DELETE FROM " + TABLE_FACTORY + " WHERE " + NAME_FACTORY + " = '" + name + "'";
+        this.getWritableDatabase().execSQL(strSql);
+    }
+
+    public Factory infoFirstFactory() {
+
+        String strSql = " SELECT * FROM " + TABLE_FACTORY;
         Cursor cursor = this.getReadableDatabase().rawQuery( strSql, null);
         cursor.moveToFirst();
 
@@ -192,24 +216,25 @@ public class Database extends SQLiteOpenHelper {
         return fact;
     }
 
-    public ArrayList infoCity(ArrayList<City> CityList) {
+    public ArrayList<Factory> infoFactory(ArrayList<Factory> FactoryList) {
 
-        String strSql = " SELECT * FROM " + TABLE_CITY_PLAYER;
+        String strSql = " SELECT * FROM " + TABLE_FACTORY;
         Cursor cursor = this.getReadableDatabase().rawQuery( strSql, null);
         cursor.moveToFirst();
 
         while (!cursor.isAfterLast()) {
-            City citys = new City(cursor.getString(0), //Name
-                    cursor.getString(1), //Category
-                    cursor.getInt(2), //CoinWin
-                    cursor.getInt(3), //Price
-                    cursor.getInt(4), //EnergyCost
-                    cursor.getInt(5), //Level
-                    cursor.getInt(6)); //Skin
-            CityList.add(citys);
+            Factory factorys = new Factory(cursor.getString(0), //Name
+                    cursor.getInt(1), //Level
+                    cursor.getInt(2), //Cost
+                    cursor.getInt(3), //UpgradeCost
+                    cursor.getInt(4), //PointGenerate
+                    cursor.getInt(5), //OperatingCost
+                    cursor.getInt(6), //PollutionTax
+                    cursor.getInt(7)); //Skin
+            FactoryList.add(factorys);
             cursor.moveToNext();
         }
 
-        return CityList;
+        return FactoryList;
     }
 }

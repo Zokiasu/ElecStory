@@ -67,7 +67,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 db.insertPlayer(Pseudo.getText().toString(), Integer.parseInt(Age.getText().toString()), 0, 0, generateUniqueId(Pseudo.getText().toString(), Integer.parseInt(Age.getText().toString())));
-                db.insertCity("Lampe", "Objet", 1, 1, 5, 1, R.drawable.ampoule);
+                db.insertCity("Lampe", 1, 1, 5, R.drawable.ampoule);
+                db.insertFactory("Not Factory",0,0,0,0,0,0,0);
                 Intent myIntent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(myIntent);
                 finish();

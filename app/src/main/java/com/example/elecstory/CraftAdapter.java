@@ -9,26 +9,26 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.elecstory.Object.City;
+import com.example.elecstory.Object.EarthObject;
 
-import java.util.List;
+import java.util.ArrayList;
 
-public class ShopAdapter extends BaseAdapter {
+public class CraftAdapter extends BaseAdapter {
 
-    public Context Context;
-    public List<City> ListCityObject;
+    public android.content.Context Context;
+    public ArrayList<EarthObject> ListObject;
     public LayoutInflater layoutInflater;
     public View views;
 
-    public ShopAdapter (Context Contexts, List<City> ListCO) {
+    public CraftAdapter (Context Contexts, ArrayList<EarthObject> ListCO) {
         this.Context = Contexts;
-        this.ListCityObject = ListCO;
+        this.ListObject = ListCO;
         this.layoutInflater = LayoutInflater.from(Context);
     }
 
     @Override
     public int getCount() {
-        return ListCityObject.size();
+        return ListObject.size();
     }
 
     @Override
@@ -54,9 +54,9 @@ public class ShopAdapter extends BaseAdapter {
         TextView objectPrice = views.findViewById(R.id.objectCount);
         TextView objectName = views.findViewById(R.id.objectName);
 
-        imageView.setImageResource(ListCityObject.get(position).getSkin());
-        objectPrice.setText(String.valueOf(ListCityObject.get(position).getPriceObject()));
-        objectName.setText(String.valueOf(ListCityObject.get(position).getName()));
+        objectPrice.setText(String.valueOf(ListObject.get(position).getPriceObject()));
+        objectName.setText(String.valueOf(ListObject.get(position).getName()));
+        imageView.setImageResource(ListObject.get(position).getSkin());
 
         return views;
     }

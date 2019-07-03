@@ -1,4 +1,4 @@
-package com.example.elecstory;
+package com.example.elecstory.Object;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
@@ -7,32 +7,30 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.elecstory.Object.City;
-import com.example.elecstory.Object.Factory;
+import com.example.elecstory.R;
 
 import java.util.ArrayList;
 
-import de.hdodenhof.circleimageview.CircleImageView;
+public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerViewAdapterFactory.ViewHolder> {
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+    private static final String TAG = "RecyclerViewAdapterEarth";
 
-    private static final String TAG = "RecyclerViewAdapter";
-
-    private ArrayList<City> mCity;
+    private ArrayList<Factory> mFactory;
     private Context mContext;
 
-    public RecyclerViewAdapter(Context context, ArrayList<City> mCitys) {
-        mCity = mCitys;
+    public RecyclerViewAdapterFactory(Context context, ArrayList<Factory> mFactorys) {
+        mFactory = mFactorys;
         mContext = context;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.objectcity_adapter, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.city_adapter, parent, false);
         return new ViewHolder(view);
     }
 
@@ -42,28 +40,28 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         Glide.with(mContext)
                 .asBitmap()
-                .load(BitmapFactory.decodeResource(mContext.getResources(), mCity.get(position).getSkin()))
+                .load(BitmapFactory.decodeResource(mContext.getResources(), mFactory.get(position).getSkin()))
                 .into(holder.image);
 
-        holder.name.setText(mCity.get(position).getName());
+        holder.name.setText(mFactory.get(position).getName());
 
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "onClick: clicked on an image: " + mCity.get(position).getName());
-                Toast.makeText(mContext, mCity.get(position).getName(), Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onClick: clicked on an image: " + mFactory.get(position).getName());
+                Toast.makeText(mContext, mFactory.get(position).getName(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return mCity.size();
+        return mFactory.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-        CircleImageView image;
+        ImageView image;
         TextView name;
 
         public ViewHolder(View itemView) {

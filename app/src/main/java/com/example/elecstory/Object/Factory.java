@@ -15,6 +15,8 @@ public class Factory {
     protected int PollutionTax; /*Taxe de pollution*/
     protected int Skin;
 
+
+    /*Constructeu des centrales préfaites*/
     public Factory(int N){
         switch (N){
             case 0 :
