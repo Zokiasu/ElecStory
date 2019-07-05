@@ -36,7 +36,6 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        Log.d(TAG, "onBindViewHolder: called.");
 
         Glide.with(mContext)
                 .asBitmap()
@@ -44,11 +43,11 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
                 .into(holder.image);
 
         holder.name.setText(mFactory.get(position).getName());
+        holder.nbObject.setText(String.valueOf(mFactory.get(position).getNbObject()));
 
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "onClick: clicked on an image: " + mFactory.get(position).getName());
                 Toast.makeText(mContext, mFactory.get(position).getName(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -63,11 +62,13 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
 
         ImageView image;
         TextView name;
+        TextView nbObject;
 
         public ViewHolder(View itemView) {
             super(itemView);
             image = itemView.findViewById(R.id.image);
             name = itemView.findViewById(R.id.imagename);
+            nbObject = itemView.findViewById(R.id.NumberObject);
         }
     }
 }

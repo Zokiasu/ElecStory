@@ -1,4 +1,4 @@
-package com.example.elecstory;
+package com.example.elecstory.Craft;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.elecstory.Object.EarthObject;
+import com.example.elecstory.R;
 
 import java.util.ArrayList;
 

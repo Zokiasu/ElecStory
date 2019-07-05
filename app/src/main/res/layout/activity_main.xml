@@ -52,62 +52,80 @@
 
     <LinearLayout
         android:id="@+id/request"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@color/colorAccent"
+        android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/Factorys"
-        tools:ignore="InvalidId">
+        app:layout_constraintBottom_toTopOf="@+id/Factorys">
 
-
-
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/requestName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="Request Name"
-                android:textSize="20dp"/>
-
-            <ImageView
-                android:id="@+id/requestImage"
-                android:layout_width="190dp"
-                android:layout_height="190dp"
-                app:srcCompat="@drawable/ampoule"
-                tools:ignore="MissingConstraints" />
-
-        </LinearLayout>
+            android:gravity="center"
+            android:text="ActualQuest"
+            android:textSize="25dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/colorAccent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/Factorys"
+            tools:ignore="InvalidId">
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="match_parent"
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="Object Request"
-                android:textSize="20dp"/>
+                android:orientation="vertical">
 
-            <GridView
-                android:id="@+id/requestObject"
+                <TextView
+                    android:id="@+id/requestName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Request Name"
+                    android:textSize="20dp"/>
+
+                <ImageView
+                    android:id="@+id/requestImage"
+                    android:layout_width="190dp"
+                    android:layout_height="190dp"
+                    app:srcCompat="@drawable/ampoule"
+                    tools:ignore="MissingConstraints" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/colorPrimary"
-                android:fastScrollEnabled="true"
-                android:columnWidth="100dp"
-                android:numColumns="auto_fit">
-            </GridView>
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Object Request"
+                    android:textSize="20dp"/>
+
+                <GridView
+                    android:id="@+id/requestObject"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorPrimary"
+                    android:fastScrollEnabled="true"
+                    android:columnWidth="100dp"
+                    android:numColumns="auto_fit">
+                </GridView>
+
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -183,7 +201,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Coût en Energie : 0"
+                android:text="Energy Cost : 0"
                 android:autoSizeTextType="uniform"
                 android:autoSizeMinTextSize="15dp"/>
 
@@ -197,7 +215,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Argent Produit : 0"
+                android:text="Coin Produced : 0"
                 android:autoSizeTextType="uniform"
                 android:autoSizeMinTextSize="15dp" />
 
@@ -235,7 +253,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Energie Produite : 0"
+                android:text="Energy Produced : 0"
                 android:autoSizeTextType="uniform"
                 android:autoSizeMinTextSize="15dp"/>
 
@@ -249,7 +267,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Coût de Production : 0"
+                android:text="Cost of Production : 0"
                 android:autoSizeTextType="uniform"
                 android:autoSizeMinTextSize="15dp" />
 
@@ -263,7 +281,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Taxe : 0"
+                android:text="Pollution Taxe : 0"
                 android:autoSizeTextType="uniform"
                 android:autoSizeMinTextSize="15dp" />
 

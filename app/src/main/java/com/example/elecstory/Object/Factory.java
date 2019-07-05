@@ -6,6 +6,7 @@ import com.example.elecstory.R;
 
 public class Factory {
 
+    protected int NbObject;
     protected String Name; /*Nom de l'usine*/
     protected int FactoryLevel; /*Niveau à laquelle elle est acheter*/
     protected int RequiredCost; /*Coût de son achat*/
@@ -20,7 +21,8 @@ public class Factory {
     public Factory(int N){
         switch (N){
             case 0 :
-                this.Name = "Centrale Solaire";
+                this.NbObject = 1;
+                this.Name = "Solar Factory";
                 this.RequiredCost = 1000000;
                 this.FactoryLevel = 1;
                 this.UpgradeCost = 500;
@@ -30,7 +32,8 @@ public class Factory {
                 this.Skin = R.drawable.eclair;
                 break;
             case 1 :
-                this.Name = "Centrale Geothermique";
+                this.NbObject = 1;
+                this.Name = "Geothermal Factory";
                 this.RequiredCost = 2000000;
                 this.FactoryLevel = 1;
                 this.UpgradeCost = 1500;
@@ -40,7 +43,8 @@ public class Factory {
                 this.Skin = R.drawable.eclair;
                 break;
             case 2 :
-                this.Name = "Centrale Eolienne";
+                this.NbObject = 1;
+                this.Name = "Wind Factory";
                 this.RequiredCost = 2000000;
                 this.FactoryLevel = 1;
                 this.UpgradeCost = 2000;
@@ -50,7 +54,8 @@ public class Factory {
                 this.Skin = R.drawable.eclair;
                 break;
             case 3 :
-                this.Name = "Centrale Hydroelectrique";
+                this.NbObject = 1;
+                this.Name = "Hydroelectric Factory";
                 this.RequiredCost = 5000000;
                 this.FactoryLevel = 1;
                 this.UpgradeCost = 2000;
@@ -60,7 +65,8 @@ public class Factory {
                 this.Skin = R.drawable.eclair;
                 break;
             case 4 :
-                this.Name = "Centrale Thermique";
+                this.NbObject = 1;
+                this.Name = "Thermic Factory";
                 this.RequiredCost = 7500000;
                 this.FactoryLevel = 1;
                 this.UpgradeCost = 2500;
@@ -70,7 +76,8 @@ public class Factory {
                 this.Skin = R.drawable.eclair;
                 break;
             case 5 :
-                this.Name = "Centrale Nucleaire";
+                this.NbObject = 1;
+                this.Name = "Nuclear Factory";
                 this.RequiredCost = 10000000;
                 this.FactoryLevel = 1;
                 this.UpgradeCost = 5000;
@@ -80,19 +87,21 @@ public class Factory {
                 this.Skin = R.drawable.eclair;
                 break;
             default:
-                this.Name = "Machine de Gramme";
-                this.RequiredCost = 0;
+                this.NbObject = 1;
+                this.Name = "Machine of Gramme";
+                this.RequiredCost = 1000;
                 this.FactoryLevel = 1;
                 this.UpgradeCost = 100;
                 this.ElecGenerate = 1;
-                this.OperatingCost = 0;
+                this.OperatingCost = 2;
                 this.PollutionTax = 0;
                 this.Skin = R.drawable.eclair;
                 break;
         }
     }
 
-    public Factory(String name, int factoryLevel, int requiredCost, int upgradeCost, int elecGenerate, int operatingCost, int pollutionTax, int skin) {
+    public Factory(int NbObjects, String name, int factoryLevel, int requiredCost, int upgradeCost, int elecGenerate, int operatingCost, int pollutionTax, int skin) {
+        NbObject = NbObjects;
         Name = name;
         FactoryLevel = factoryLevel;
         RequiredCost = requiredCost;
@@ -129,6 +138,14 @@ public class Factory {
             Fact = new Factory(N+1);
         }
         return Fact;
+    }
+
+    public int getNbObject() {
+        return NbObject;
+    }
+
+    public void setNbObject(int nbObject) {
+        NbObject = nbObject;
     }
 
     public int getSkin() {

@@ -8,6 +8,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
@@ -15,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.elecstory.Craft.CraftActivity;
 import com.example.elecstory.Database.Database;
 import com.example.elecstory.Object.EarthObject;
 import com.example.elecstory.Object.Factory;
@@ -99,16 +101,20 @@ public class MainActivity extends AppCompatActivity {
         ListCraft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                db.close();
                 Intent myIntent = new Intent(MainActivity.this, CraftActivity.class);
                 startActivity(myIntent);
+                finish();
             }
         });
 
         Shop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                db.close();
                 Intent myIntent = new Intent(MainActivity.this, ShopActivity.class);
                 startActivity(myIntent);
+                finish();
             }
         });
 
@@ -119,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        incrementEnergy(0);
+        recursionUpDownPoint(0);
         db.close();
     }
 
@@ -155,11 +161,78 @@ public class MainActivity extends AppCompatActivity {
         gv = findViewById(R.id.requestObject);
     }
 
+    public void recursionUpDownPoint(int N){
+        db = new Database(this);
+        //Augmente l'énergie en fonction de l'usine actuel
+        if(mFactory.size() > 0){
+            int EnergyWin = 0, Pollution = 0, Cost = 0, NbFactory = 0;
+            for (int i = 0; i < mFactory.size(); i++){
+                EnergyWin = EnergyWin + mFactory.get(i).getElecGenerate();
+                Pollution = Pollution + mFactory.get(i).getPollutionTax();
+                Cost = Cost + mFactory.get(i).getOperatingCost();
+                NbFactory = NbFactory + mFactory.get(i).getNbObject();
+            }
+            ElecGenerate.setText("Énergie produite : " + EnergyWin*NbFactory);
+            OperatingCost.setText("Coût de production : " + Cost*NbFactory);
+            PollutionTax.setText("Taxe : " + Pollution*NbFactory);
+            ActualPlayer.setElectricityStockage(ActualPlayer.getElectricityStockage() + EnergyWin*NbFactory);
+            if(EnergyWin != 0) {
+                db.updateElecPoint(ActualPlayer.getName(), EnergyWin*NbFactory);
+            }
+            ActualElecStockage.setText("Energy " + ActualPlayer.getElectricityStockage());
+        }
+        //Réduit l'énergie & donne des coins en fonction des bâtiments possédé
+        if(mEarthObject.size() > 0){
+            int EnergyCost = 0, CoinWin = 0, NbEarthObject = 0;
+            for (int i = 0; i < mEarthObject.size(); i++){
+                EnergyCost = EnergyCost + mEarthObject.get(i).getEnergyCost();
+                CoinWin = CoinWin + mEarthObject.get(i).getCoinWin();
+                NbEarthObject = NbEarthObject + mEarthObject.get(i).getNbObject();
+            }
+            if(ActualPlayer.getElectricityStockage() >= EnergyCost*NbEarthObject && (ActualPlayer.getElectricityStockage() - EnergyCost*NbEarthObject) >= 0) {
+                ActualPlayer.setElectricityStockage(ActualPlayer.getElectricityStockage() - EnergyCost*NbEarthObject);
+                db.updateElecPoint(ActualPlayer.getName(), -EnergyCost*NbEarthObject);
+                ActualElecStockage.setText("Energy " + ActualPlayer.getElectricityStockage());
+
+                ActualPlayer.setCoin(ActualPlayer.getCoin() + CoinWin*NbEarthObject);
+                db.updateCoin(ActualPlayer.getName(), CoinWin*NbEarthObject);
+                ActualCoin.setText("Coin " + ActualPlayer.getCoin());
+            }
+            ElecCost.setText("Coût en Energie : " + EnergyCost*NbEarthObject);
+            CoinWins.setText("Argent Produit : " + CoinWin*NbEarthObject);
+        }
+
+        if(N == 20) {
+            //decrementCostProduction();
+            N = 0;
+        }
+
+        db.close();
+        refreshRecursion(1000, N);
+    }
+
+    private void refreshRecursion(int milli, final int N){
+        final Handler handler = new Handler();
+
+        final Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                recursionUpDownPoint(N+1);
+            }
+        };
+
+        handler.postDelayed(runnable, milli);
+    }
+
     public void upgradeQuest(){
         if(ActualQuest.checkQuest(mEarthObject, db)) {
+
             mEarthObject.clear();
             mEarthObject = db.infoCity(mEarthObject);
             initRecyclerViewCity();
+
+            EarthObject TmpObject = new EarthObject(ActualQuest.getIdQuest(), ActualQuest.getNameReward());
+            db.insertCraft(TmpObject.getNbObject(), TmpObject.getName(), TmpObject.getCoinWin(), TmpObject.getPriceObject(), TmpObject.getEnergyCost(), TmpObject.getSkin());
 
             ActualQuest = new Quest(ActualQuest.getIdQuest() + 1);
 
@@ -179,6 +252,15 @@ public class MainActivity extends AppCompatActivity {
             /*A modifier dès que possible NON PRIORITAIRE*/
             Toast.makeText(this, "Vous ne possédez pas les objets nécessaire pour cette fabrication", Toast.LENGTH_LONG).show();
         }
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void displayQuest(){
+        gv.setAdapter(new QuestAdapter(this, ActualQuest.getEarthObjectRequest(), ActualQuest.getNbRequest()));
     }
 
     public void upgradeEnergy() {
@@ -194,78 +276,13 @@ public class MainActivity extends AppCompatActivity {
             Factory MyFact = new Factory(-1);
             db.deleteFactory("Not Factory");
             mFactory.remove(0);
-            db.insertFactory(MyFact.getName(), MyFact.getFactoryLevel(), MyFact.getRequiredCost(), MyFact.getUpgradeCost(), MyFact.getElecGenerate(), MyFact.getOperatingCost(), MyFact.getPollutionTax(), MyFact.getSkin());
+            db.insertFactory(MyFact.getNbObject(), MyFact.getName(), MyFact.getFactoryLevel(), MyFact.getRequiredCost(), MyFact.getUpgradeCost(), MyFact.getElecGenerate(), MyFact.getOperatingCost(), MyFact.getPollutionTax(), MyFact.getSkin());
             mFactory = db.infoFactory(mFactory);
             initRecyclerViewFactory();
         }
     }
 
-    public void displayQuest(){
-        gv.setAdapter(new QuestAdapter(this, ActualQuest.getEarthObjectRequest(), ActualQuest.getNbRequest()));
-    }
-
-    public void incrementEnergy(int N){
-        db = new Database(this);
-        //Augmente l'énergie en fonction de l'usine actuel
-        if(mFactory.size() > 0){
-            int EnergyWin = 0, Pollution = 0, Cost = 0;
-            for (int i = 0; i < mFactory.size(); i++){
-                EnergyWin = EnergyWin + mFactory.get(i).getElecGenerate();
-                Pollution = Pollution + mFactory.get(i).getPollutionTax();
-                Cost = Cost + mFactory.get(i).getOperatingCost();
-            }
-            ElecGenerate.setText("Énergie produite : " + EnergyWin);
-            OperatingCost.setText("Coût de production : " + Cost);
-            PollutionTax.setText("Taxe : " + Pollution);
-            ActualPlayer.setElectricityStockage(ActualPlayer.getElectricityStockage() + EnergyWin);
-            if(EnergyWin != 0) {
-                db.updateElecPoint(ActualPlayer.getName(), EnergyWin);
-            }
-            ActualElecStockage.setText("Energy " + ActualPlayer.getElectricityStockage());
-        }
-        //Réduit l'énergie & donne des coins en fonction des bâtiments possédé
-        if(mEarthObject.size() > 0){
-            int EnergyCost = 0, CoinWin = 0;
-            for (int i = 0; i < mEarthObject.size(); i++){
-                EnergyCost = EnergyCost + mEarthObject.get(i).getEnergyCost();
-                CoinWin = CoinWin + mEarthObject.get(i).getCoinWin();
-            }
-            if(ActualPlayer.getElectricityStockage() > EnergyCost && ActualPlayer.getElectricityStockage() - EnergyCost > 0) {
-                ActualPlayer.setElectricityStockage(ActualPlayer.getElectricityStockage() - EnergyCost);
-                db.updateElecPoint(ActualPlayer.getName(), -EnergyCost);
-                ActualElecStockage.setText("Energy " + ActualPlayer.getElectricityStockage());
-
-                ActualPlayer.setCoin(ActualPlayer.getCoin() + CoinWin);
-                db.updateCoin(ActualPlayer.getName(), CoinWin);
-                ActualCoin.setText("Coin " + ActualPlayer.getCoin());
-            }
-            ElecCost.setText("Coût en Energie : " + EnergyCost);
-            CoinWins.setText("Argent Produit : " + CoinWin);
-        }
-
-        if(N == 10) {
-            decrementCoin();
-            N = 0;
-        }
-
-        db.close();
-        refreshEnergy(1000, N);
-    }
-
-    private void refreshEnergy(int milli, final int N){
-        final Handler handler = new Handler();
-
-        final Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                incrementEnergy(N+1);
-            }
-        };
-
-        handler.postDelayed(runnable, milli);
-    }
-
-    public void decrementCoin() {
+    public void decrementCostProduction() {
         if(mFactory.size() > 0){
             int OperatingCost = 0, PollutionTax = 0;
             for (int i = 0; i < mFactory.size(); i++){
@@ -278,13 +295,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public static PlayerData getActualPlayer() {
-        return ActualPlayer;
-    }
-
     private void initRecyclerViewCity(){
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-
         recyclerViewCity.setLayoutManager(layoutManager);
         RecyclerViewAdapterEarth adapter = new RecyclerViewAdapterEarth(this, mEarthObject);
         recyclerViewCity.setAdapter(adapter);

@@ -1,5 +1,7 @@
 package com.example.elecstory.Quest;
 
+import android.util.Log;
+
 import com.example.elecstory.Database.Database;
 import com.example.elecstory.Object.EarthObject;
 import com.example.elecstory.R;
@@ -28,9 +30,9 @@ public class Quest {
             case 1 :
                 this.IdQuest = 1;
                 this.SkinReward = R.drawable.ampoule;
-                this.NameReward = "Maison";
+                this.NameReward = "House";
                 this.earthObjectRequest = new ArrayList<>();
-                this.earthObjectRequest.add(new EarthObject("Lampe", 1, 1, 5, R.drawable.ampoule));
+                this.earthObjectRequest.add(new EarthObject(1,"Lamp", 1, 1, 5, R.drawable.ampoule));
                 this.NbRequest = new ArrayList<>();
                 this.NbRequest.add(3);
                 break;
@@ -38,16 +40,16 @@ public class Quest {
             case 2 :
                 this.IdQuest = 2;
                 this.SkinReward = R.drawable.ampoule;
-                this.NameReward = "Rue";
+                this.NameReward = "Street";
                 this.earthObjectRequest = new ArrayList<>();
-                this.earthObjectRequest.add(new EarthObject("Maison", 1, 1, 5, R.drawable.ampoule));
+                this.earthObjectRequest.add(new EarthObject(1,"House", 1, 1, 5, R.drawable.ampoule));
                 this.NbRequest = new ArrayList<>();
                 this.NbRequest.add(8);
                 break;
             /*District Quest*/
             case 3 :
                 break;
-            /*EarthObject Quest*/
+            /*City Quest*/
             case 4 :
                 break;
             /*Municipality Quest*/
@@ -84,7 +86,8 @@ public class Quest {
             X = 0;
             for (int j = 0; j < earthObjectLists.size(); j++) {
                 if (this.getEarthObjectRequest().get(i).getName().equals(earthObjectLists.get(j).getName())) {
-                    X++;
+                    Log.i("Quest", "this.getEarthObjectRequest().get("+i+").getNbObject() : " + this.getEarthObjectRequest().get(i).getNbObject());
+                    X = X + earthObjectLists.get(j).getNbObject();
                 }
             }
             ObjectComparator.add(X);
@@ -95,7 +98,9 @@ public class Quest {
     public Boolean NbRequestComparator(ArrayList<EarthObject> earthObjectLists) {
         ArrayList<Integer> ObjectComparator = ObjectRequestComparator(earthObjectLists);
         for(int i = 0; i < this.getNbRequest().size(); i++) {
-            if(this.getNbRequest().get(i).equals(ObjectComparator.get(i))){
+            Log.i("Quest", "this.getNbRequest().get("+i+") : " + this.getNbRequest().get(i));
+            Log.i("Quest", "ObjectComparator.get("+i+") : " + ObjectComparator.get(i));
+            if(this.getNbRequest().get(i) <= ObjectComparator.get(i)){
                 return true;
             }
         }
@@ -105,19 +110,28 @@ public class Quest {
     public boolean checkQuest(ArrayList<EarthObject> earthObjectLists, Database db){
         if(this.getIdQuest() != 9) {
             if (NbRequestComparator(earthObjectLists)) {
-                EarthObject TmpObject = new EarthObject(this.getIdQuest(), this.getNameReward());
-                earthObjectLists.add(TmpObject); //Ajoute l'objet qui doit être craft
-                db.insertCity(TmpObject.getName(), TmpObject.getCoinWin(), TmpObject.getPriceObject(), TmpObject.getEnergyCost(), TmpObject.getSkin());
-                for (int i = 0; i < this.getNbRequest().size(); i++) { //Le nombre d'objet différent à supp
-                    for (int j = 0; j < this.getNbRequest().get(i); j++) { //Le nombre de fois où cette objet apparaît
-                        for (int k = 0; k < earthObjectLists.size(); k++) { //Check toute la liste du joueur
-                            if (this.getEarthObjectRequest().get(i).getName().equals(earthObjectLists.get(k).getName())) { //Si l'objet est trouvé le supprime et interrompt la boucle
-                                db.deleteCity(this.getEarthObjectRequest().get(i).getName());
+                for (int i = 0; i < this.getEarthObjectRequest().size(); i++) { //Le nombre d'objet différent à supp
+                    for (int k = 0; k < earthObjectLists.size(); k++) { //Check toute la liste du joueur
+                        if (this.getEarthObjectRequest().get(i).getName().equals(earthObjectLists.get(k).getName())) { //Si l'objet est trouvé le supprime et interrompt la boucle
+                            Log.i("Quest", "this.getEarthObjectRequest().get("+i+").getName() : " + this.getEarthObjectRequest().get(i).getName());
+                            Log.i("Quest", "earthObjectLists.get("+k+").getName() : " + earthObjectLists.get(k).getName());
+                            Log.i("Quest", "this.getNbRequest().get("+i+") : " + this.getNbRequest().get(i));
+                            Log.i("Quest", "earthObjectLists.get("+k+").getNbObject() : " + earthObjectLists.get(k).getNbObject());
+                            if(this.getNbRequest().get(i) < earthObjectLists.get(k).getNbObject()){
+                                earthObjectLists.get(k).setNbObject(earthObjectLists.get(k).getNbObject()-this.getNbRequest().get(i));
+                            } else {
                                 earthObjectLists.remove(k);
-                                k = earthObjectLists.size();
                             }
+                            k = earthObjectLists.size();
                         }
                     }
+                }
+
+                db.clearAllCity();
+                EarthObject TmpObject = new EarthObject(this.getIdQuest(), this.getNameReward());
+                earthObjectLists.add(TmpObject); //Ajoute l'objet qui doit être craft
+                for (int k = 0; k < earthObjectLists.size(); k++) { //Check toute la liste du joueur
+                    db.insertCity(earthObjectLists.get(k).getNbObject(),earthObjectLists.get(k).getName(),earthObjectLists.get(k).getCoinWin(),earthObjectLists.get(k).getPriceObject(),earthObjectLists.get(k).getEnergyCost(),earthObjectLists.get(k).getSkin());
                 }
                 return true;
             }

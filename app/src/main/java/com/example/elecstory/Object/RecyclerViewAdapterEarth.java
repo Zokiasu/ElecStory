@@ -36,7 +36,6 @@ public class RecyclerViewAdapterEarth extends RecyclerView.Adapter<RecyclerViewA
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        Log.d(TAG, "onBindViewHolder: called.");
 
         Glide.with(mContext)
                 .asBitmap()
@@ -45,10 +44,12 @@ public class RecyclerViewAdapterEarth extends RecyclerView.Adapter<RecyclerViewA
 
         holder.name.setText(mEarthObject.get(position).getName());
 
+        holder.nbObject.setText(String.valueOf(mEarthObject.get(position).getNbObject()));
+
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "onClick: clicked on an image: " + mEarthObject.get(position).getName());
+                Log.i("MainActivity","mEarthObject.get("+position+").getNbObject() : " + mEarthObject.get(position).getNbObject());
                 Toast.makeText(mContext, mEarthObject.get(position).getName(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -63,11 +64,13 @@ public class RecyclerViewAdapterEarth extends RecyclerView.Adapter<RecyclerViewA
 
         ImageView image;
         TextView name;
+        TextView nbObject;
 
         public ViewHolder(View itemView) {
             super(itemView);
             image = itemView.findViewById(R.id.image);
             name = itemView.findViewById(R.id.imagename);
+            nbObject = itemView.findViewById(R.id.NumberObject);
         }
     }
 }

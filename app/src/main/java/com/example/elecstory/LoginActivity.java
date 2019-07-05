@@ -57,6 +57,7 @@ public class LoginActivity extends AppCompatActivity {
 
         try {
             if(db.infoFirstPlayer() != null) {
+                db.close();
                 Intent myIntent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(myIntent);
                 finish();
@@ -67,9 +68,10 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 db.insertPlayer(Pseudo.getText().toString(), Integer.parseInt(Age.getText().toString()), 0, 0, generateUniqueId(Pseudo.getText().toString(), Integer.parseInt(Age.getText().toString())));
-                db.insertCity("Lampe", 1, 1, 5, R.drawable.ampoule);
-                db.insertFactory("Not Factory",0,0,0,0,0,0,0);
+                db.insertCity(1,"Lamp", 1, 1, 5, R.drawable.ampoule);
+                db.insertFactory(0,"Not Factory",0,0,0,0,0,0,0);
                 db.insertFirstCraft();
+                db.close();
                 Intent myIntent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(myIntent);
                 finish();

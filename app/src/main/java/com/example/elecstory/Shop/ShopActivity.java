@@ -4,10 +4,13 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.elecstory.Database.Database;
 import com.example.elecstory.MainActivity;
 import com.example.elecstory.Object.Factory;
 import com.example.elecstory.R;
@@ -20,6 +23,8 @@ public class ShopActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop);
+
+        final Database db = new Database(this);
 
         TextView Title = findViewById(R.id.ShopTitle);
         Title.setText("Boutique d'usine");
@@ -34,13 +39,14 @@ public class ShopActivity extends AppCompatActivity {
         BackShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                db.close();
                 Intent myIntent = new Intent(ShopActivity.this, MainActivity.class);
                 startActivity(myIntent);
                 finish();
             }
         });
 
-        ArrayList<Factory> ListShopObject = new ArrayList<>();
+        final ArrayList<Factory> ListShopObject = new ArrayList<>();
         ListShopObject.add(new Factory(0));
         ListShopObject.add(new Factory(1));
         ListShopObject.add(new Factory(2));
@@ -51,5 +57,22 @@ public class ShopActivity extends AppCompatActivity {
 
         GridView GV = findViewById(R.id.GridShop);
         GV.setAdapter(new ShopAdapter(this, ListShopObject));
+
+        GV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                Factory N = ListShopObject.get(position);
+                if(db.infoFirstPlayer().getCoin() >= N.getRequiredCost()) {
+                    db.insertFactory(N.getNbObject(), N.getName(), N.getFactoryLevel(), N.getRequiredCost(), N.getUpgradeCost(), N.getElecGenerate(), N.getOperatingCost(), N.getPollutionTax(), N.getSkin());
+                    db.updateCoin(db.infoFirstPlayer().getName(), -N.getRequiredCost());
+                    Toast.makeText(ShopActivity.this, "Achat effectué ! ", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(ShopActivity.this, "Vous n'avez pas assez d'argent ! ", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+        });
+        db.close();
     }
 }
