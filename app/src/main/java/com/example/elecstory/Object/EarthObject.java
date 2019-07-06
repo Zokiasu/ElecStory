@@ -34,7 +34,7 @@ public class EarthObject {
             this.NbObject = 1;
             this.Name = "House";
             this.CoinWin = 15;
-            this.PriceObject = 1000;
+            this.PriceObject = 100;
             this.EnergyCost = 25;
             this.Skin = R.drawable.eclair;
         } else if(N == 2 || M.equals("Street")){

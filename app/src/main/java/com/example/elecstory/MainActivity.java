@@ -129,6 +129,13 @@ public class MainActivity extends AppCompatActivity {
         db.close();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initRecyclerViewCity();
+        initRecyclerViewFactory();
+    }
+
     private void initFindViewById(){
         currentLayout = findViewById(R.id.activity_main);
 
@@ -205,6 +212,10 @@ public class MainActivity extends AppCompatActivity {
         if(N == 20) {
             //decrementCostProduction();
             N = 0;
+        }
+
+        if(N%5 == 1) {
+            initRecyclerViewFactory();
         }
 
         db.close();
@@ -303,7 +314,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void initRecyclerViewFactory(){
+    public void initRecyclerViewFactory(){
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 
         recyclerViewFactory.setLayoutManager(layoutManager);

@@ -2,6 +2,7 @@ package com.example.elecstory.Object;
 
 import android.util.Log;
 
+import com.example.elecstory.Database.Database;
 import com.example.elecstory.R;
 
 public class Factory {
@@ -17,7 +18,7 @@ public class Factory {
     protected int Skin;
 
 
-    /*Constructeu des centrales préfaites*/
+    /*Constructeur des centrales préfaites*/
     public Factory(int N){
         switch (N){
             case 0 :
@@ -89,7 +90,7 @@ public class Factory {
             default:
                 this.NbObject = 1;
                 this.Name = "Machine of Gramme";
-                this.RequiredCost = 1000;
+                this.RequiredCost = 100;
                 this.FactoryLevel = 1;
                 this.UpgradeCost = 100;
                 this.ElecGenerate = 1;
@@ -112,11 +113,18 @@ public class Factory {
         Skin = skin;
     }
 
-    public Factory Upgrade(Factory Fact){
+    public Factory Upgrade(Factory Fact, Database db){
+        if(Fact.getName().equals("Machine of Gramme")){
+
+        }
+
         if(Fact.getFactoryLevel() < 10) {
             Fact.setFactoryLevel(Fact.getFactoryLevel() + 1);
-            Fact.setUpgradeCost(Fact.getUpgradeCost() * 2);
-            Fact.setElecGenerate(Fact.getElecGenerate() + 1);
+            db.updateLvLFactory(Fact.getName());
+            Fact.setUpgradeCost(Fact.getUpgradeCost()*2);
+            db.updateUpgradeCostFactory(Fact.getName());
+            Fact.setElecGenerate(Fact.getElecGenerate()*5);
+            db.updateEnergyGeneratedFactory(Fact.getName());
         } else {
             int N = -1;
             switch (Fact.getName()){

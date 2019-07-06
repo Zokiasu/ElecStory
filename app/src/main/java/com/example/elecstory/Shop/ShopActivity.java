@@ -66,9 +66,9 @@ public class ShopActivity extends AppCompatActivity {
                 if(db.infoFirstPlayer().getCoin() >= N.getRequiredCost()) {
                     db.insertFactory(N.getNbObject(), N.getName(), N.getFactoryLevel(), N.getRequiredCost(), N.getUpgradeCost(), N.getElecGenerate(), N.getOperatingCost(), N.getPollutionTax(), N.getSkin());
                     db.updateCoin(db.infoFirstPlayer().getName(), -N.getRequiredCost());
-                    Toast.makeText(ShopActivity.this, "Achat effectué ! ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ShopActivity.this, "Achat effectué !", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(ShopActivity.this, "Vous n'avez pas assez d'argent ! ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ShopActivity.this, "Vous n'avez pas assez d'argent !", Toast.LENGTH_SHORT).show();
                 }
             }
 

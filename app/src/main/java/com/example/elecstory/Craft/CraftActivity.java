@@ -66,10 +66,10 @@ public class CraftActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 EarthObject N = finalListEarthObject.get(position);
-                if(db.infoFirstPlayer().getCoin() >= 0) {
+                if(db.infoFirstPlayer().getCoin() >= N.getPriceObject()) {
                     if(position == 0 || checkObject(finalListEarthObjectPlayer, position, db)) {
                         db.insertCity(N.getNbObject(), N.getName(), N.getCoinWin(), N.getPriceObject(), N.getEnergyCost(), N.getSkin());
-                        //db.updateCoin(db.infoFirstPlayer().getName(), -N.getPriceObject());
+                        db.updateCoin(db.infoFirstPlayer().getName(), -N.getPriceObject());
                         Toast.makeText(CraftActivity.this, "Craft effectué ! ", Toast.LENGTH_SHORT).show();
                     } else {
                         /*A modifier PAS IMPORTANT*/

@@ -44,38 +44,81 @@ public class Quest {
                 this.earthObjectRequest = new ArrayList<>();
                 this.earthObjectRequest.add(new EarthObject(1,"House", 1, 1, 5, R.drawable.ampoule));
                 this.NbRequest = new ArrayList<>();
-                this.NbRequest.add(8);
+                this.NbRequest.add(3);
                 break;
             /*District Quest*/
             case 3 :
+                this.IdQuest = 3;
+                this.SkinReward = R.drawable.ampoule;
+                this.NameReward = "District";
+                this.earthObjectRequest = new ArrayList<>();
+                this.earthObjectRequest.add(new EarthObject(1,"Street", 1, 1, 5, R.drawable.ampoule));
+                this.NbRequest = new ArrayList<>();
+                this.NbRequest.add(3);
                 break;
             /*City Quest*/
             case 4 :
+                this.IdQuest = 4;
+                this.SkinReward = R.drawable.ampoule;
+                this.NameReward = "City";
+                this.earthObjectRequest = new ArrayList<>();
+                this.earthObjectRequest.add(new EarthObject(1,"District", 1, 1, 5, R.drawable.ampoule));
+                this.NbRequest = new ArrayList<>();
+                this.NbRequest.add(3);
                 break;
             /*Municipality Quest*/
             case 5 :
+                this.IdQuest = 5;
+                this.SkinReward = R.drawable.ampoule;
+                this.NameReward = "Municipality";
+                this.earthObjectRequest = new ArrayList<>();
+                this.earthObjectRequest.add(new EarthObject(1,"City", 1, 1, 5, R.drawable.ampoule));
+                this.NbRequest = new ArrayList<>();
+                this.NbRequest.add(3);
                 break;
             /*Region Quest*/
             case 6 :
+                this.IdQuest = 6;
+                this.SkinReward = R.drawable.ampoule;
+                this.NameReward = "Region";
+                this.earthObjectRequest = new ArrayList<>();
+                this.earthObjectRequest.add(new EarthObject(1,"Municipality", 1, 1, 5, R.drawable.ampoule));
+                this.NbRequest = new ArrayList<>();
+                this.NbRequest.add(3);
                 break;
             /*Country Quest*/
             case 7 :
+                this.IdQuest = 7;
+                this.SkinReward = R.drawable.ampoule;
+                this.NameReward = "Country";
+                this.earthObjectRequest = new ArrayList<>();
+                this.earthObjectRequest.add(new EarthObject(1,"Region", 1, 1, 5, R.drawable.ampoule));
+                this.NbRequest = new ArrayList<>();
+                this.NbRequest.add(3);
                 break;
             /*Continent Quest*/
             case 8 :
+                this.IdQuest = 8;
+                this.SkinReward = R.drawable.ampoule;
+                this.NameReward = "Continent";
+                this.earthObjectRequest = new ArrayList<>();
+                this.earthObjectRequest.add(new EarthObject(1,"Country", 1, 1, 5, R.drawable.ampoule));
+                this.NbRequest = new ArrayList<>();
+                this.NbRequest.add(3);
                 break;
             /*Planet Quest*/
             case 9 :
+                this.IdQuest = 9;
+                this.SkinReward = R.drawable.ampoule;
+                this.NameReward = "Planet";
+                this.earthObjectRequest = new ArrayList<>();
+                this.earthObjectRequest.add(new EarthObject(1,"Continent", 1, 1, 5, R.drawable.ampoule));
+                this.NbRequest = new ArrayList<>();
+                this.NbRequest.add(3);
                 break;
             /*??? Quest*/
-            case 10 :
-                break;
             /*??? Quest*/
-            case 11 :
-                break;
             /*Galaxy Quest*/
-            case 12 :
-                break;
         }
     }
 

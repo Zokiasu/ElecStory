@@ -232,21 +232,50 @@ public class Database extends SQLiteOpenHelper {
         ArrayList<Factory> Test = new ArrayList<>();
         int i = 0;
         Test = this.infoFactory(Test);
+        Log.i(TAG, "Test.size() : " + Test.size());
         if(Test.size() > 0){
             for(i = 0; i < Test.size(); i++){
+                Log.i(TAG, "Test.get("+i+").getName() : " + Test.get(i).getName());
+                Log.i(TAG, "name : " + name);
                 if(Test.get(i).getName().equals(name)){
-                    this.updateNbObject(name);
+                    this.updateNbFactory(name);
                     i = Test.size();
                 }
             }
         }
+        Log.i(TAG, "i : " + i);
         if(Test.size() == 0 || i == Test.size()){
             name = name.replace("'", "''");
             String strSql =
                     "INSERT INTO " + TABLE_FACTORY + "(number_object, name, level, cost, upgadecost, pointgenerate, operatingcost, pollutiontax, skin) " +
-                            "VALUES ('" + NbObject + "','" + name + "', '" + level + "', '" + cost + "', '" + upgadecost + "', '" + pointgenerate +  "', '" + operatingcost + "', '" + pollutiontax + "', '" + skin + "')";
+                    "VALUES ('" + NbObject + "','" + name + "', '" + level + "', '" + cost + "', '" + upgadecost + "', '" + pointgenerate +  "', '" + operatingcost + "', '" + pollutiontax + "', '" + skin + "')";
             this.getWritableDatabase().execSQL(strSql);
+            Log.i(TAG, "strSql : " + strSql);
         }
+    }
+
+    public void updateNbFactory (String name) {
+        name = name.replace("'", "''");
+        String strSql = "UPDATE " + TABLE_FACTORY + " SET " + NUMBER_OBJECT + " = "+ NUMBER_OBJECT + " + 1 WHERE " + NAME_FACTORY + " = '" + name + "'";
+        this.getWritableDatabase().execSQL(strSql);
+    }
+
+    public void updateLvLFactory (String name) {
+        name = name.replace("'", "''");
+        String strSql = "UPDATE " + TABLE_FACTORY + " SET " + LEVEL_FACTORY + " = "+ LEVEL_FACTORY + " + 1 WHERE " + NAME_FACTORY + " = '" + name + "'";
+        this.getWritableDatabase().execSQL(strSql);
+    }
+
+    public void updateUpgradeCostFactory (String name) {
+        name = name.replace("'", "''");
+        String strSql = "UPDATE " + TABLE_FACTORY + " SET " + UPGRADECOST_FACTORY + " = "+ UPGRADECOST_FACTORY + "*2 WHERE " + NAME_FACTORY + " = '" + name + "'";
+        this.getWritableDatabase().execSQL(strSql);
+    }
+
+    public void updateEnergyGeneratedFactory (String name) {
+        name = name.replace("'", "''");
+        String strSql = "UPDATE " + TABLE_FACTORY + " SET " + POINTGENERATE_FACTORY + " = "+ POINTGENERATE_FACTORY + "*5 WHERE " + NAME_FACTORY + " = '" + name + "'";
+        this.getWritableDatabase().execSQL(strSql);
     }
 
     public void deleteFactory(String name) {
