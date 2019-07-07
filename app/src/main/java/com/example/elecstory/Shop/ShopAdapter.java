@@ -55,7 +55,7 @@ public class ShopAdapter extends BaseAdapter {
         TextView objectPrice = views.findViewById(R.id.objectCount);
         TextView objectName = views.findViewById(R.id.objectName);
 
-        objectPrice.setText(String.valueOf(ListObject.get(position).getRequiredCost()));
+        objectPrice.setText(String.valueOf(ListObject.get(position).getPriceFactory()));
         objectName.setText(String.valueOf(ListObject.get(position).getName()));
         imageView.setImageResource(ListObject.get(position).getSkin());
 

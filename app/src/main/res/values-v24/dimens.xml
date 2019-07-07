@@ -2,6 +2,6 @@
 <resources>
     <dimen name="size_text">15sp</dimen>
     <dimen name="size_text_plus">25sp</dimen>
-    <dimen name="size_factory_image">20dp</dimen>
+    <dimen name="size_factory_image">30dp</dimen>
     <dimen name="size_factory_adapter">100dp</dimen>
 </resources>

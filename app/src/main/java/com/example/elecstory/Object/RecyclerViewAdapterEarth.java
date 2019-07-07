@@ -53,6 +53,14 @@ public class RecyclerViewAdapterEarth extends RecyclerView.Adapter<RecyclerViewA
                 Toast.makeText(mContext, mEarthObject.get(position).getName(), Toast.LENGTH_SHORT).show();
             }
         });
+
+        holder.image.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(mContext, "Hello", Toast.LENGTH_LONG).show();
+                return true;
+            }
+        });
     }
 
     @Override

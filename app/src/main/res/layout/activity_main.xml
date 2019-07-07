@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="ElecStockage"
-            android:textSize="20dp" />
+            android:textSize="@dimen/size_text" />
 
         <Space
             android:layout_width="wrap_content"
@@ -41,7 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="CoinPlayer"
-            android:textSize="20dp" />
+            android:textSize="@dimen/size_text" />
 
         <Space
             android:layout_width="wrap_content"
@@ -72,7 +72,7 @@
             android:layout_height="wrap_content"
             android:text="Shop"
             android:textAllCaps="false"
-            android:textSize="20dp"
+            android:textSize="@dimen/size_text"
             tools:ignore="HardcodedText,MissingConstraints,SpUsage" />
 
         <Space
@@ -86,7 +86,7 @@
             android:layout_height="wrap_content"
             android:text="ListCraft"
             android:textAllCaps="false"
-            android:textSize="20dp" />
+            android:textSize="@dimen/size_text" />
 
         <Space
             android:layout_width="wrap_content"
@@ -120,7 +120,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="ActualQuest"
-                android:textSize="25dp" />
+                android:textSize="@dimen/size_text_plus"
+                android:autoSizeTextType="uniform"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -144,7 +145,8 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="Request Name"
-                        android:textSize="20dp" />
+                        android:textSize="@dimen/size_text"
+                        android:autoSizeTextType="uniform" />
 
                     <RelativeLayout
                         android:layout_width="wrap_content"
@@ -167,7 +169,7 @@
                             android:layout_centerHorizontal="true"
                             android:text="Craft"
                             android:textAllCaps="false"
-                            android:textSize="20dp" />
+                            android:textSize="@dimen/size_text" />
 
                     </RelativeLayout>
 
@@ -184,7 +186,8 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="Object Request"
-                        android:textSize="20dp" />
+                        android:textSize="@dimen/size_text"
+                        android:autoSizeTextType="uniform"/>
 
                     <GridView
                         android:id="@+id/requestObject"
@@ -232,9 +235,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:autoSizeMinTextSize="15dp"
-                    android:autoSizeTextType="uniform"
                     android:text="Energy Cost : 0"
-                    android:textSize="20dp" />
+                    android:textSize="@dimen/size_text"
+                    android:autoSizeTextType="uniform"/>
 
                 <Space
                     android:layout_width="wrap_content"
@@ -247,9 +250,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:autoSizeMinTextSize="15dp"
-                    android:autoSizeTextType="uniform"
                     android:text="Coin Produced : 0"
-                    android:textSize="20dp" />
+                    android:textSize="@dimen/size_text"
+                    android:autoSizeTextType="uniform"/>
 
                 <Space
                     android:layout_width="wrap_content"
@@ -293,10 +296,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:autoSizeMinTextSize="15dp"
-                    android:autoSizeTextType="uniform"
                     android:text="Energy Produced : 0"
-                    android:textSize="20dp" />
+                    android:textSize="@dimen/size_text"
+                    android:autoSizeTextType="uniform"/>
 
                 <Space
                     android:layout_width="wrap_content"
@@ -308,10 +310,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:autoSizeMinTextSize="15dp"
-                    android:autoSizeTextType="uniform"
                     android:text="Cost of Production : 0"
-                    android:textSize="20dp" />
+                    android:textSize="@dimen/size_text"
+                    android:autoSizeTextType="uniform"/>
 
                 <Space
                     android:layout_width="wrap_content"
@@ -323,10 +324,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:autoSizeMinTextSize="15dp"
-                    android:autoSizeTextType="uniform"
                     android:text="Pollution Taxe : 0"
-                    android:textSize="20dp" />
+                    android:textSize="@dimen/size_text"
+                    android:autoSizeTextType="uniform"/>
 
                 <Space
                     android:layout_width="wrap_content"
@@ -375,7 +375,7 @@
             android:layout_height="wrap_content"
             android:text="+1"
             android:textAllCaps="false"
-            android:textSize="20dp"
+            android:textSize="@dimen/size_text"
             tools:ignore="MissingConstraints" />
 
         <Space

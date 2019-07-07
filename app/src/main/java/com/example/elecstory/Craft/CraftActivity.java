@@ -29,13 +29,7 @@ public class CraftActivity extends AppCompatActivity {
         final Database db = new Database(this);
 
         TextView Title = findViewById(R.id.CraftTitle);
-        Title.setText("Boutique d'usine");
-
-        final Button Confirm = findViewById(R.id.confirm);
-        Confirm.setVisibility(View.INVISIBLE);
-
-        final Button Cancel = findViewById(R.id.cancel);
-        Cancel.setVisibility(View.INVISIBLE);
+        Title.setText("Craft List");
 
         Button BackCraft = findViewById(R.id.back);
 
@@ -61,12 +55,20 @@ public class CraftActivity extends AppCompatActivity {
         final ArrayList<EarthObject> finalListEarthObject = ListEarthObject;
         final ArrayList<EarthObject> finalListEarthObjectPlayer = ListEarthObjectPlayer;
 
+        GV.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(CraftActivity.this, "Hello!!!", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+
         GV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 EarthObject N = finalListEarthObject.get(position);
-                if(db.infoFirstPlayer().getCoin() >= N.getPriceObject()) {
+                if((db.infoFirstPlayer().getCoin() >= N.getPriceObject()) && (db.infoFirstPlayer().getCoin()-N.getPriceObject() >= 0)) {
                     if(position == 0 || checkObject(finalListEarthObjectPlayer, position, db)) {
                         db.insertCity(N.getNbObject(), N.getName(), N.getCoinWin(), N.getPriceObject(), N.getEnergyCost(), N.getSkin());
                         db.updateCoin(db.infoFirstPlayer().getName(), -N.getPriceObject());

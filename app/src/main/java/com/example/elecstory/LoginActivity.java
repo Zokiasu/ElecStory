@@ -21,6 +21,8 @@ public class LoginActivity extends AppCompatActivity {
     Button Confirm;
     private Database db;
 
+    private static final String TAG = "LoginActivity";
+
     public String generateUniqueId(String Pseudo, int Age) {
         db = new Database(this);
 
@@ -48,6 +50,10 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+        decorView.setSystemUiVisibility(uiOptions);
 
         db = new Database(this);
 

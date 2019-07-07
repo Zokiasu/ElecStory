@@ -32,12 +32,12 @@ import java.util.ArrayList;
 @SuppressLint("SetTextI18n")
 public class MainActivity extends AppCompatActivity {
 
-    public TextView ActualElecStockage;
+    public TextView ActualElecPoint;
     public TextView ActualCoin;
 
     public TextView ElecGenerate;
-    public TextView OperatingCost;
-    public TextView PollutionTax;
+    public TextView ActualFactoryCost;
+    public TextView ActualFactoryTax;
     public TextView ElecCost;
     public TextView CoinWins;
     public TextView DisplayQuestName;
@@ -64,6 +64,17 @@ public class MainActivity extends AppCompatActivity {
 
     private Database db;
 
+    private Boolean Start = true;
+
+    private int FactoryEnergyWin = 0;
+    private int FactoryPollution = 0;
+    private int FactoryCost = 0;
+    private int NbFactory = 0;
+
+    private int EarthObjectEnergyCost = 0;
+    private int EarthObjectCoinWin = 0;
+    private int NbEarthObject = 0;
+
     private static final String TAG = "MainActivity";
 
     @SuppressLint("SetTextI18n")
@@ -71,6 +82,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.i(TAG, "onCreate");
+
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+        decorView.setSystemUiVisibility(uiOptions);
 
         initFindViewById();
 
@@ -83,9 +99,11 @@ public class MainActivity extends AppCompatActivity {
         displayQuest();
 
         ActualCoin.setText("Coin " + ActualPlayer.getCoin());
-        ActualElecStockage.setText("Energy " + ActualPlayer.getElectricityStockage());
+        ActualElecPoint.setText("Energy " + ActualPlayer.getElectricityPoint());
 
+        mFactory.clear();
         mFactory = db.infoFactory(mFactory);
+        mEarthObject.clear();
         mEarthObject = db.infoCity(mEarthObject);
 
         initRecyclerViewFactory();
@@ -101,7 +119,6 @@ public class MainActivity extends AppCompatActivity {
         ListCraft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db.close();
                 Intent myIntent = new Intent(MainActivity.this, CraftActivity.class);
                 startActivity(myIntent);
                 finish();
@@ -111,7 +128,6 @@ public class MainActivity extends AppCompatActivity {
         Shop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db.close();
                 Intent myIntent = new Intent(MainActivity.this, ShopActivity.class);
                 startActivity(myIntent);
                 finish();
@@ -124,7 +140,8 @@ public class MainActivity extends AppCompatActivity {
                 upgradeEnergy();
             }
         });
-
+        initFactoryVar();
+        initEarthObjectVar();
         recursionUpDownPoint(0);
         db.close();
     }
@@ -132,94 +149,75 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        initRecyclerViewCity();
-        initRecyclerViewFactory();
+        Log.i(TAG, "onResume");
+        db = new Database(this);
+        mFactory.clear();
+        mFactory = db.infoFactory(mFactory);
+        mEarthObject.clear();
+        mEarthObject = db.infoCity(mEarthObject);
+        db.close();
+        Start = true;
+        initFactoryVar();
+        initEarthObjectVar();
     }
 
-    private void initFindViewById(){
-        currentLayout = findViewById(R.id.activity_main);
-
-        //Information Player
-        ActualCoin = findViewById(R.id.ElecCoins);
-        ActualElecStockage = findViewById(R.id.ElecStockage);
-
-        //Information Factory
-        ElecGenerate = findViewById(R.id.ElecGenerate);
-        OperatingCost = findViewById(R.id.OperatingCost);
-        PollutionTax = findViewById(R.id.PollutionTax);
-
-        //Information ObjectEarth
-        ElecCost = findViewById(R.id.EnergyCost);
-        CoinWins = findViewById(R.id.CoinWins);
-
-        //Quest
-        DisplayQuestImage = findViewById(R.id.requestImage);
-        DisplayQuestName = findViewById(R.id.requestName);
-
-        //Button
-        Shop = findViewById(R.id.ShopButton);
-        Craft = findViewById(R.id.ActionCraft);
-        ListCraft = findViewById(R.id.ListCraft);
-        UpElecPoint = findViewById(R.id.ElecUp);
-
-        //Affichage liste
-        recyclerViewCity = findViewById(R.id.recyclerViewCity);
-        recyclerViewFactory = findViewById(R.id.recyclerViewFactory);
-        gv = findViewById(R.id.requestObject);
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i(TAG, "onPause");
+        Start = false;
     }
 
     public void recursionUpDownPoint(int N){
-        db = new Database(this);
-        //Augmente l'énergie en fonction de l'usine actuel
-        if(mFactory.size() > 0){
-            int EnergyWin = 0, Pollution = 0, Cost = 0, NbFactory = 0;
-            for (int i = 0; i < mFactory.size(); i++){
-                EnergyWin = EnergyWin + mFactory.get(i).getElecGenerate();
-                Pollution = Pollution + mFactory.get(i).getPollutionTax();
-                Cost = Cost + mFactory.get(i).getOperatingCost();
-                NbFactory = NbFactory + mFactory.get(i).getNbObject();
-            }
-            ElecGenerate.setText("Énergie produite : " + EnergyWin*NbFactory);
-            OperatingCost.setText("Coût de production : " + Cost*NbFactory);
-            PollutionTax.setText("Taxe : " + Pollution*NbFactory);
-            ActualPlayer.setElectricityStockage(ActualPlayer.getElectricityStockage() + EnergyWin*NbFactory);
-            if(EnergyWin != 0) {
-                db.updateElecPoint(ActualPlayer.getName(), EnergyWin*NbFactory);
-            }
-            ActualElecStockage.setText("Energy " + ActualPlayer.getElectricityStockage());
-        }
-        //Réduit l'énergie & donne des coins en fonction des bâtiments possédé
-        if(mEarthObject.size() > 0){
-            int EnergyCost = 0, CoinWin = 0, NbEarthObject = 0;
-            for (int i = 0; i < mEarthObject.size(); i++){
-                EnergyCost = EnergyCost + mEarthObject.get(i).getEnergyCost();
-                CoinWin = CoinWin + mEarthObject.get(i).getCoinWin();
-                NbEarthObject = NbEarthObject + mEarthObject.get(i).getNbObject();
-            }
-            if(ActualPlayer.getElectricityStockage() >= EnergyCost*NbEarthObject && (ActualPlayer.getElectricityStockage() - EnergyCost*NbEarthObject) >= 0) {
-                ActualPlayer.setElectricityStockage(ActualPlayer.getElectricityStockage() - EnergyCost*NbEarthObject);
-                db.updateElecPoint(ActualPlayer.getName(), -EnergyCost*NbEarthObject);
-                ActualElecStockage.setText("Energy " + ActualPlayer.getElectricityStockage());
+        if(Start) {
+            //Augmente l'énergie en fonction de l'usine actuel
+            if (mFactory.size() > 0) {
+                if (ActualPlayer.getCoin() - (FactoryCost + FactoryPollution) * NbFactory >= 0) {
+                    if (FactoryEnergyWin != 0) {
+                        ActualPlayer.setElectricityPoint(ActualPlayer.getElectricityPoint() + FactoryEnergyWin * NbFactory);
+                        db.updateElecPoint(ActualPlayer.getName(), FactoryEnergyWin * NbFactory);
+                        ActualElecPoint.setText("Energy " + ActualPlayer.getElectricityPoint());
+                    }
 
-                ActualPlayer.setCoin(ActualPlayer.getCoin() + CoinWin*NbEarthObject);
-                db.updateCoin(ActualPlayer.getName(), CoinWin*NbEarthObject);
-                ActualCoin.setText("Coin " + ActualPlayer.getCoin());
+                    if (N == 10) {
+                        ActualPlayer.setCoin(ActualPlayer.getCoin() - (FactoryCost + FactoryPollution) * NbFactory);
+                        db.updateCoin(ActualPlayer.getName(), -(FactoryCost + FactoryPollution) * NbFactory);
+                        ActualCoin.setText("Coin " + ActualPlayer.getCoin());
+                    }
+                }
+
+                ElecGenerate.setText("Énergie produite : " + FactoryEnergyWin * NbFactory);
+                ActualFactoryCost.setText("Coût de production : " + FactoryCost * NbFactory);
+                ActualFactoryTax.setText("Taxe : " + FactoryPollution * NbFactory);
             }
-            ElecCost.setText("Coût en Energie : " + EnergyCost*NbEarthObject);
-            CoinWins.setText("Argent Produit : " + CoinWin*NbEarthObject);
-        }
 
-        if(N == 20) {
-            //decrementCostProduction();
-            N = 0;
-        }
+            //Réduit l'énergie & donne des coins en fonction des bâtiments possédé
+            if (mEarthObject.size() > 0) {
+                if (ActualPlayer.getElectricityPoint() >= (EarthObjectEnergyCost * NbEarthObject) && (ActualPlayer.getElectricityPoint() - (EarthObjectEnergyCost * NbEarthObject)) >= 0 && N % 2 == 1) {
+                    ActualPlayer.setElectricityPoint(ActualPlayer.getElectricityPoint() - (EarthObjectEnergyCost * NbEarthObject));
+                    db.updateElecPoint(ActualPlayer.getName(), -(EarthObjectEnergyCost * NbEarthObject));
+                    ActualElecPoint.setText("Energy " + ActualPlayer.getElectricityPoint());
 
-        if(N%5 == 1) {
-            initRecyclerViewFactory();
-        }
+                    ActualPlayer.setCoin(ActualPlayer.getCoin() + EarthObjectCoinWin * NbEarthObject);
+                    db.updateCoin(ActualPlayer.getName(), EarthObjectCoinWin * NbEarthObject);
+                    ActualCoin.setText("Coin " + ActualPlayer.getCoin());
 
-        db.close();
-        refreshRecursion(1000, N);
+                }
+
+                ElecCost.setText("Coût en Energie : " + EarthObjectEnergyCost * NbEarthObject);
+                CoinWins.setText("Argent Produit : " + EarthObjectCoinWin * NbEarthObject);
+            }
+
+            if (N % 5 == 1) {
+                initRecyclerViewFactory();
+            }
+
+            if (N == 10) {
+                N = 0;
+            }
+
+            refreshRecursion(1000, N);
+        }
     }
 
     private void refreshRecursion(int milli, final int N){
@@ -233,6 +231,10 @@ public class MainActivity extends AppCompatActivity {
         };
 
         handler.postDelayed(runnable, milli);
+    }
+
+    public void displayQuest(){
+        gv.setAdapter(new QuestAdapter(this, ActualQuest.getEarthObjectRequest(), ActualQuest.getNbRequest()));
     }
 
     public void upgradeQuest(){
@@ -270,39 +272,21 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void displayQuest(){
-        gv.setAdapter(new QuestAdapter(this, ActualQuest.getEarthObjectRequest(), ActualQuest.getNbRequest()));
-    }
-
     public void upgradeEnergy() {
-        ActualPlayer.setElectricityStockage(ActualPlayer.getElectricityStockage() + 1);
+        ActualPlayer.setElectricityPoint(ActualPlayer.getElectricityPoint() + 1);
         db.updateElecPoint(ActualPlayer.getName(), 1);
+        ActualElecPoint.setText("Energy " + ActualPlayer.getElectricityPoint());
         ActualPlayer.setCoin(ActualPlayer.getCoin() + 1);
         db.updateCoin(ActualPlayer.getName(), 1);
-
-        ActualElecStockage.setText("Energy " + ActualPlayer.getElectricityStockage());
         ActualCoin.setText("Coin " + ActualPlayer.getCoin());
 
         if(ActualPlayer.getCoin() >= 10 && mFactory.get(0).getName().equals("Not Factory")){
             Factory MyFact = new Factory(-1);
             db.deleteFactory("Not Factory");
             mFactory.remove(0);
-            db.insertFactory(MyFact.getNbObject(), MyFact.getName(), MyFact.getFactoryLevel(), MyFact.getRequiredCost(), MyFact.getUpgradeCost(), MyFact.getElecGenerate(), MyFact.getOperatingCost(), MyFact.getPollutionTax(), MyFact.getSkin());
+            db.insertFactory(MyFact.getNbObject(), MyFact.getName(), MyFact.getFactoryLevel(), MyFact.getPriceFactory(), MyFact.getUpgradeCost(), MyFact.getElecGenerate(), MyFact.getOperatingCost(), MyFact.getPollutionTax(), MyFact.getSkin());
             mFactory = db.infoFactory(mFactory);
             initRecyclerViewFactory();
-        }
-    }
-
-    public void decrementCostProduction() {
-        if(mFactory.size() > 0){
-            int OperatingCost = 0, PollutionTax = 0;
-            for (int i = 0; i < mFactory.size(); i++){
-                OperatingCost = OperatingCost + mFactory.get(i).getOperatingCost();
-                PollutionTax = PollutionTax + mFactory.get(i).getPollutionTax();
-            }
-            ActualPlayer.setCoin(ActualPlayer.getCoin() -(OperatingCost + PollutionTax));
-            db.updateCoin(ActualPlayer.getName(), -(OperatingCost + PollutionTax));
-            ActualCoin.setText("Coin " + ActualPlayer.getCoin());
         }
     }
 
@@ -321,5 +305,63 @@ public class MainActivity extends AppCompatActivity {
         RecyclerViewAdapterFactory adapter = new RecyclerViewAdapterFactory(this, mFactory);
         recyclerViewFactory.setAdapter(adapter);
 
+    }
+
+    private void initFindViewById(){
+        currentLayout = findViewById(R.id.activity_main);
+
+        //Information Player
+        ActualCoin = findViewById(R.id.ElecCoins);
+        ActualElecPoint = findViewById(R.id.ElecStockage);
+
+        //Information Factory
+        ElecGenerate = findViewById(R.id.ElecGenerate);
+        ActualFactoryCost = findViewById(R.id.OperatingCost);
+        ActualFactoryTax = findViewById(R.id.PollutionTax);
+
+        //Information ObjectEarth
+        ElecCost = findViewById(R.id.EnergyCost);
+        CoinWins = findViewById(R.id.CoinWins);
+
+        //Quest
+        DisplayQuestImage = findViewById(R.id.requestImage);
+        DisplayQuestName = findViewById(R.id.requestName);
+
+        //Button
+        Shop = findViewById(R.id.ShopButton);
+        Craft = findViewById(R.id.ActionCraft);
+        ListCraft = findViewById(R.id.ListCraft);
+        UpElecPoint = findViewById(R.id.ElecUp);
+
+        //Affichage liste
+        recyclerViewCity = findViewById(R.id.recyclerViewCity);
+        recyclerViewFactory = findViewById(R.id.recyclerViewFactory);
+        gv = findViewById(R.id.requestObject);
+    }
+
+    private void initFactoryVar(){
+        FactoryEnergyWin = 0;
+        FactoryPollution = 0;
+        FactoryCost = 0;
+        NbFactory = 0;
+
+        for (int i = 0; i < mFactory.size(); i++) {
+            FactoryEnergyWin = FactoryEnergyWin + mFactory.get(i).getElecGenerate();
+            FactoryPollution = FactoryPollution + mFactory.get(i).getPollutionTax();
+            FactoryCost = FactoryCost + mFactory.get(i).getOperatingCost();
+            NbFactory = NbFactory + mFactory.get(i).getNbObject();
+        }
+    }
+
+    private void initEarthObjectVar(){
+        EarthObjectEnergyCost = 0;
+        EarthObjectCoinWin = 0;
+        NbEarthObject = 0;
+
+        for (int i = 0; i < mEarthObject.size(); i++) {
+            EarthObjectEnergyCost = EarthObjectEnergyCost + mEarthObject.get(i).getEnergyCost();
+            EarthObjectCoinWin = EarthObjectCoinWin + mEarthObject.get(i).getCoinWin();
+            NbEarthObject = NbEarthObject + mEarthObject.get(i).getNbObject();
+        }
     }
 }

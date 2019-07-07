@@ -58,6 +58,14 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
                 }
             }
         });
+
+        holder.image.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(mContext, "Hello", Toast.LENGTH_LONG).show();
+                return true;
+            }
+        });
         db.close();
     }
 

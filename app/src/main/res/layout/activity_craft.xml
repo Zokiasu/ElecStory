@@ -10,13 +10,42 @@
     android:layout_gravity="center"
     tools:context=".Shop.ShopActivity">
 
-    <TextView
-        android:id="@+id/CraftTitle"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textSize="50dp"
-        tools:ignore="MissingConstraints" />
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"/>
+
+        <TextView
+            android:id="@+id/CraftTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textSize="@dimen/size_text_plus"
+            tools:ignore="MissingConstraints" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="B" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
 
     <GridView
         android:id="@+id/GridCraft"
@@ -24,58 +53,7 @@
         android:layout_height="wrap_content"
         android:columnWidth="200dp"
         android:fastScrollEnabled="true"
-        android:numColumns="auto_fit"
-        app:layout_constraintBottom_toTopOf="@id/Button"
-        app:layout_constraintTop_toBottomOf="@id/ShopTitle" />
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"/>
-    <LinearLayout
-        android:id="@+id/Button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <Button
-            android:id="@+id/cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cancel" />
-
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <Button
-            android:id="@+id/confirm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Confirm" />
-
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-    </LinearLayout>
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"/>
-
-    <Button
-        android:id="@+id/back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Back" />
+        android:numColumns="auto_fit"/>
 
     <Space
         android:layout_width="match_parent"

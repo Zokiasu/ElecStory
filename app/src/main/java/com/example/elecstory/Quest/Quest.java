@@ -44,7 +44,7 @@ public class Quest {
                 this.earthObjectRequest = new ArrayList<>();
                 this.earthObjectRequest.add(new EarthObject(1,"House", 1, 1, 5, R.drawable.ampoule));
                 this.NbRequest = new ArrayList<>();
-                this.NbRequest.add(3);
+                this.NbRequest.add(8);
                 break;
             /*District Quest*/
             case 3 :
@@ -54,7 +54,7 @@ public class Quest {
                 this.earthObjectRequest = new ArrayList<>();
                 this.earthObjectRequest.add(new EarthObject(1,"Street", 1, 1, 5, R.drawable.ampoule));
                 this.NbRequest = new ArrayList<>();
-                this.NbRequest.add(3);
+                this.NbRequest.add(4);
                 break;
             /*City Quest*/
             case 4 :
@@ -64,7 +64,7 @@ public class Quest {
                 this.earthObjectRequest = new ArrayList<>();
                 this.earthObjectRequest.add(new EarthObject(1,"District", 1, 1, 5, R.drawable.ampoule));
                 this.NbRequest = new ArrayList<>();
-                this.NbRequest.add(3);
+                this.NbRequest.add(10);
                 break;
             /*Municipality Quest*/
             case 5 :
@@ -74,7 +74,7 @@ public class Quest {
                 this.earthObjectRequest = new ArrayList<>();
                 this.earthObjectRequest.add(new EarthObject(1,"City", 1, 1, 5, R.drawable.ampoule));
                 this.NbRequest = new ArrayList<>();
-                this.NbRequest.add(3);
+                this.NbRequest.add(5);
                 break;
             /*Region Quest*/
             case 6 :
@@ -84,7 +84,7 @@ public class Quest {
                 this.earthObjectRequest = new ArrayList<>();
                 this.earthObjectRequest.add(new EarthObject(1,"Municipality", 1, 1, 5, R.drawable.ampoule));
                 this.NbRequest = new ArrayList<>();
-                this.NbRequest.add(3);
+                this.NbRequest.add(6);
                 break;
             /*Country Quest*/
             case 7 :
@@ -94,7 +94,7 @@ public class Quest {
                 this.earthObjectRequest = new ArrayList<>();
                 this.earthObjectRequest.add(new EarthObject(1,"Region", 1, 1, 5, R.drawable.ampoule));
                 this.NbRequest = new ArrayList<>();
-                this.NbRequest.add(3);
+                this.NbRequest.add(25);
                 break;
             /*Continent Quest*/
             case 8 :
@@ -104,7 +104,7 @@ public class Quest {
                 this.earthObjectRequest = new ArrayList<>();
                 this.earthObjectRequest.add(new EarthObject(1,"Country", 1, 1, 5, R.drawable.ampoule));
                 this.NbRequest = new ArrayList<>();
-                this.NbRequest.add(3);
+                this.NbRequest.add(5);
                 break;
             /*Planet Quest*/
             case 9 :
@@ -114,11 +114,8 @@ public class Quest {
                 this.earthObjectRequest = new ArrayList<>();
                 this.earthObjectRequest.add(new EarthObject(1,"Continent", 1, 1, 5, R.drawable.ampoule));
                 this.NbRequest = new ArrayList<>();
-                this.NbRequest.add(3);
+                this.NbRequest.add(8);
                 break;
-            /*??? Quest*/
-            /*??? Quest*/
-            /*Galaxy Quest*/
         }
     }
 
@@ -129,7 +126,6 @@ public class Quest {
             X = 0;
             for (int j = 0; j < earthObjectLists.size(); j++) {
                 if (this.getEarthObjectRequest().get(i).getName().equals(earthObjectLists.get(j).getName())) {
-                    Log.i("Quest", "this.getEarthObjectRequest().get("+i+").getNbObject() : " + this.getEarthObjectRequest().get(i).getNbObject());
                     X = X + earthObjectLists.get(j).getNbObject();
                 }
             }
@@ -141,8 +137,6 @@ public class Quest {
     public Boolean NbRequestComparator(ArrayList<EarthObject> earthObjectLists) {
         ArrayList<Integer> ObjectComparator = ObjectRequestComparator(earthObjectLists);
         for(int i = 0; i < this.getNbRequest().size(); i++) {
-            Log.i("Quest", "this.getNbRequest().get("+i+") : " + this.getNbRequest().get(i));
-            Log.i("Quest", "ObjectComparator.get("+i+") : " + ObjectComparator.get(i));
             if(this.getNbRequest().get(i) <= ObjectComparator.get(i)){
                 return true;
             }
@@ -156,10 +150,6 @@ public class Quest {
                 for (int i = 0; i < this.getEarthObjectRequest().size(); i++) { //Le nombre d'objet différent à supp
                     for (int k = 0; k < earthObjectLists.size(); k++) { //Check toute la liste du joueur
                         if (this.getEarthObjectRequest().get(i).getName().equals(earthObjectLists.get(k).getName())) { //Si l'objet est trouvé le supprime et interrompt la boucle
-                            Log.i("Quest", "this.getEarthObjectRequest().get("+i+").getName() : " + this.getEarthObjectRequest().get(i).getName());
-                            Log.i("Quest", "earthObjectLists.get("+k+").getName() : " + earthObjectLists.get(k).getName());
-                            Log.i("Quest", "this.getNbRequest().get("+i+") : " + this.getNbRequest().get(i));
-                            Log.i("Quest", "earthObjectLists.get("+k+").getNbObject() : " + earthObjectLists.get(k).getNbObject());
                             if(this.getNbRequest().get(i) < earthObjectLists.get(k).getNbObject()){
                                 earthObjectLists.get(k).setNbObject(earthObjectLists.get(k).getNbObject()-this.getNbRequest().get(i));
                             } else {

@@ -27,13 +27,7 @@ public class ShopActivity extends AppCompatActivity {
         final Database db = new Database(this);
 
         TextView Title = findViewById(R.id.ShopTitle);
-        Title.setText("Boutique d'usine");
-
-        final Button Confirm = findViewById(R.id.confirm);
-        Confirm.setVisibility(View.INVISIBLE);
-
-        final Button Cancel = findViewById(R.id.cancel);
-        Cancel.setVisibility(View.INVISIBLE);
+        Title.setText("Factory's Shop");
 
         Button BackShop = findViewById(R.id.back);
         BackShop.setOnClickListener(new View.OnClickListener() {
@@ -47,13 +41,33 @@ public class ShopActivity extends AppCompatActivity {
         });
 
         final ArrayList<Factory> ListShopObject = new ArrayList<>();
+        ListShopObject.add(new Factory(-1));
         ListShopObject.add(new Factory(0));
         ListShopObject.add(new Factory(1));
         ListShopObject.add(new Factory(2));
         ListShopObject.add(new Factory(3));
         ListShopObject.add(new Factory(4));
         ListShopObject.add(new Factory(5));
-        ListShopObject.add(new Factory(6));
+
+
+        ArrayList<Factory> ListFactoryPlayer = new ArrayList<>();
+        ListFactoryPlayer = db.infoFactory(ListFactoryPlayer);
+
+        for (int i = 0; i < ListFactoryPlayer.size(); i++){
+            for (int j = 0; j < ListShopObject.size(); j++){
+                if(ListFactoryPlayer.get(i).getName() == ListShopObject.get(j).getName()){
+                    if(ListFactoryPlayer.get(i).getNbObject() > 1) {
+                        for (int k = 0; k < ListFactoryPlayer.get(i).getNbObject(); k++) {
+                            ListShopObject.get(j).setPriceFactory(ListShopObject.get(j).getPriceFactory() * 10);
+                        }
+                    } else if (ListFactoryPlayer.get(i).getFactoryLevel() > 1){
+                        for (int k = 0; k < ListFactoryPlayer.get(i).getFactoryLevel(); k++) {
+                            ListShopObject.get(j).setPriceFactory(ListShopObject.get(j).getPriceFactory() * 2);
+                        }
+                    }
+                }
+            }
+        }
 
         GridView GV = findViewById(R.id.GridShop);
         GV.setAdapter(new ShopAdapter(this, ListShopObject));
@@ -63,9 +77,9 @@ public class ShopActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 Factory N = ListShopObject.get(position);
-                if(db.infoFirstPlayer().getCoin() >= N.getRequiredCost()) {
-                    db.insertFactory(N.getNbObject(), N.getName(), N.getFactoryLevel(), N.getRequiredCost(), N.getUpgradeCost(), N.getElecGenerate(), N.getOperatingCost(), N.getPollutionTax(), N.getSkin());
-                    db.updateCoin(db.infoFirstPlayer().getName(), -N.getRequiredCost());
+                if((db.infoFirstPlayer().getCoin() >= N.getPriceFactory()) && (db.infoFirstPlayer().getCoin()-N.getPriceFactory() >= 0)) {
+                    db.insertFactory(N.getNbObject(), N.getName(), N.getFactoryLevel(), N.getPriceFactory(), N.getUpgradeCost(), N.getElecGenerate(), N.getOperatingCost(), N.getPollutionTax(), N.getSkin());
+                    db.updateCoin(db.infoFirstPlayer().getName(), -N.getPriceFactory());
                     Toast.makeText(ShopActivity.this, "Achat effectué !", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(ShopActivity.this, "Vous n'avez pas assez d'argent !", Toast.LENGTH_SHORT).show();
