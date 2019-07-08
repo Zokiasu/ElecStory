@@ -10,88 +10,63 @@
     tools:ignore="ExtraText">
 
     <LinearLayout
-        android:id="@+id/ListInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/ButtonCraft"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/body"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
         <TextView
-            android:id="@+id/ElecStockage"
+            android:id="@+id/Pseudo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ElecStockage"
-            android:textSize="@dimen/size_text" />
+            android:text="Pseudo"
+            android:textSize="@dimen/size_text_pseudo"
+            android:layout_marginLeft="5dp"/>
 
-        <Space
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/ButtonCraft"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="5" />
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/ElecCoins"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="CoinPlayer"
-            android:textSize="@dimen/size_text" />
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:srcCompat="@drawable/ampoule"
+                tools:ignore="MissingConstraints" />
 
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/ButtonCraft"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/body"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ListInfo">
+                <TextView
+                    android:id="@+id/ElecStockage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ElecStockage"
+                    android:textSize="@dimen/size_text" />
 
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
+                <TextView
+                    android:id="@+id/ElecCoins"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CoinPlayer"
+                    android:textSize="@dimen/size_text" />
 
-        <Button
-            android:id="@+id/ShopButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Shop"
-            android:textAllCaps="false"
-            android:textSize="@dimen/size_text"
-            tools:ignore="HardcodedText,MissingConstraints,SpUsage" />
+            </LinearLayout>
 
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="25" />
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
 
-        <Button
-            android:id="@+id/ListCraft"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="ShopCraft"
-            android:textAllCaps="false"
-            android:textSize="@dimen/size_text" />
-
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -242,7 +217,7 @@
                 <Space
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2" />
+                    android:layout_weight="15" />
 
                 <TextView
                     android:id="@+id/CoinWins"
@@ -258,6 +233,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
+
             </LinearLayout>
 
             <android.support.v4.widget.Space
@@ -368,7 +344,34 @@
         <Space
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="25" />
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/ShopButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Shop"
+            android:textAllCaps="false"
+            android:textSize="@dimen/size_text"
+            tools:ignore="HardcodedText,MissingConstraints,SpUsage" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/ListCraft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ShopCraft"
+            android:textAllCaps="false"
+            android:textSize="@dimen/size_text" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
         <Button
             android:id="@+id/ElecUp"
@@ -382,7 +385,7 @@
         <Space
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="5" />
+            android:layout_weight="1" />
 
     </LinearLayout>
 
@@ -393,6 +396,8 @@
         android:text="Random"
         android:textAllCaps="false"
         android:textSize="@dimen/size_text"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="161dp"
+        tools:layout_editor_absoluteY="236dp" />
 
 </android.support.constraint.ConstraintLayout>

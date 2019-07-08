@@ -10,6 +10,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -207,11 +209,10 @@ public class MainActivity extends AppCompatActivity {
             if (N%60 == 1) {
                 initRecyclerViewCity();
                 initRecyclerViewFactory();
+                randomButton();
             }
 
             if(N%30 == 1) {
-                Log.i(TAG,"RandomButton");
-                randomButton();
                 initFactoryVar();
                 initEarthObjectVar();
             }
@@ -243,22 +244,30 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("NewApi")
     protected void randomButton(){
-        if(RandomBonus.getVisibility() == View.INVISIBLE){
-            Random r = new Random();
+        Random r = new Random();
+        AlphaAnimation alphaAnim = new AlphaAnimation(1.0f,0.0f);
+        alphaAnim.setStartOffset(1);                        // start in 5 seconds
+        alphaAnim.setDuration(10000);
+        alphaAnim.setAnimationListener(new Animation.AnimationListener()
+        {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                RandomBonus.setVisibility(View.VISIBLE);
+            }
 
-            /*RandomBonus.setTranslationX();
-            RandomBonus.setTranslationY();
-            RandomBonus.setTranslationZ();*/
+            public void onAnimationEnd(Animation animation)
+            {
+                // make invisible when animation completes, you could also remove the view from the layout
+                RandomBonus.setVisibility(View.INVISIBLE);
+            }
 
-            RandomBonus.setVisibility(View.VISIBLE);
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    RandomBonus.setVisibility(View.INVISIBLE);
-                }
-            },30000);
-        }
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        RandomBonus.setAnimation(alphaAnim);
     }
 
     public void displayQuest(){

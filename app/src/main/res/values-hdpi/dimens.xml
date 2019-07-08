@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="size_text">20sp</dimen>
+    <dimen name="size_text_pseudo">25sp</dimen>
     <dimen name="size_text_plus">30sp</dimen>
     <dimen name="size_factory_image">50dp</dimen>
     <dimen name="size_factory_adapter">100dp</dimen>
