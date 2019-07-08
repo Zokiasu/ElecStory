@@ -1,5 +1,7 @@
 package com.example.elecstory.Object;
 
+import android.util.Log;
+
 import com.example.elecstory.Database.Database;
 import com.example.elecstory.R;
 
@@ -22,21 +24,21 @@ public class Factory {
             case -1 :
                 this.NbObject = 1;
                 this.Name = "Machine of Gramme";
-                this.PriceFactory = 100;
                 this.FactoryLevel = 1;
+                this.PriceFactory = 100;
                 this.UpgradeCost = 100;
-                this.ElecGenerate = 1;
+                this.ElecGenerate = 2;
                 this.OperatingCost = 1;
-                this.PollutionTax = 0;
+                this.PollutionTax = 1;
                 this.Skin = R.drawable.eclair;
                 break;
             case 0 :
                 this.NbObject = 1;
                 this.Name = "Solar Factory";
-                this.PriceFactory = 1000000;
                 this.FactoryLevel = 1;
+                this.PriceFactory = 1000000;
                 this.UpgradeCost = 500;
-                this.ElecGenerate = 2;
+                this.ElecGenerate = 5;
                 this.OperatingCost = 10;
                 this.PollutionTax = 5;
                 this.Skin = R.drawable.eclair;
@@ -44,32 +46,32 @@ public class Factory {
             case 1 :
                 this.NbObject = 1;
                 this.Name = "Geothermal Factory";
-                this.PriceFactory = 1500000;
                 this.FactoryLevel = 1;
+                this.PriceFactory = 1500000;
                 this.UpgradeCost = 1500;
-                this.ElecGenerate = 2;
-                this.OperatingCost = 10;
+                this.ElecGenerate = 5;
+                this.OperatingCost = 15;
                 this.PollutionTax = 5;
                 this.Skin = R.drawable.eclair;
                 break;
             case 2 :
                 this.NbObject = 1;
                 this.Name = "Wind Factory";
-                this.PriceFactory = 2000000;
                 this.FactoryLevel = 1;
+                this.PriceFactory = 2000000;
                 this.UpgradeCost = 2000;
-                this.ElecGenerate = 2;
-                this.OperatingCost = 20;
-                this.PollutionTax = 10;
+                this.ElecGenerate = 5;
+                this.OperatingCost = 10;
+                this.PollutionTax = 5;
                 this.Skin = R.drawable.eclair;
                 break;
             case 3 :
                 this.NbObject = 1;
                 this.Name = "Hydroelectric Factory";
-                this.PriceFactory = 5000000;
                 this.FactoryLevel = 1;
-                this.UpgradeCost = 2000;
-                this.ElecGenerate = 1;
+                this.PriceFactory = 5000000;
+                this.UpgradeCost = 4000;
+                this.ElecGenerate = 10;
                 this.OperatingCost = 50;
                 this.PollutionTax = 15;
                 this.Skin = R.drawable.eclair;
@@ -77,10 +79,10 @@ public class Factory {
             case 4 :
                 this.NbObject = 1;
                 this.Name = "Thermic Factory";
-                this.PriceFactory = 7500000;
                 this.FactoryLevel = 1;
-                this.UpgradeCost = 2500;
-                this.ElecGenerate = 2;
+                this.PriceFactory = 7500000;
+                this.UpgradeCost = 6500;
+                this.ElecGenerate = 15;
                 this.OperatingCost = 150;
                 this.PollutionTax = 25;
                 this.Skin = R.drawable.eclair;
@@ -88,10 +90,10 @@ public class Factory {
             case 5 :
                 this.NbObject = 1;
                 this.Name = "Nuclear Factory";
-                this.PriceFactory = 10000000;
                 this.FactoryLevel = 1;
-                this.UpgradeCost = 5000;
-                this.ElecGenerate = 5;
+                this.PriceFactory = 10000000;
+                this.UpgradeCost = 10000;
+                this.ElecGenerate = 20;
                 this.OperatingCost = 250;
                 this.PollutionTax = 50;
                 this.Skin = R.drawable.eclair;
@@ -113,14 +115,25 @@ public class Factory {
 
     public Factory Upgrade(Factory Fact, Database db){
         if(Fact.getFactoryLevel() < 10) {
+
+            Log.i("Factory", "Fact.getUpgradeCost() : " + Fact.getUpgradeCost());
+            db.updateCoin(db.infoFirstPlayer().getName(), -Fact.getUpgradeCost());
+
             Fact.setFactoryLevel(Fact.getFactoryLevel() + 1);
             db.updateLvLFactory(Fact.getName());
 
             Fact.setUpgradeCost(Fact.getUpgradeCost()*5);
-            db.updateUpgradeCostFactory(Fact.getName());
+            db.updateUpgradeCostFactory(Fact.getName(), 5);
 
             Fact.setElecGenerate(Fact.getElecGenerate()*2);
-            db.updateEnergyGeneratedFactory(Fact.getName());
+            db.updateEnergyGeneratedFactory(Fact.getName(), 2);
+
+            Fact.setOperatingCost(Fact.getOperatingCost()*5);
+            db.updateOperatingCostFactory(Fact.getName(), 5);
+
+            Fact.setPollutionTax(Fact.getPollutionTax()*2);
+            db.updatePollutionTaxFactory(Fact.getName(), 2);
+
         }
         return Fact;
     }

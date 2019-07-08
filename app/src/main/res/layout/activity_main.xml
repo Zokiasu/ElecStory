@@ -84,7 +84,7 @@
             android:id="@+id/ListCraft"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ListCraft"
+            android:text="ShopCraft"
             android:textAllCaps="false"
             android:textSize="@dimen/size_text" />
 
@@ -119,7 +119,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="ActualQuest"
+                android:text="UnlockNextObject"
                 android:textSize="@dimen/size_text_plus"
                 android:autoSizeTextType="uniform"/>
 
@@ -156,8 +156,8 @@
 
                         <ImageView
                             android:id="@+id/requestImage"
-                            android:layout_width="190dp"
-                            android:layout_height="190dp"
+                            android:layout_width="@dimen/size_unlock_image"
+                            android:layout_height="@dimen/size_unlock_image"
                             app:srcCompat="@drawable/ampoule"
                             tools:ignore="MissingConstraints" />
 
@@ -282,6 +282,7 @@
                 android:layout_height="10dp" />
 
             <LinearLayout
+                android:id="@+id/FactoryInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -384,5 +385,14 @@
             android:layout_weight="5" />
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/randomButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Random"
+        android:textAllCaps="false"
+        android:textSize="@dimen/size_text"
+        tools:ignore="MissingConstraints" />
 
 </android.support.constraint.ConstraintLayout>

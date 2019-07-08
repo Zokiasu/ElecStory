@@ -1,6 +1,5 @@
 package com.example.elecstory.Quest;
 
-import android.util.Log;
 
 import com.example.elecstory.Database.Database;
 import com.example.elecstory.Object.EarthObject;

@@ -4,4 +4,5 @@
     <dimen name="size_text_plus">25sp</dimen>
     <dimen name="size_factory_image">30dp</dimen>
     <dimen name="size_factory_adapter">100dp</dimen>
+    <dimen name="size_unlock_image">30dp</dimen>
 </resources>

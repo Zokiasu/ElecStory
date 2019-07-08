@@ -48,10 +48,10 @@ public class Database extends SQLiteOpenHelper {
     //Factory Table - Column names
     public static final String NAME_FACTORY = "name";
     public static final String LEVEL_FACTORY = "level";
-    public static final String COST_FACTORY = "cost";
-    public static final String UPGRADECOST_FACTORY = "upgadecost";
+    public static final String PRICE_FACTORY = "cost";
+    public static final String UPGRADE_FACTORY = "upgadecost";
     public static final String POINTGENERATE_FACTORY = "pointgenerate";
-    public static final String OPERATINGCOST_FACTORY = "operatingcost";
+    public static final String OPERATINGPRICE_FACTORY = "operatingcost";
     public static final String POLLUTIONTAX_FACTORY = "pollutiontax";
     public static final String SKIN_FACTORY = "skin";
 
@@ -84,19 +84,19 @@ public class Database extends SQLiteOpenHelper {
 
     //Factory Table Create
     public static final String CREATE_TABLE_FACTORY = "CREATE TABLE " + TABLE_FACTORY
-            + " ("  + NUMBER_OBJECT + " INTEGER DEFAULT 1, "
+            + " (" + NUMBER_OBJECT + " INTEGER DEFAULT 1, "
             + NAME_FACTORY + " TEXT NOT NULL,"
             + LEVEL_FACTORY + " INTEGER DEFAULT 0,"
-            + COST_FACTORY + " INTEGER DEFAULT 0,"
-            + UPGRADECOST_FACTORY + " INTEGER DEFAULT 0,"
+            + PRICE_FACTORY + " INTEGER DEFAULT 0,"
+            + UPGRADE_FACTORY + " INTEGER DEFAULT 0,"
             + POINTGENERATE_FACTORY + " INTEGER DEFAULT 0,"
-            + OPERATINGCOST_FACTORY + " INTEGER DEFAULT 0,"
+            + OPERATINGPRICE_FACTORY + " INTEGER DEFAULT 0,"
             + POLLUTIONTAX_FACTORY + " INTEGER DEFAULT 0,"
             + SKIN_FACTORY + " INTEGER DEFAULT NULL)";
 
     //EarthObject Table Create
     public static final String CREATE_TABLE_CRAFT = "CREATE TABLE " + TABLE_CRAFT
-            + " ("   + NUMBER_OBJECT + " INTEGER DEFAULT 1, "
+            + " (" + NUMBER_OBJECT + " INTEGER DEFAULT 1, "
             + NAME_CRAFT + " TEXT NOT NULL,"
             + COINWIN_CRAFT + " INTEGER DEFAULT 0,"
             + PRICE_CRAFT + " INTEGER DEFAULT 0,"
@@ -256,15 +256,33 @@ public class Database extends SQLiteOpenHelper {
         this.getWritableDatabase().execSQL(strSql);
     }
 
-    public void updateUpgradeCostFactory (String name) {
+    public void updatePriceFactory (String name, int X) {
         name = name.replace("'", "''");
-        String strSql = "UPDATE " + TABLE_FACTORY + " SET " + UPGRADECOST_FACTORY + " = "+ UPGRADECOST_FACTORY + "*5 WHERE " + NAME_FACTORY + " = '" + name + "'";
+        String strSql = "UPDATE " + TABLE_FACTORY + " SET " + PRICE_FACTORY + " = "+ PRICE_FACTORY + "*" + X +" WHERE " + NAME_FACTORY + " = '" + name + "'";
         this.getWritableDatabase().execSQL(strSql);
     }
 
-    public void updateEnergyGeneratedFactory (String name) {
+    public void updateUpgradeCostFactory (String name, int X) {
         name = name.replace("'", "''");
-        String strSql = "UPDATE " + TABLE_FACTORY + " SET " + POINTGENERATE_FACTORY + " = "+ POINTGENERATE_FACTORY + "*2 WHERE " + NAME_FACTORY + " = '" + name + "'";
+        String strSql = "UPDATE " + TABLE_FACTORY + " SET " + UPGRADE_FACTORY + " = "+ UPGRADE_FACTORY + "*" + X +" WHERE " + NAME_FACTORY + " = '" + name + "'";
+        this.getWritableDatabase().execSQL(strSql);
+    }
+
+    public void updateEnergyGeneratedFactory (String name, int X) {
+        name = name.replace("'", "''");
+        String strSql = "UPDATE " + TABLE_FACTORY + " SET " + POINTGENERATE_FACTORY + " = "+ POINTGENERATE_FACTORY + "*" + X +" WHERE " + NAME_FACTORY + " = '" + name + "'";
+        this.getWritableDatabase().execSQL(strSql);
+    }
+
+    public void updateOperatingCostFactory (String name, int X) {
+        name = name.replace("'", "''");
+        String strSql = "UPDATE " + TABLE_FACTORY + " SET " + OPERATINGPRICE_FACTORY + " = "+ OPERATINGPRICE_FACTORY + "*" + X +" WHERE " + NAME_FACTORY + " = '" + name + "'";
+        this.getWritableDatabase().execSQL(strSql);
+    }
+
+    public void updatePollutionTaxFactory (String name, int X) {
+        name = name.replace("'", "''");
+        String strSql = "UPDATE " + TABLE_FACTORY + " SET " + POLLUTIONTAX_FACTORY + " = "+ POLLUTIONTAX_FACTORY + "*" + X +" WHERE " + NAME_FACTORY + " = '" + name + "'";
         this.getWritableDatabase().execSQL(strSql);
     }
 
@@ -319,16 +337,18 @@ public class Database extends SQLiteOpenHelper {
     public void insertFirstCraft() {
         this.getWritableDatabase().execSQL("DROP TABLE IF EXISTS " + TABLE_CRAFT);
         this.getWritableDatabase().execSQL(CREATE_TABLE_CRAFT);
-        int X = R.drawable.ampoule;
-        String strSql = "INSERT INTO " + TABLE_CRAFT + "(number_object, name, coinwin, price, energycost, skin) " + "VALUES (1, 'Lamp', 1, 10, 5, " + X + ")";
+        EarthObject Test = new EarthObject(0,"");
+        String strSql =
+        "INSERT INTO " + TABLE_CRAFT + "(number_object, name, coinwin, price, energycost, skin) " +
+        "VALUES ("+Test.getNbObject()+", '" + Test.getName() + "', " + Test.getCoinWin() + ", " + Test.getPriceObject() + ", " + Test.getEnergyCost() + ", " + Test.getSkin() + ")";
         this.getWritableDatabase().execSQL(strSql);
     }
 
     public void insertCraft (int NbObject, String name, int coinwin, int price, int energycost, int skin) {
         name = name.replace("'", "''");
         String strSql =
-                "INSERT INTO " + TABLE_CRAFT + "(number_object, name, coinwin, price, energycost, skin) " +
-                        "VALUES ('" + NbObject + "','" + name + "', '" + coinwin + "', '" + price + "', '" + energycost + "', " + skin + ")";
+        "INSERT INTO " + TABLE_CRAFT + "(number_object, name, coinwin, price, energycost, skin) " +
+        "VALUES ('" + NbObject + "','" + name + "', '" + coinwin + "', '" + price + "', '" + energycost + "', " + skin + ")";
         this.getWritableDatabase().execSQL(strSql);
     }
 

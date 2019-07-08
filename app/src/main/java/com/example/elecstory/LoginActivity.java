@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.elecstory.Database.Database;
+import com.example.elecstory.Object.EarthObject;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -74,8 +75,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 db.insertPlayer(Pseudo.getText().toString(), Integer.parseInt(Age.getText().toString()), 0, 0, generateUniqueId(Pseudo.getText().toString(), Integer.parseInt(Age.getText().toString())));
-                db.insertCity(1,"Lamp", 1, 1, 5, R.drawable.ampoule);
-                db.insertFactory(0,"Not Factory",0,0,0,0,0,0,0);
+                EarthObject Test = new EarthObject(0,"");
+                db.insertCity(Test.getNbObject(),Test.getName(), Test.getCoinWin(), Test.getPriceObject(), Test.getEnergyCost(), Test.getSkin());
                 db.insertFirstCraft();
                 db.close();
                 Intent myIntent = new Intent(LoginActivity.this, MainActivity.class);

@@ -3,7 +3,6 @@ package com.example.elecstory.Craft;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -55,30 +54,20 @@ public class CraftActivity extends AppCompatActivity {
         final ArrayList<EarthObject> finalListEarthObject = ListEarthObject;
         final ArrayList<EarthObject> finalListEarthObjectPlayer = ListEarthObjectPlayer;
 
-        GV.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(CraftActivity.this, "Hello!!!", Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
-
         GV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 EarthObject N = finalListEarthObject.get(position);
                 if((db.infoFirstPlayer().getCoin() >= N.getPriceObject()) && (db.infoFirstPlayer().getCoin()-N.getPriceObject() >= 0)) {
-                    if(position == 0 || checkObject(finalListEarthObjectPlayer, position, db)) {
+                    //if(position == 0 || checkObject(finalListEarthObjectPlayer, position, db)) {
                         db.insertCity(N.getNbObject(), N.getName(), N.getCoinWin(), N.getPriceObject(), N.getEnergyCost(), N.getSkin());
                         db.updateCoin(db.infoFirstPlayer().getName(), -N.getPriceObject());
                         Toast.makeText(CraftActivity.this, "Craft effectué ! ", Toast.LENGTH_SHORT).show();
-                    } else {
-                        /*A modifier PAS IMPORTANT*/
+                   /* } else {
                         Toast.makeText(CraftActivity.this, "Vous n'avez pas les objets requis ! ", Toast.LENGTH_SHORT).show();
-                    }
+                    }*/
                 } else {
-                    /*A modifier PAS IMPORTANT*/
                     Toast.makeText(CraftActivity.this, "Vous n'avez pas assez d'argent ! ", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -90,11 +79,7 @@ public class CraftActivity extends AppCompatActivity {
     ////!!!Faire une vrai fonction qui vérifie chaque craft!!!////
 
     public boolean checkObject(ArrayList<EarthObject> ListObject, int position, Database db){
-        Log.i("CraftActivity","Call checkObject");
         Quest TestTmp = new Quest(position);
-        for (int i = 0; i < ListObject.size(); i++){
-            Log.i("CraftActivity","ListObject.get("+i+").getName() : " + ListObject.get(i).getName());
-        }
         return TestTmp.checkQuest(ListObject, db);
     }
 }
