@@ -205,25 +205,23 @@ public class MainActivity extends AppCompatActivity {
         decorView.setSystemUiVisibility(uiOptions);
 
         if(Start) {
+            ActualPlayer = db.infoFirstPlayer();
             //Augmente l'énergie en fonction de des usines actuelles
             if (mFactory.size() > 0) {
                 if (FactoryEnergyWin != 0) {
-                    db.updateElecPoint(db.infoFirstPlayer().getName(), FactoryEnergyWin);
-                    ActualPlayer = db.infoFirstPlayer();
+                    db.updateElecPoint(ActualPlayer.getName(), FactoryEnergyWin);
                 }
 
                 if (N%60 == 1) {
-                    db.updateCoin(db.infoFirstPlayer().getName(), -(FactoryCost + FactoryPollution));
-                    ActualPlayer = db.infoFirstPlayer();
+                    db.updateCoin(ActualPlayer.getName(), -(FactoryCost + FactoryPollution));
                 }
             }
 
             //Réduit l'énergie & donne des coins en fonction des bâtiments possédé
             if (mEarthObject.size() > 0) {
                 if (db.infoFirstPlayer().getElectricityPoint() >= EarthObjectEnergyCost && (db.infoFirstPlayer().getElectricityPoint() - EarthObjectEnergyCost) >= 0 && N % 2 == 1) {
-                    db.updateElecPoint(db.infoFirstPlayer().getName(), -EarthObjectEnergyCost);
-                    db.updateCoin(db.infoFirstPlayer().getName(), EarthObjectCoinWin*Multiple);
-                    ActualPlayer = db.infoFirstPlayer();
+                    db.updateElecPoint(ActualPlayer.getName(), -EarthObjectEnergyCost);
+                    db.updateCoin(ActualPlayer.getName(), EarthObjectCoinWin*Multiple);
                 }
             }
 
@@ -243,17 +241,17 @@ public class MainActivity extends AppCompatActivity {
             }
 
             if(N%30 == 1 && N > 1) {
-                initFactoryVar();
-                initEarthObjectVar();
+                updatingList();
                 adapterE.notifyDataSetChanged();
                 adapterF.notifyDataSetChanged();
+                initFactoryVar();
+                initEarthObjectVar();
             }
 
-            updatingList();
             checkBoostAds();
 
-            ActualElecPoint.setText("Energy : " + db.infoFirstPlayer().getElectricityPoint());
-            ActualCoin.setText("Coin : " + db.infoFirstPlayer().getCoin());
+            ActualElecPoint.setText("Energy : " + ActualPlayer.getElectricityPoint());
+            ActualCoin.setText("Coin : " + ActualPlayer.getCoin());
             ElecCost.setText("Energy Use: " + EarthObjectEnergyCost);
             CoinWins.setText("Coin Win: " + EarthObjectCoinWin);
             ElecGenerate.setText("Energy Prod: " + FactoryEnergyWin + "/s");
@@ -364,11 +362,11 @@ public class MainActivity extends AppCompatActivity {
     protected void upgradeEnergy() {
         ActualPlayer = db.infoFirstPlayer();
 
-        ActualElecPoint.setText("Energy : " + db.infoFirstPlayer().getElectricityPoint());
-        db.updateElecPoint(db.infoFirstPlayer().getName(), 1);
+        ActualElecPoint.setText("Energy : " + ActualPlayer.getElectricityPoint());
+        db.updateElecPoint(ActualPlayer.getName(), 1);
 
-        db.updateCoin(db.infoFirstPlayer().getName(), 1);
-        ActualCoin.setText("Coin : " + db.infoFirstPlayer().getCoin());
+        db.updateCoin(ActualPlayer.getName(), 1);
+        ActualCoin.setText("Coin : " + ActualPlayer.getCoin());
 
         if(db.infoFirstPlayer().getCoin() >= 10 && mFactory.size() == 0){
             Factory MyFact = new Factory(-1);
@@ -588,9 +586,9 @@ public class MainActivity extends AppCompatActivity {
         SimpleDateFormat minute = new SimpleDateFormat("mm");
         SimpleDateFormat second = new SimpleDateFormat("ss");
 
-        SimpleDateFormat year = new SimpleDateFormat("YY");
+        SimpleDateFormat year = new SimpleDateFormat("yyyy");
         SimpleDateFormat month = new SimpleDateFormat("MM");
-        SimpleDateFormat day = new SimpleDateFormat("DD");
+        SimpleDateFormat day = new SimpleDateFormat("dd");
 
         Y = Integer.valueOf(year.format(Deb.getTime()));
         M = Integer.valueOf(month.format(Deb.getTime()));
