@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,8 +31,13 @@ import com.example.elecstory.Quest.Quest;
 import com.example.elecstory.Quest.QuestAdapter;
 import com.example.elecstory.Shop.ShopActivity;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Random;
 
 @SuppressLint("SetTextI18n")
@@ -41,32 +47,51 @@ public class MainActivity extends AppCompatActivity {
     public TextView ActualCoin;
     public TextView ElecGenerate;
     public TextView ActualFactoryCost;
-    public TextView ActualFactoryTax;
     public TextView ElecCost;
     public TextView CoinWins;
     public TextView DisplayQuestName;
 
     public Button UpElecPoint;
     public Button Shop;
-    public Button Craft;
+    public Button Unlock;
     public Button ListCraft;
     public Button RandomBonus;
 
     public RecyclerView recyclerViewCity;
     public RecyclerView recyclerViewFactory;
 
-    private ArrayList<EarthObject> mEarthObject = new ArrayList<>();
-    private ArrayList<Factory> mFactory = new ArrayList<>();
+    public RecyclerViewAdapterEarth adapterE;
+    public RecyclerViewAdapterFactory adapterF;
 
-    private Date TimeStart;
-    private Date TimeEnd;
+    public ArrayList<EarthObject> mEarthObject = new ArrayList<>();
+    public ArrayList<Factory> mFactory = new ArrayList<>();
 
-    private int FactoryEnergyWin = 0;
-    private int FactoryPollution = 0;
-    private int FactoryCost = 0;
+    @SuppressLint("SimpleDateFormat")
+    public DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
-    private int EarthObjectEnergyCost = 0;
-    private int EarthObjectCoinWin = 0;
+
+    public TextView CoinAdText;
+    public RelativeLayout CoinAd;
+    public Calendar CoinAdEnd;
+
+    public TextView SpeedAdText;
+    public RelativeLayout SpeedAd;
+    public Calendar SpeedAdEnd;
+    public int Speed = 1;
+
+    public TextView MultiAdText;
+    public RelativeLayout MultiAd;
+    public Calendar MultiAdEnd;
+    public int Multiple = 1;
+
+    public int FactoryEnergyWin = 0;
+    public int FactoryPollution = 0;
+    public int FactoryCost = 0;
+
+    public int EarthObjectEnergyCost = 0;
+    public int EarthObjectCoinWin = 0;
+
+    public LinearLayout FactoryInfos;
 
     public ConstraintLayout currentLayout;
 
@@ -78,16 +103,57 @@ public class MainActivity extends AppCompatActivity {
 
     public static PlayerData ActualPlayer;
 
-    private Database db;
+    public Database db = new Database(this);
 
-    private Boolean Start = true;
+    public Boolean Start = true;
 
-    private static final String TAG = "MainActivity";
+    public static final String TAG = "MainActivity";
 
     @SuppressLint("SetTextI18n")
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i(TAG, "onCreate");
+        createOrRestart();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.i(TAG, "onRestart");
+        recursionUpDownPoint(0);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i(TAG, "onStop");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.i(TAG, "onStart");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i(TAG, "onPause");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i(TAG, "onResume");
+    }
+
+    @Override
+    public void onBackPressed() {
+        // do nothing.
+    }
+
+    public void createOrRestart(){
         setContentView(R.layout.activity_main);
 
         View decorView = getWindow().getDecorView();
@@ -96,28 +162,339 @@ public class MainActivity extends AppCompatActivity {
 
         initFindViewById();
 
-        db = new Database(this);
-
         ActualPlayer = db.infoFirstPlayer();
         ActualQuest = new Quest(db.infoFirstPlayer().getQuestId());
+
         DisplayQuestName.setText(ActualQuest.getNameReward());
         DisplayQuestImage.setImageResource(ActualQuest.getSkinReward());
         displayQuest();
 
-        RandomBonus.setVisibility(View.INVISIBLE);
-
-        ActualCoin.setText("Coin " + ActualPlayer.getCoin());
-        ActualElecPoint.setText("Energy " + ActualPlayer.getElectricityPoint());
+        ActualCoin.setText("Coin : " + db.infoFirstPlayer().getCoin());
+        ActualElecPoint.setText("Energy : " + db.infoFirstPlayer().getElectricityPoint());
 
         mFactory.clear();
         mFactory = db.infoFactory(mFactory);
         mEarthObject.clear();
         mEarthObject = db.infoCity(mEarthObject);
 
-        initRecyclerViewFactory();
-        initRecyclerViewCity();
+        if(mFactory.size() < 1) {
+            recyclerViewFactory.setVisibility(View.INVISIBLE);
+            FactoryInfos.setVisibility(View.INVISIBLE);
+        }
 
-        Craft.setOnClickListener(new View.OnClickListener() {
+        RandomBonus.setVisibility(View.INVISIBLE);
+        CoinAd.setVisibility(View.INVISIBLE);
+        SpeedAd.setVisibility(View.INVISIBLE);
+        MultiAd.setVisibility(View.INVISIBLE);
+
+        initButtonAction();
+        initFactoryVar();
+        initEarthObjectVar();
+        initRecyclerViewFactory();
+        initRecyclerViewEarthObject();
+        initAdEnd();
+
+        recursionUpDownPoint(0);
+        db.close();
+    }
+
+    public void recursionUpDownPoint(int N){
+
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+        decorView.setSystemUiVisibility(uiOptions);
+
+        if(Start) {
+            //Augmente l'énergie en fonction de des usines actuelles
+            if (mFactory.size() > 0) {
+                if (FactoryEnergyWin != 0) {
+                    db.updateElecPoint(db.infoFirstPlayer().getName(), FactoryEnergyWin);
+                    ActualPlayer = db.infoFirstPlayer();
+                }
+
+                if (N%60 == 1) {
+                    db.updateCoin(db.infoFirstPlayer().getName(), -(FactoryCost + FactoryPollution));
+                    ActualPlayer = db.infoFirstPlayer();
+                }
+            }
+
+            //Réduit l'énergie & donne des coins en fonction des bâtiments possédé
+            if (mEarthObject.size() > 0) {
+                if (db.infoFirstPlayer().getElectricityPoint() >= EarthObjectEnergyCost && (db.infoFirstPlayer().getElectricityPoint() - EarthObjectEnergyCost) >= 0 && N % 2 == 1) {
+                    db.updateElecPoint(db.infoFirstPlayer().getName(), -EarthObjectEnergyCost);
+                    db.updateCoin(db.infoFirstPlayer().getName(), EarthObjectCoinWin*Multiple);
+                    ActualPlayer = db.infoFirstPlayer();
+                }
+            }
+
+            if(ActualQuest.getIdQuest() >= 2){
+                CoinAd.setVisibility(View.VISIBLE);
+                if(ActualQuest.getIdQuest() >= 3) {
+                    MultiAd.setVisibility(View.VISIBLE);
+                    if(ActualQuest.getIdQuest() >= 4) {
+                        SpeedAd.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+
+            if(N%60 == 1 && N > 1){
+                //randomButton();
+                N = 0;
+            }
+
+            if(N%30 == 1 && N > 1) {
+                initFactoryVar();
+                initEarthObjectVar();
+                adapterE.notifyDataSetChanged();
+                adapterF.notifyDataSetChanged();
+            }
+
+            updatingList();
+            checkBoostAds();
+
+            ActualElecPoint.setText("Energy : " + db.infoFirstPlayer().getElectricityPoint());
+            ActualCoin.setText("Coin : " + db.infoFirstPlayer().getCoin());
+            ElecCost.setText("Energy Use: " + EarthObjectEnergyCost);
+            CoinWins.setText("Coin Win: " + EarthObjectCoinWin);
+            ElecGenerate.setText("Energy Prod: " + FactoryEnergyWin + "/s");
+            ActualFactoryCost.setText("Coin Use: " + FactoryCost + "/m");
+
+            refreshRecursion(1000/Speed, N);
+        }
+
+    }
+
+    public void refreshRecursion(int milli, final int N){
+        final Handler handler = new Handler();
+
+        final Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                recursionUpDownPoint(N+1);
+            }
+        };
+
+        handler.postDelayed(runnable, milli);
+    }
+
+    //Choisit le bouton bonus à afficher aléatoirement toute les minutes
+    public void randomButton(){
+        Random r = new Random();
+        AlphaAnimation alphaAnim = new AlphaAnimation(1.0f,0.0f);
+        alphaAnim.setStartOffset(1);
+        alphaAnim.setDuration(10000);
+        alphaAnim.setAnimationListener(new Animation.AnimationListener()
+        {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                RandomBonus.setVisibility(View.VISIBLE);
+            }
+
+            public void onAnimationEnd(Animation animation) {
+                RandomBonus.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        RandomBonus.setAnimation(alphaAnim);
+    }
+
+    //Convertis les millisecondes en string format hh:mm:ss
+    public static String timeConversion(int milli) {
+
+        final int MINUTES_IN_AN_HOUR = 60;
+        final int SECONDS_IN_A_MINUTE = 60;
+        final int MILLISECOND_IN_A_SECOND = 1000;
+        int totalSeconds = milli/MILLISECOND_IN_A_SECOND;
+
+        int seconds = totalSeconds % SECONDS_IN_A_MINUTE;
+        int totalMinutes = totalSeconds / SECONDS_IN_A_MINUTE;
+        int minutes = totalMinutes % MINUTES_IN_AN_HOUR;
+        int hours = totalMinutes / MINUTES_IN_AN_HOUR;
+
+        return hours + ":" + minutes + ":" + seconds;
+    }
+
+    //Affiche la quête actuel du joueur
+    public void displayQuest(){
+        gv.setAdapter(new QuestAdapter(this, ActualQuest.getEarthObjectRequest(), ActualQuest.getNbRequest()));
+    }
+
+    //Vérifie que la quête actuelle est réalisé et passe à la quête suivante
+    public void upgradeQuest(){
+        if(ActualQuest.checkQuest(mEarthObject, db)) {
+
+            mEarthObject.clear();
+            mEarthObject = db.infoCity(mEarthObject);
+            initRecyclerViewEarthObject();
+
+            EarthObject TmpObject = new EarthObject(ActualQuest.getIdQuest(), ActualQuest.getNameReward());
+            db.insertCraft(TmpObject.getNbObject(), TmpObject.getName(), TmpObject.getCoinWin(), TmpObject.getPriceObject(), TmpObject.getEnergyCost(), TmpObject.getSkin());
+
+            ActualQuest = new Quest(ActualQuest.getIdQuest() + 1);
+
+            db.updateQuest(ActualQuest.getIdQuest());
+            db.infoFirstPlayer().setQuestId(ActualQuest.getIdQuest());
+
+            DisplayQuestName.setText(ActualQuest.getNameReward());
+            DisplayQuestImage.setImageResource(ActualQuest.getSkinReward());
+
+            displayQuest();
+            initEarthObjectVar();
+            Toast.makeText(this, "A new object has been added to the ShopCraft", Toast.LENGTH_LONG).show();
+            if(ActualQuest.getIdQuest() == 12){
+                Toast.makeText(this, "You have completed the last quest for now!", Toast.LENGTH_LONG).show();
+                Unlock.setVisibility(View.INVISIBLE);
+            }
+        } else {
+            /*A modifier dès que possible NON PRIORITAIRE*/
+            Toast.makeText(this, "You do not have the necessary objects for this production", Toast.LENGTH_LONG).show();
+        }
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //Fonction du bouton +1
+    public void upgradeEnergy() {
+        ActualPlayer = db.infoFirstPlayer();
+
+        ActualElecPoint.setText("Energy : " + db.infoFirstPlayer().getElectricityPoint());
+        db.updateElecPoint(db.infoFirstPlayer().getName(), 1);
+
+        db.updateCoin(db.infoFirstPlayer().getName(), 1);
+        ActualCoin.setText("Coin : " + db.infoFirstPlayer().getCoin());
+
+        if(db.infoFirstPlayer().getCoin() >= 10 && mFactory.size() == 0){
+            Factory MyFact = new Factory(-1);
+            db.insertFactory(MyFact.getNbObject(), MyFact.getName(), MyFact.getFactoryLevel(), MyFact.getPriceFactory(), MyFact.getUpgradeCost(), MyFact.getEnergyProd(), MyFact.getOperatingCost(), MyFact.getPollutionTax(), MyFact.getSkin());
+            mFactory = db.infoFactory(mFactory);
+            initFactoryVar();
+            initEarthObjectVar();
+            initRecyclerViewFactory();
+            recyclerViewFactory.setVisibility(View.VISIBLE);
+            FactoryInfos.setVisibility(View.VISIBLE);
+            Toast.makeText(MainActivity.this, "You win a "+ MyFact.getName() +"!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    //Update les listes utiliser par les recyclerview
+    public void  updatingList(){
+        int X, Y;
+        X = mFactory.size();
+        Y = mEarthObject.size();
+        mFactory.clear();
+        mFactory = db.infoFactory(mFactory);
+        mEarthObject.clear();
+        mEarthObject = db.infoCity(mEarthObject);
+        if(Y != mEarthObject.size()) {
+            adapterE.notifyDataSetChanged();
+        }
+        if(X != mFactory.size()) {
+            adapterF.notifyDataSetChanged();
+        }
+        db.close();
+    }
+
+    //Initialise les RecyclerView des EarthObject
+    public void initRecyclerViewEarthObject(){
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        recyclerViewCity.setLayoutManager(layoutManager);
+        adapterE = new RecyclerViewAdapterEarth(this, mEarthObject, this);
+        recyclerViewCity.setAdapter(adapterE);
+
+    }
+
+    //Initialise les RecyclerView des Factory
+    public void initRecyclerViewFactory(){
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        recyclerViewFactory.setLayoutManager(layoutManager);
+        adapterF = new RecyclerViewAdapterFactory(this, mFactory, this, db);
+        recyclerViewFactory.setAdapter(adapterF);
+    }
+
+    //Initialise tout les findViewById
+    public void initFindViewById(){
+        currentLayout = findViewById(R.id.activity_main);
+        FactoryInfos = findViewById(R.id.FactoryInfo);
+
+        //Relative ads
+        CoinAd = findViewById(R.id.coinAds);
+        SpeedAd = findViewById(R.id.speedAds);
+        MultiAd = findViewById(R.id.multiAds);
+
+        CoinAdText = findViewById(R.id.coinAdsText);
+        SpeedAdText = findViewById(R.id.speedAdsText);
+        MultiAdText = findViewById(R.id.multiAdsText);
+
+        //Information Player
+        ActualCoin = findViewById(R.id.ElecCoins);
+        ActualElecPoint = findViewById(R.id.ElecStockage);
+
+        //Information Factory
+        ElecGenerate = findViewById(R.id.ElecGenerate);
+        ActualFactoryCost = findViewById(R.id.OperatingCost);
+
+        //Information ObjectEarth
+        ElecCost = findViewById(R.id.EnergyCost);
+        CoinWins = findViewById(R.id.CoinWins);
+
+        //Quest
+        DisplayQuestImage = findViewById(R.id.requestImage);
+        DisplayQuestName = findViewById(R.id.requestName);
+
+        //Button
+        Shop = findViewById(R.id.ShopButton);
+        Unlock = findViewById(R.id.ActionCraft);
+        ListCraft = findViewById(R.id.ListCraft);
+        UpElecPoint = findViewById(R.id.ElecUp);
+        RandomBonus = findViewById(R.id.randomButton);
+
+        //Affichage liste
+        recyclerViewCity = findViewById(R.id.recyclerViewCity);
+        recyclerViewFactory = findViewById(R.id.recyclerViewFactory);
+        gv = findViewById(R.id.requestObject);
+    }
+
+    //Initialise les différentes actions que font chaque bouton
+    public void initButtonAction(){
+        CoinAd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG,"Call CoinAd");
+                coinAds();
+            }
+        });
+
+        SpeedAd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG,"Call SpeedAd");
+                speedAds();
+            }
+        });
+
+        MultiAd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG,"Call MultiAd");
+                multiAds();
+            }
+        });
+
+        RandomBonus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /////IDK
+            }
+        });
+
+        Unlock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 upgradeQuest();
@@ -148,257 +525,188 @@ public class MainActivity extends AppCompatActivity {
                 upgradeEnergy();
             }
         });
-        initFactoryVar();
-        initEarthObjectVar();
-        recursionUpDownPoint(0);
-        db.close();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        db = new Database(this);
-        mFactory.clear();
-        mFactory = db.infoFactory(mFactory);
-        mEarthObject.clear();
-        mEarthObject = db.infoCity(mEarthObject);
-        db.close();
-
-        Start = true;
-        initFactoryVar();
-        initEarthObjectVar();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        Start = false;
-    }
-
-    public void recursionUpDownPoint(int N){
-        if(Start) {
-            //Augmente l'énergie en fonction de l'usine actuel
-            if (mFactory.size() > 0) {
-                if (FactoryEnergyWin != 0) {
-                    db.updateElecPoint(ActualPlayer.getName(), FactoryEnergyWin);
-                    ActualPlayer = db.infoFirstPlayer();
-                }
-
-                if (N%60 == 1) {
-                    db.updateCoin(ActualPlayer.getName(), -(FactoryCost + FactoryPollution));
-                    ActualPlayer = db.infoFirstPlayer();
-                }
-            }
-
-            //Réduit l'énergie & donne des coins en fonction des bâtiments possédé
-            if (mEarthObject.size() > 0) {
-                if (ActualPlayer.getElectricityPoint() >= EarthObjectEnergyCost && (ActualPlayer.getElectricityPoint() - EarthObjectEnergyCost) >= 0 && N % 2 == 1) {
-                    db.updateElecPoint(ActualPlayer.getName(), -EarthObjectEnergyCost);
-                    db.updateCoin(ActualPlayer.getName(), EarthObjectCoinWin);
-                    ActualPlayer = db.infoFirstPlayer();
-                }
-            }
-
-            if(N == 300){
-                Toast.makeText(MainActivity.this, "RandomButton", Toast.LENGTH_LONG).show();
-                N = 0;
-            }
-
-            if (N%60 == 1) {
-                initRecyclerViewCity();
-                initRecyclerViewFactory();
-                randomButton();
-            }
-
-            if(N%30 == 1) {
-                initFactoryVar();
-                initEarthObjectVar();
-            }
-
-            ActualElecPoint.setText("Energy " + ActualPlayer.getElectricityPoint());
-            ActualCoin.setText("Coin " + ActualPlayer.getCoin());
-            ElecCost.setText("Cost: " + EarthObjectEnergyCost);
-            CoinWins.setText("Coin Win: " + EarthObjectCoinWin);
-            ElecGenerate.setText("Production E: " + FactoryEnergyWin);
-            ActualFactoryCost.setText("Production Cost: " + FactoryCost);
-            ActualFactoryTax.setText("Tax: " + FactoryPollution);
-
-            refreshRecursion(1000, N);
-        }
-    }
-
-    private void refreshRecursion(int milli, final int N){
-        final Handler handler = new Handler();
-
-        final Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                recursionUpDownPoint(N+1);
-            }
-        };
-
-        handler.postDelayed(runnable, milli);
-    }
-
-    @SuppressLint("NewApi")
-    protected void randomButton(){
-        Random r = new Random();
-        AlphaAnimation alphaAnim = new AlphaAnimation(1.0f,0.0f);
-        alphaAnim.setStartOffset(1);                        // start in 5 seconds
-        alphaAnim.setDuration(10000);
-        alphaAnim.setAnimationListener(new Animation.AnimationListener()
-        {
-            @Override
-            public void onAnimationStart(Animation animation) {
-                RandomBonus.setVisibility(View.VISIBLE);
-            }
-
-            public void onAnimationEnd(Animation animation)
-            {
-                // make invisible when animation completes, you could also remove the view from the layout
-                RandomBonus.setVisibility(View.INVISIBLE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-
-        RandomBonus.setAnimation(alphaAnim);
-    }
-
-    public void displayQuest(){
-        gv.setAdapter(new QuestAdapter(this, ActualQuest.getEarthObjectRequest(), ActualQuest.getNbRequest()));
-    }
-
-    public void upgradeQuest(){
-        if(ActualQuest.checkQuest(mEarthObject, db)) {
-
-            mEarthObject.clear();
-            mEarthObject = db.infoCity(mEarthObject);
-            initRecyclerViewCity();
-
-            EarthObject TmpObject = new EarthObject(ActualQuest.getIdQuest(), ActualQuest.getNameReward());
-            db.insertCraft(TmpObject.getNbObject(), TmpObject.getName(), TmpObject.getCoinWin(), TmpObject.getPriceObject(), TmpObject.getEnergyCost(), TmpObject.getSkin());
-
-            ActualQuest = new Quest(ActualQuest.getIdQuest() + 1);
-
-            db.updateQuest(ActualQuest.getIdQuest());
-            db.infoFirstPlayer().setQuestId(ActualQuest.getIdQuest());
-
-            DisplayQuestName.setText(ActualQuest.getNameReward());
-            DisplayQuestImage.setImageResource(ActualQuest.getSkinReward());
-
-            displayQuest();
-            initEarthObjectVar();
-
-            if(ActualQuest.getIdQuest() == 9){
-                Toast.makeText(this, "Vous avez réalisé la dernière quête pour le moment !", Toast.LENGTH_LONG).show();
-                Craft.setVisibility(View.INVISIBLE);
-            }
-        } else {
-            /*A modifier dès que possible NON PRIORITAIRE*/
-            Toast.makeText(this, "Vous ne possédez pas les objets nécessaire pour cette fabrication", Toast.LENGTH_LONG).show();
-        }
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void upgradeEnergy() {
-        db.updateElecPoint(ActualPlayer.getName(), 1);
-        db.updateCoin(ActualPlayer.getName(), 1);
-        ActualPlayer = db.infoFirstPlayer();
-        ActualElecPoint.setText("Energy " + ActualPlayer.getElectricityPoint());
-        ActualCoin.setText("Coin " + ActualPlayer.getCoin());
-
-        if(ActualPlayer.getCoin() >= 10 && mFactory.size() == 0){
-            Factory MyFact = new Factory(-1);
-            /*db.deleteFactory("Not Factory");
-            mFactory.remove(0);*/
-            db.insertFactory(MyFact.getNbObject(), MyFact.getName(), MyFact.getFactoryLevel(), MyFact.getPriceFactory(), MyFact.getUpgradeCost(), MyFact.getElecGenerate(), MyFact.getOperatingCost(), MyFact.getPollutionTax(), MyFact.getSkin());
-            mFactory = db.infoFactory(mFactory);
-            initFactoryVar();
-            initEarthObjectVar();
-            initRecyclerViewFactory();
-            Toast.makeText(MainActivity.this, "You win a "+ MyFact.getName() +"!", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void initRecyclerViewCity(){
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        recyclerViewCity.setLayoutManager(layoutManager);
-        RecyclerViewAdapterEarth adapter = new RecyclerViewAdapterEarth(this, mEarthObject);
-        recyclerViewCity.setAdapter(adapter);
-
-    }
-
-    public void initRecyclerViewFactory(){
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-
-        recyclerViewFactory.setLayoutManager(layoutManager);
-        RecyclerViewAdapterFactory adapter = new RecyclerViewAdapterFactory(this, mFactory);
-        recyclerViewFactory.setAdapter(adapter);
-
-    }
-
-    private void initFindViewById(){
-        currentLayout = findViewById(R.id.activity_main);
-
-        //Information Player
-        ActualCoin = findViewById(R.id.ElecCoins);
-        ActualElecPoint = findViewById(R.id.ElecStockage);
-
-        //Information Factory
-        ElecGenerate = findViewById(R.id.ElecGenerate);
-        ActualFactoryCost = findViewById(R.id.OperatingCost);
-        ActualFactoryTax = findViewById(R.id.PollutionTax);
-
-        //Information ObjectEarth
-        ElecCost = findViewById(R.id.EnergyCost);
-        CoinWins = findViewById(R.id.CoinWins);
-
-        //Quest
-        DisplayQuestImage = findViewById(R.id.requestImage);
-        DisplayQuestName = findViewById(R.id.requestName);
-
-        //Button
-        Shop = findViewById(R.id.ShopButton);
-        Craft = findViewById(R.id.ActionCraft);
-        ListCraft = findViewById(R.id.ListCraft);
-        UpElecPoint = findViewById(R.id.ElecUp);
-        RandomBonus = findViewById(R.id.randomButton);
-
-        //Affichage liste
-        recyclerViewCity = findViewById(R.id.recyclerViewCity);
-        recyclerViewFactory = findViewById(R.id.recyclerViewFactory);
-        gv = findViewById(R.id.requestObject);
-    }
-
-    private void initFactoryVar(){
+    //Initalise ou actualise les variables global qui sont en fonction des Factorys
+    public void initFactoryVar(){
         FactoryEnergyWin = 0;
         FactoryPollution = 0;
         FactoryCost = 0;
 
         for (int i = 0; i < mFactory.size(); i++) {
-            FactoryEnergyWin = FactoryEnergyWin + (mFactory.get(i).getElecGenerate()*mFactory.get(i).getNbObject());
+            FactoryEnergyWin = FactoryEnergyWin + (mFactory.get(i).getEnergyProd()*mFactory.get(i).getNbObject());
             FactoryPollution = FactoryPollution + (mFactory.get(i).getPollutionTax()*mFactory.get(i).getNbObject());
-            FactoryCost = FactoryCost + (mFactory.get(i).getOperatingCost()*mFactory.get(i).getNbObject());
+            FactoryCost = FactoryCost + (mFactory.get(i).getOperatingCost()*mFactory.get(i).getNbObject()) + (mFactory.get(i).getPollutionTax()*mFactory.get(i).getNbObject());
         }
     }
 
-    private void initEarthObjectVar(){
+    //Initalise ou actualise les variables global qui sont en fonction des EarthObject
+    public void initEarthObjectVar(){
         EarthObjectEnergyCost = 0;
         EarthObjectCoinWin = 0;
 
         for (int i = 0; i < mEarthObject.size(); i++) {
             EarthObjectEnergyCost = EarthObjectEnergyCost + (mEarthObject.get(i).getEnergyCost()*mEarthObject.get(i).getNbObject());
             EarthObjectCoinWin = EarthObjectCoinWin + (mEarthObject.get(i).getCoinWin()*mEarthObject.get(i).getNbObject());
+        }
+    }
+
+    public void initAdEnd(){
+
+        Date date = null;
+
+        SpeedAdEnd = Calendar.getInstance();
+        try {
+            date = dateFormat.parse(db.infoSpeedAds());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        SpeedAdEnd.setTime(date);
+
+        CoinAdEnd = Calendar.getInstance();
+        try {
+            date = dateFormat.parse(db.infoCoinAds());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        CoinAdEnd.setTime(date);
+
+        MultiAdEnd = Calendar.getInstance();
+        try {
+            date = dateFormat.parse(db.infoMultiAds());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        MultiAdEnd.setTime(date);
+    }
+
+    public String displayHMS(Calendar Deb, Calendar Fin){
+
+        int Y, M, D, h, m, s, totalS;
+
+        SimpleDateFormat hours = new SimpleDateFormat("HH");
+        SimpleDateFormat minute = new SimpleDateFormat("mm");
+        SimpleDateFormat second = new SimpleDateFormat("ss");
+
+        SimpleDateFormat year = new SimpleDateFormat("YY");
+        SimpleDateFormat month = new SimpleDateFormat("MM");
+        SimpleDateFormat day = new SimpleDateFormat("DD");
+
+        Y = Integer.valueOf(year.format(Deb.getTime()));
+        M = Integer.valueOf(month.format(Deb.getTime()));
+        D = Integer.valueOf(day.format(Deb.getTime()));
+
+        h = Integer.valueOf(hours.format(Deb.getTime()));
+        m = Integer.valueOf(minute.format(Deb.getTime()));
+        s = Integer.valueOf(second.format(Deb.getTime()));
+
+        Date deb1 = new GregorianCalendar(Y,M,D,h,m,s).getTime();
+
+        Y = Integer.valueOf(year.format(Fin.getTime()));
+        M = Integer.valueOf(month.format(Fin.getTime()));
+        D = Integer.valueOf(day.format(Fin.getTime()));
+
+        h = Integer.valueOf(hours.format(Fin.getTime()));
+        m = Integer.valueOf(minute.format(Fin.getTime()));
+        s = Integer.valueOf(second.format(Fin.getTime()));
+
+        Date fin2 = new GregorianCalendar(Y,M,D,h,m,s).getTime();
+
+        long hello = deb1.getTime() - fin2.getTime();
+        totalS = Math.abs((int)((hello)/(1000)));
+        h = totalS/(60*60);
+        m = (totalS/60)%60;
+        s = totalS%60;
+
+        return h+":"+m+":"+s;
+    }
+
+    //Reinitialisation des boosts
+    public void checkBoostAds(){
+        Calendar ActualDate = Calendar.getInstance();
+
+        if(ActualDate.after(MultiAdEnd)) {
+            Multiple = 1;
+            MultiAdText.setText("X2");
+        } else {
+            Multiple = 2;
+            MultiAdText.setText(displayHMS(ActualDate, MultiAdEnd));
+        }
+
+        if(ActualDate.after(SpeedAdEnd)) {
+            Speed = 1;
+            SpeedAdText.setText("Speed");
+        } else {
+            Speed = 2;
+            SpeedAdText.setText(displayHMS(ActualDate, SpeedAdEnd));
+        }
+
+        if(ActualDate.after(CoinAdEnd)) {
+            CoinAdText.setText("Coins");
+        } else {
+            CoinAdText.setText(displayHMS(ActualDate, CoinAdEnd));
+        }
+    }
+
+    /////Fonction Ads/////
+    public void coinAds(){
+        Calendar ActualDate = Calendar.getInstance();
+        if(ActualDate.after(CoinAdEnd)) {
+            CoinAdEnd = Calendar.getInstance();
+            CoinAdEnd.add(Calendar.HOUR, 4);
+            db.insertCoinAds(dateFormat.format(CoinAdEnd.getTime()));
+
+            Random X = new Random();
+            int nombreAleatoire = X.nextInt(100 - 1 + 1) + 1, A = 0;
+
+            if (nombreAleatoire > 1 && nombreAleatoire < 20) {
+                A = ((db.infoFirstPlayer().getCoin())*2);
+                db.updateCoin(db.infoFirstPlayer().getName(), A);
+                Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
+            } else if (nombreAleatoire > 20 && nombreAleatoire < 50) {
+                A = ((db.infoFirstPlayer().getCoin())*3);
+                db.updateCoin(db.infoFirstPlayer().getName(), A);
+                Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
+            } else if (nombreAleatoire > 50 && nombreAleatoire < 80) {
+                A = ((db.infoFirstPlayer().getCoin())*4);
+                db.updateCoin(db.infoFirstPlayer().getName(), A);
+                Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
+            } else if (nombreAleatoire > 80 && nombreAleatoire < 100) {
+                A = ((db.infoFirstPlayer().getCoin())*5);
+                db.updateCoin(db.infoFirstPlayer().getName(), A);
+                Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
+            } else {
+                A = ((db.infoFirstPlayer().getCoin())*10);
+                db.updateCoin(db.infoFirstPlayer().getName(), A);
+                Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
+            }
+        }
+        ActualCoin.setText("Coin : " + db.infoFirstPlayer().getCoin());
+    }
+
+    public void speedAds(){
+        Calendar ActualDate = Calendar.getInstance();
+        if(ActualDate.after(SpeedAdEnd)) {
+
+            SpeedAdEnd = Calendar.getInstance();
+            SpeedAdEnd.add(Calendar.HOUR, 4);
+            db.insertSpeedAds(dateFormat.format(SpeedAdEnd.getTime()));
+
+            Speed = 2;
+            Toast.makeText(MainActivity.this,"The speed has been multiplied by 2!",Toast.LENGTH_LONG);
+        }
+    }
+
+    public void multiAds(){
+        Calendar ActualDate = Calendar.getInstance();
+        if(ActualDate.after(MultiAdEnd)) {
+
+            MultiAdEnd = Calendar.getInstance();
+            MultiAdEnd.add(Calendar.MINUTE, 30);
+            db.insertMultiAds(dateFormat.format(MultiAdEnd.getTime()));
+
+            Multiple = 2;
+            Toast.makeText(MainActivity.this,"You earn " + Multiple + " times more coins",Toast.LENGTH_LONG);
         }
     }
 }

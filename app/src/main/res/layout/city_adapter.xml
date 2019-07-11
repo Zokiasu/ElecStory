@@ -9,6 +9,7 @@
         android:layout_width="@dimen/size_factory_adapter"
         android:layout_height="@dimen/size_factory_adapter"
         android:layout_centerInParent="true"
+        app:cardCornerRadius="10dp"
         tools:ignore="MissingConstraints">
 
         <RelativeLayout
@@ -42,9 +43,9 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="10dp"
                 android:gravity="center"
+                android:text="Hello"
                 android:textColor="#000"
-                android:textSize="@dimen/size_text"
-                android:autoSizeTextType="uniform"/>
+                android:textSize="@dimen/size_text"/>
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 

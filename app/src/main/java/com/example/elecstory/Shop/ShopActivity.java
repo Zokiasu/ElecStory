@@ -24,6 +24,10 @@ public class ShopActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop);
 
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+        decorView.setSystemUiVisibility(uiOptions);
+
         final Database db = new Database(this);
 
         TextView Title = findViewById(R.id.ShopTitle);
@@ -78,7 +82,7 @@ public class ShopActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 Factory N = ListShopObject.get(position);
                 if((db.infoFirstPlayer().getCoin() >= N.getPriceFactory()) && (db.infoFirstPlayer().getCoin()-N.getPriceFactory() >= 0)) {
-                    db.insertFactory(N.getNbObject(), N.getName(), N.getFactoryLevel(), N.getPriceFactory(), N.getUpgradeCost(), N.getElecGenerate(), N.getOperatingCost(), N.getPollutionTax(), N.getSkin());
+                    db.insertFactory(N.getNbObject(), N.getName(), N.getFactoryLevel(), N.getPriceFactory(), N.getUpgradeCost(), N.getEnergyProd(), N.getOperatingCost(), N.getPollutionTax(), N.getSkin());
                     db.updateCoin(db.infoFirstPlayer().getName(), -N.getPriceFactory());
                     Toast.makeText(ShopActivity.this, "Achat effectué !", Toast.LENGTH_SHORT).show();
                 } else {
@@ -88,5 +92,10 @@ public class ShopActivity extends AppCompatActivity {
 
         });
         db.close();
+    }
+
+    @Override
+    public void onBackPressed() {
+        // do nothing.
     }
 }

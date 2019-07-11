@@ -1,5 +1,6 @@
 package com.example.elecstory.Object;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
@@ -12,7 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.elecstory.Database.Database;
 import com.example.elecstory.R;
+import com.example.elecstory.SalePopup;
 
 import java.util.ArrayList;
 
@@ -22,10 +25,12 @@ public class RecyclerViewAdapterEarth extends RecyclerView.Adapter<RecyclerViewA
 
     private ArrayList<EarthObject> mEarthObject;
     private Context mContext;
+    private Activity activity;
 
-    public RecyclerViewAdapterEarth(Context context, ArrayList<EarthObject> mEarthObjects) {
+    public RecyclerViewAdapterEarth(Context context, ArrayList<EarthObject> mEarthObjects, Activity activitys) {
         mEarthObject = mEarthObjects;
         mContext = context;
+        activity = activitys;
     }
 
     @Override
@@ -36,6 +41,7 @@ public class RecyclerViewAdapterEarth extends RecyclerView.Adapter<RecyclerViewA
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
+        final Database db = new Database(mContext);
 
         Glide.with(mContext)
                 .asBitmap()
@@ -46,21 +52,39 @@ public class RecyclerViewAdapterEarth extends RecyclerView.Adapter<RecyclerViewA
 
         holder.nbObject.setText(String.valueOf(mEarthObject.get(position).getNbObject()));
 
-        holder.image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.i("MainActivity","mEarthObject.get("+position+").getNbObject() : " + mEarthObject.get(position).getNbObject());
-                Toast.makeText(mContext, mEarthObject.get(position).getName(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
         holder.image.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Toast.makeText(mContext, "Hello", Toast.LENGTH_LONG).show();
+                final SalePopup salepopups = new SalePopup(activity);
+                salepopups.setMessageSale("You want sale " + mEarthObject.get(position).getName() + " for " + (mEarthObject.get(position).getPriceObject()/2) + " coins!");
+                salepopups.setNameObjectSale("Selling " + mEarthObject.get(position).getName());
+                salepopups.getConfirm().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(mEarthObject.size() > 0) {
+                            db.deleteCity(mEarthObject.get(position).getName());
+                            db.updateCoin(db.infoFirstPlayer().getName(), (mEarthObject.get(position).getPriceObject()/2));
+                            Toast.makeText(mContext, "This object will be deleted !", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(mContext, "You no longer have this object.", Toast.LENGTH_SHORT).show();
+                        }
+                        salepopups.dismiss();
+                    }
+                });
+
+                salepopups.getCancel().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        salepopups.dismiss();
+                    }
+                });
+                salepopups.getClose().setVisibility(View.INVISIBLE);
+                salepopups.build();
                 return true;
             }
         });
+
+        db.close();
     }
 
     @Override

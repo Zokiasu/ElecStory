@@ -78,6 +78,7 @@ public class LoginActivity extends AppCompatActivity {
                 EarthObject Test = new EarthObject(0,"");
                 db.insertCity(Test.getNbObject(),Test.getName(), Test.getCoinWin(), Test.getPriceObject(), Test.getEnergyCost(), Test.getSkin());
                 db.insertFirstCraft();
+                db.insertAllAds();
                 db.close();
                 Intent myIntent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(myIntent);

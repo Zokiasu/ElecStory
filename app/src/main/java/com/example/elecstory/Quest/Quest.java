@@ -25,95 +25,172 @@ public class Quest {
 
     public Quest (int N){
         switch (N){
-            /*Mansion Quest*/
+            /*Floor Lamp Quest*/
             case 1 :
                 this.IdQuest = 1;
                 this.SkinReward = R.drawable.ampoule;
-                this.NameReward = "House";
+                this.NameReward = "Floor Lamp";
                 this.earthObjectRequest = new ArrayList<>();
-                this.earthObjectRequest.add(new EarthObject(1,"Lamp", 1, 1, 5, R.drawable.ampoule));
+                this.earthObjectRequest.add(new EarthObject(0,"Lamp"));
                 this.NbRequest = new ArrayList<>();
                 this.NbRequest.add(3);
                 break;
-            /*Street Quest*/
+            /*House Quest*/
             case 2 :
                 this.IdQuest = 2;
                 this.SkinReward = R.drawable.ampoule;
-                this.NameReward = "Street";
+                this.NameReward = "House";
                 this.earthObjectRequest = new ArrayList<>();
-                this.earthObjectRequest.add(new EarthObject(1,"House", 1, 1, 5, R.drawable.ampoule));
+                this.earthObjectRequest.add(new EarthObject(0, "Lamp"));
+                this.earthObjectRequest.add(new EarthObject(1, "Floor Lamp"));
                 this.NbRequest = new ArrayList<>();
-                this.NbRequest.add(8);
+                this.NbRequest.add(5);
+                this.NbRequest.add(2);
                 break;
-            /*District Quest*/
+            /*Street Quest*/
             case 3 :
                 this.IdQuest = 3;
                 this.SkinReward = R.drawable.ampoule;
-                this.NameReward = "District";
+                this.NameReward = "Street";
                 this.earthObjectRequest = new ArrayList<>();
-                this.earthObjectRequest.add(new EarthObject(1,"Street", 1, 1, 5, R.drawable.ampoule));
+                this.earthObjectRequest.add(new EarthObject(2, "House"));
+                this.earthObjectRequest.add(new EarthObject(1, "Floor Lamp"));
                 this.NbRequest = new ArrayList<>();
-                this.NbRequest.add(4);
+                this.NbRequest.add(8);
+                this.NbRequest.add(10);
                 break;
-            /*City Quest*/
+            /*District Quest*/
             case 4 :
                 this.IdQuest = 4;
                 this.SkinReward = R.drawable.ampoule;
-                this.NameReward = "City";
+                this.NameReward = "District";
                 this.earthObjectRequest = new ArrayList<>();
-                this.earthObjectRequest.add(new EarthObject(1,"District", 1, 1, 5, R.drawable.ampoule));
+                this.earthObjectRequest.add(new EarthObject(3, "Street"));
+                this.earthObjectRequest.add(new EarthObject(1, "Floor Lamp"));
                 this.NbRequest = new ArrayList<>();
                 this.NbRequest.add(10);
+                this.NbRequest.add(20);
                 break;
-            /*Municipality Quest*/
+            /*City Quest*/
             case 5 :
                 this.IdQuest = 5;
                 this.SkinReward = R.drawable.ampoule;
-                this.NameReward = "Municipality";
+                this.NameReward = "City";
                 this.earthObjectRequest = new ArrayList<>();
-                this.earthObjectRequest.add(new EarthObject(1,"City", 1, 1, 5, R.drawable.ampoule));
+                this.earthObjectRequest.add(new EarthObject(4, "District"));
+                this.earthObjectRequest.add(new EarthObject(3, "Street"));
+                this.earthObjectRequest.add(new EarthObject(1, "Floor Lamp"));
                 this.NbRequest = new ArrayList<>();
+                this.NbRequest.add(10);
                 this.NbRequest.add(5);
+                this.NbRequest.add(10);
                 break;
-            /*Region Quest*/
+            /*Municipality Quest*/
             case 6 :
                 this.IdQuest = 6;
                 this.SkinReward = R.drawable.ampoule;
-                this.NameReward = "Region";
+                this.NameReward = "Municipality";
                 this.earthObjectRequest = new ArrayList<>();
-                this.earthObjectRequest.add(new EarthObject(1,"Municipality", 1, 1, 5, R.drawable.ampoule));
+                this.earthObjectRequest.add(new EarthObject(5, "City"));
+                this.earthObjectRequest.add(new EarthObject(3, "Street"));
+                this.earthObjectRequest.add(new EarthObject(1, "Floor Lamp"));
                 this.NbRequest = new ArrayList<>();
-                this.NbRequest.add(6);
+                this.NbRequest.add(5);
+                this.NbRequest.add(10);
+                this.NbRequest.add(20);
                 break;
-            /*Country Quest*/
+            /*Region Quest*/
             case 7 :
                 this.IdQuest = 7;
                 this.SkinReward = R.drawable.ampoule;
-                this.NameReward = "Country";
+                this.NameReward = "Region";
                 this.earthObjectRequest = new ArrayList<>();
-                this.earthObjectRequest.add(new EarthObject(1,"Region", 1, 1, 5, R.drawable.ampoule));
+                this.earthObjectRequest.add(new EarthObject(6, "Municipality"));
+                this.earthObjectRequest.add(new EarthObject(3, "Street"));
+                this.earthObjectRequest.add(new EarthObject(1, "Floor Lamp"));
                 this.NbRequest = new ArrayList<>();
-                this.NbRequest.add(25);
+                this.NbRequest.add(6);
+                this.NbRequest.add(10);
+                this.NbRequest.add(50);
                 break;
-            /*Continent Quest*/
+            /*Capital Quest*/
             case 8 :
                 this.IdQuest = 8;
                 this.SkinReward = R.drawable.ampoule;
-                this.NameReward = "Continent";
+                this.NameReward = "Capital";
                 this.earthObjectRequest = new ArrayList<>();
-                this.earthObjectRequest.add(new EarthObject(1,"Country", 1, 1, 5, R.drawable.ampoule));
+                this.earthObjectRequest.add(new EarthObject(4, "District"));
+                this.earthObjectRequest.add(new EarthObject(3, "Street"));
+                this.earthObjectRequest.add(new EarthObject(1, "Floor Lamp"));
                 this.NbRequest = new ArrayList<>();
-                this.NbRequest.add(5);
+                this.NbRequest.add(20);
+                this.NbRequest.add(15);
+                this.NbRequest.add(30);
                 break;
-            /*Planet Quest*/
+            /*Country Quest*/
             case 9 :
                 this.IdQuest = 9;
                 this.SkinReward = R.drawable.ampoule;
+                this.NameReward = "Country";
+                this.earthObjectRequest = new ArrayList<>();
+                this.earthObjectRequest.add(new EarthObject(7, "Region"));
+                this.earthObjectRequest.add(new EarthObject(8, "Capital"));
+                this.earthObjectRequest.add(new EarthObject(3, "Street"));
+                this.earthObjectRequest.add(new EarthObject(1, "Floor Lamp"));
+                this.NbRequest = new ArrayList<>();
+                this.NbRequest.add(25);
+                this.NbRequest.add(1);
+                this.NbRequest.add(50);
+                this.NbRequest.add(100);
+                break;
+            /*Metropolis Quest*/
+            case 10 :
+                this.IdQuest = 10;
+                this.SkinReward = R.drawable.ampoule;
+                this.NameReward = "Metropolis";
+                this.earthObjectRequest = new ArrayList<>();
+                this.earthObjectRequest.add(new EarthObject(4, "District"));
+                this.earthObjectRequest.add(new EarthObject(3, "Street"));
+                this.earthObjectRequest.add(new EarthObject(1, "Floor Lamp"));
+                this.NbRequest = new ArrayList<>();
+                this.NbRequest.add(50);
+                this.NbRequest.add(50);
+                this.NbRequest.add(100);
+                break;
+            /*Continent Quest*/
+            case 11 :
+                this.IdQuest = 11;
+                this.SkinReward = R.drawable.ampoule;
+                this.NameReward = "Continent";
+                this.earthObjectRequest = new ArrayList<>();
+                this.earthObjectRequest.add(new EarthObject(9, "Country"));
+                this.earthObjectRequest.add(new EarthObject(3, "Street"));
+                this.earthObjectRequest.add(new EarthObject(1, "Floor Lamp"));
+                this.earthObjectRequest.add(new EarthObject(10, "Metropolis"));
+                this.NbRequest = new ArrayList<>();
+                this.NbRequest.add(5);
+                this.NbRequest.add(100);
+                this.NbRequest.add(250);
+                this.NbRequest.add(2);
+                break;
+            /*Planet Quest*/
+            case 12 :
+                this.IdQuest = 12;
+                this.SkinReward = R.drawable.ampoule;
                 this.NameReward = "Planet";
                 this.earthObjectRequest = new ArrayList<>();
-                this.earthObjectRequest.add(new EarthObject(1,"Continent", 1, 1, 5, R.drawable.ampoule));
+                this.earthObjectRequest.add(new EarthObject(11, "Continent"));
+                this.earthObjectRequest.add(new EarthObject(10, "Metropolis"));
                 this.NbRequest = new ArrayList<>();
                 this.NbRequest.add(8);
+                this.NbRequest.add(10);
+                break;
+            default:
+                this.IdQuest = 00;
+                this.SkinReward = R.drawable.ampoule;
+                this.NameReward = "Nothing";
+                this.earthObjectRequest = new ArrayList<>();
+                this.NbRequest = new ArrayList<>();
                 break;
         }
     }
@@ -136,15 +213,15 @@ public class Quest {
     public Boolean NbRequestComparator(ArrayList<EarthObject> earthObjectLists) {
         ArrayList<Integer> ObjectComparator = ObjectRequestComparator(earthObjectLists);
         for(int i = 0; i < this.getNbRequest().size(); i++) {
-            if(this.getNbRequest().get(i) <= ObjectComparator.get(i)){
-                return true;
+            if(this.getNbRequest().get(i) > ObjectComparator.get(i)){
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     public boolean checkQuest(ArrayList<EarthObject> earthObjectLists, Database db){
-        if(this.getIdQuest() != 9) {
+        if(this.getIdQuest() != 12) {
             if (NbRequestComparator(earthObjectLists)) {
                 for (int i = 0; i < this.getEarthObjectRequest().size(); i++) { //Le nombre d'objet différent à supp
                     for (int k = 0; k < earthObjectLists.size(); k++) { //Check toute la liste du joueur

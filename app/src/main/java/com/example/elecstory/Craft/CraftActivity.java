@@ -25,10 +25,14 @@ public class CraftActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_craft);
 
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+        decorView.setSystemUiVisibility(uiOptions);
+
         final Database db = new Database(this);
 
         TextView Title = findViewById(R.id.CraftTitle);
-        Title.setText("Craft List");
+        Title.setText("Unlock List");
 
         Button BackCraft = findViewById(R.id.back);
 
@@ -63,7 +67,7 @@ public class CraftActivity extends AppCompatActivity {
                     //if(position == 0 || checkObject(finalListEarthObjectPlayer, position, db)) {
                         db.insertCity(N.getNbObject(), N.getName(), N.getCoinWin(), N.getPriceObject(), N.getEnergyCost(), N.getSkin());
                         db.updateCoin(db.infoFirstPlayer().getName(), -N.getPriceObject());
-                        Toast.makeText(CraftActivity.this, "Craft effectué ! ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CraftActivity.this, "Unlock effectué ! ", Toast.LENGTH_SHORT).show();
                    /* } else {
                         Toast.makeText(CraftActivity.this, "Vous n'avez pas les objets requis ! ", Toast.LENGTH_SHORT).show();
                     }*/
@@ -81,5 +85,10 @@ public class CraftActivity extends AppCompatActivity {
     public boolean checkObject(ArrayList<EarthObject> ListObject, int position, Database db){
         Quest TestTmp = new Quest(position);
         return TestTmp.checkQuest(ListObject, db);
+    }
+
+    @Override
+    public void onBackPressed() {
+        // do nothing.
     }
 }

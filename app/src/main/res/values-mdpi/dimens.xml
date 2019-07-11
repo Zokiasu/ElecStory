@@ -6,4 +6,5 @@
     <dimen name="size_factory_image">50dp</dimen>
     <dimen name="size_factory_adapter">100dp</dimen>
     <dimen name="size_unlock_image">130dp</dimen>
+    <dimen name="size_player_image">60dp</dimen>
 </resources>

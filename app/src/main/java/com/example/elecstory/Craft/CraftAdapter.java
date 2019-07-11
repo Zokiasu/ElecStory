@@ -2,6 +2,7 @@ package com.example.elecstory.Craft;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,22 +43,26 @@ public class CraftAdapter extends BaseAdapter {
         return position;
     }
 
-    @SuppressLint("ServiceCast")
+    @SuppressLint({"ServiceCast", "LongLogTag"})
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
         layoutInflater = (LayoutInflater) Context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         views = new View(Context);
-        views = layoutInflater.inflate(R.layout.shop_adapter, null);
+        views = layoutInflater.inflate(R.layout.shop_craft_adapter, null);
 
         ImageView imageView = views.findViewById(R.id.objectView);
-        TextView objectPrice = views.findViewById(R.id.objectCount);
         TextView objectName = views.findViewById(R.id.objectName);
+        TextView objectPrice = views.findViewById(R.id.objectCost);
+        TextView coinProduc = views.findViewById(R.id.CoinProduc);
+        TextView costProduc = views.findViewById(R.id.CostProduction);
 
-        objectPrice.setText(String.valueOf(ListObject.get(position).getPriceObject()));
-        objectName.setText(String.valueOf(ListObject.get(position).getName()));
         imageView.setImageResource(ListObject.get(position).getSkin());
+        objectName.setText(String.valueOf(ListObject.get(position).getName()));
+        objectPrice.setText("Price : " + ListObject.get(position).getPriceObject() + " Coins");
+        coinProduc.setText("Coin win : " + ListObject.get(position).getCoinWin() + "/s");
+        costProduc.setText("Energy Cost : " + ListObject.get(position).getEnergyCost() + "/s");
 
         return views;
     }
