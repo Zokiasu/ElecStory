@@ -43,75 +43,75 @@ import java.util.Random;
 @SuppressLint("SetTextI18n")
 public class MainActivity extends AppCompatActivity {
 
-    public TextView ActualElecPoint;
-    public TextView ActualCoin;
-    public TextView ElecGenerate;
-    public TextView ActualFactoryCost;
-    public TextView ElecCost;
-    public TextView CoinWins;
-    public TextView DisplayQuestName;
+    protected TextView ActualElecPoint;
+    protected TextView ActualCoin;
+    protected TextView ElecGenerate;
+    protected TextView ActualFactoryCost;
+    protected TextView ElecCost;
+    protected TextView CoinWins;
+    protected TextView DisplayQuestName;
 
-    public Button UpElecPoint;
-    public Button Shop;
-    public Button Unlock;
-    public Button ListCraft;
-    public Button RandomBonus;
+    protected Button UpElecPoint;
+    protected Button Shop;
+    protected Button Unlock;
+    protected Button ListCraft;
+    protected Button RandomBonus;
 
-    public RecyclerView recyclerViewCity;
-    public RecyclerView recyclerViewFactory;
+    protected RecyclerView recyclerViewCity;
+    protected RecyclerView recyclerViewFactory;
 
-    public RecyclerViewAdapterEarth adapterE;
-    public RecyclerViewAdapterFactory adapterF;
+    protected RecyclerViewAdapterEarth adapterE;
+    protected RecyclerViewAdapterFactory adapterF;
 
-    public ArrayList<EarthObject> mEarthObject = new ArrayList<>();
-    public ArrayList<Factory> mFactory = new ArrayList<>();
+    protected ArrayList<EarthObject> mEarthObject = new ArrayList<>();
+    protected ArrayList<Factory> mFactory = new ArrayList<>();
 
     @SuppressLint("SimpleDateFormat")
-    public DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+    protected DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
 
-    public TextView CoinAdText;
-    public RelativeLayout CoinAd;
-    public Calendar CoinAdEnd;
+    protected TextView CoinAdText;
+    protected RelativeLayout CoinAd;
+    protected Calendar CoinAdEnd;
 
-    public TextView SpeedAdText;
-    public RelativeLayout SpeedAd;
-    public Calendar SpeedAdEnd;
-    public int Speed = 1;
+    protected TextView SpeedAdText;
+    protected RelativeLayout SpeedAd;
+    protected Calendar SpeedAdEnd;
+    protected int Speed = 1;
 
-    public TextView MultiAdText;
-    public RelativeLayout MultiAd;
-    public Calendar MultiAdEnd;
-    public int Multiple = 1;
+    protected TextView MultiAdText;
+    protected RelativeLayout MultiAd;
+    protected Calendar MultiAdEnd;
+    protected int Multiple = 1;
 
-    public int FactoryEnergyWin = 0;
-    public int FactoryPollution = 0;
-    public int FactoryCost = 0;
+    protected int FactoryEnergyWin = 0;
+    protected int FactoryPollution = 0;
+    protected int FactoryCost = 0;
 
-    public int EarthObjectEnergyCost = 0;
-    public int EarthObjectCoinWin = 0;
+    protected int EarthObjectEnergyCost = 0;
+    protected int EarthObjectCoinWin = 0;
 
-    public LinearLayout FactoryInfos;
+    protected LinearLayout FactoryInfos;
 
-    public ConstraintLayout currentLayout;
+    protected ConstraintLayout currentLayout;
 
-    public GridView gv;
+    protected GridView gv;
 
-    public Quest ActualQuest;
+    protected Quest ActualQuest;
 
-    public ImageView DisplayQuestImage;
+    protected ImageView DisplayQuestImage;
 
-    public static PlayerData ActualPlayer;
+    protected static PlayerData ActualPlayer;
 
-    public Database db = new Database(this);
+    protected Database db = new Database(this);
 
-    public Boolean Start = true;
+    protected Boolean Start = true;
 
-    public static final String TAG = "MainActivity";
+    protected static final String TAG = "MainActivity";
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(TAG, "onCreate");
         createOrRestart();
@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
         // do nothing.
     }
 
-    public void createOrRestart(){
+    protected void createOrRestart(){
         setContentView(R.layout.activity_main);
 
         View decorView = getWindow().getDecorView();
@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
         db.close();
     }
 
-    public void recursionUpDownPoint(int N){
+    protected void recursionUpDownPoint(int N){
 
         View decorView = getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
@@ -264,7 +264,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void refreshRecursion(int milli, final int N){
+    protected void refreshRecursion(int milli, final int N){
         final Handler handler = new Handler();
 
         final Runnable runnable = new Runnable() {
@@ -278,7 +278,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Choisit le bouton bonus à afficher aléatoirement toute les minutes
-    public void randomButton(){
+    protected void randomButton(){
         Random r = new Random();
         AlphaAnimation alphaAnim = new AlphaAnimation(1.0f,0.0f);
         alphaAnim.setStartOffset(1);
@@ -303,7 +303,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Convertis les millisecondes en string format hh:mm:ss
-    public static String timeConversion(int milli) {
+    protected static String timeConversion(int milli) {
 
         final int MINUTES_IN_AN_HOUR = 60;
         final int SECONDS_IN_A_MINUTE = 60;
@@ -319,12 +319,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Affiche la quête actuel du joueur
-    public void displayQuest(){
+    protected void displayQuest(){
         gv.setAdapter(new QuestAdapter(this, ActualQuest.getEarthObjectRequest(), ActualQuest.getNbRequest()));
     }
 
     //Vérifie que la quête actuelle est réalisé et passe à la quête suivante
-    public void upgradeQuest(){
+    protected void upgradeQuest(){
         if(ActualQuest.checkQuest(mEarthObject, db)) {
 
             mEarthObject.clear();
@@ -361,7 +361,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Fonction du bouton +1
-    public void upgradeEnergy() {
+    protected void upgradeEnergy() {
         ActualPlayer = db.infoFirstPlayer();
 
         ActualElecPoint.setText("Energy : " + db.infoFirstPlayer().getElectricityPoint());
@@ -384,7 +384,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Update les listes utiliser par les recyclerview
-    public void  updatingList(){
+    protected void  updatingList(){
         int X, Y;
         X = mFactory.size();
         Y = mEarthObject.size();
@@ -402,7 +402,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Initialise les RecyclerView des EarthObject
-    public void initRecyclerViewEarthObject(){
+    protected void initRecyclerViewEarthObject(){
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerViewCity.setLayoutManager(layoutManager);
         adapterE = new RecyclerViewAdapterEarth(this, mEarthObject, this);
@@ -411,7 +411,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Initialise les RecyclerView des Factory
-    public void initRecyclerViewFactory(){
+    protected void initRecyclerViewFactory(){
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerViewFactory.setLayoutManager(layoutManager);
         adapterF = new RecyclerViewAdapterFactory(this, mFactory, this, db);
@@ -419,7 +419,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Initialise tout les findViewById
-    public void initFindViewById(){
+    protected void initFindViewById(){
         currentLayout = findViewById(R.id.activity_main);
         FactoryInfos = findViewById(R.id.FactoryInfo);
 
@@ -462,7 +462,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Initialise les différentes actions que font chaque bouton
-    public void initButtonAction(){
+    protected void initButtonAction(){
         CoinAd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -528,7 +528,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Initalise ou actualise les variables global qui sont en fonction des Factorys
-    public void initFactoryVar(){
+    protected void initFactoryVar(){
         FactoryEnergyWin = 0;
         FactoryPollution = 0;
         FactoryCost = 0;
@@ -541,7 +541,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Initalise ou actualise les variables global qui sont en fonction des EarthObject
-    public void initEarthObjectVar(){
+    protected void initEarthObjectVar(){
         EarthObjectEnergyCost = 0;
         EarthObjectCoinWin = 0;
 
@@ -551,7 +551,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void initAdEnd(){
+    protected void initAdEnd(){
 
         Date date = null;
 
@@ -580,7 +580,7 @@ public class MainActivity extends AppCompatActivity {
         MultiAdEnd.setTime(date);
     }
 
-    public String displayHMS(Calendar Deb, Calendar Fin){
+    protected String displayHMS(Calendar Deb, Calendar Fin){
 
         int Y, M, D, h, m, s, totalS;
 
@@ -622,7 +622,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Reinitialisation des boosts
-    public void checkBoostAds(){
+    protected void checkBoostAds(){
         Calendar ActualDate = Calendar.getInstance();
 
         if(ActualDate.after(MultiAdEnd)) {
@@ -649,7 +649,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /////Fonction Ads/////
-    public void coinAds(){
+    protected void coinAds(){
         Calendar ActualDate = Calendar.getInstance();
         if(ActualDate.after(CoinAdEnd)) {
             CoinAdEnd = Calendar.getInstance();
@@ -658,25 +658,25 @@ public class MainActivity extends AppCompatActivity {
 
             Random X = new Random();
             int nombreAleatoire = X.nextInt(100 - 1 + 1) + 1, A = 0;
-
+            initEarthObjectVar();
             if (nombreAleatoire > 1 && nombreAleatoire < 20) {
-                A = ((db.infoFirstPlayer().getCoin())*2);
+                A = EarthObjectCoinWin*(900);
                 db.updateCoin(db.infoFirstPlayer().getName(), A);
                 Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
             } else if (nombreAleatoire > 20 && nombreAleatoire < 50) {
-                A = ((db.infoFirstPlayer().getCoin())*3);
+                A = EarthObjectCoinWin*(1800);
                 db.updateCoin(db.infoFirstPlayer().getName(), A);
                 Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
             } else if (nombreAleatoire > 50 && nombreAleatoire < 80) {
-                A = ((db.infoFirstPlayer().getCoin())*4);
+                A = EarthObjectCoinWin*(2700);
                 db.updateCoin(db.infoFirstPlayer().getName(), A);
                 Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
             } else if (nombreAleatoire > 80 && nombreAleatoire < 100) {
-                A = ((db.infoFirstPlayer().getCoin())*5);
+                A = EarthObjectCoinWin*(3600);
                 db.updateCoin(db.infoFirstPlayer().getName(), A);
                 Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
             } else {
-                A = ((db.infoFirstPlayer().getCoin())*10);
+                A = EarthObjectCoinWin*(7200);
                 db.updateCoin(db.infoFirstPlayer().getName(), A);
                 Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
             }
@@ -684,7 +684,7 @@ public class MainActivity extends AppCompatActivity {
         ActualCoin.setText("Coin : " + db.infoFirstPlayer().getCoin());
     }
 
-    public void speedAds(){
+    protected void speedAds(){
         Calendar ActualDate = Calendar.getInstance();
         if(ActualDate.after(SpeedAdEnd)) {
 
@@ -697,7 +697,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void multiAds(){
+    protected void multiAds(){
         Calendar ActualDate = Calendar.getInstance();
         if(ActualDate.after(MultiAdEnd)) {
 

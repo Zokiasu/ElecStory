@@ -46,46 +46,46 @@ public class EarthObject {
         } else if(N == 4 || M.equals("District")){
             this.Name = "District";
             this.CoinWin = 250;
-            this.PriceObject = 10000;
+            this.PriceObject = 100000;
             this.Skin = R.drawable.ampoule;
         } else if(N == 5 || M.equals("City")){
             this.Name = "City";
-            this.CoinWin = 5000;
-            this.PriceObject = 100000;
+            this.CoinWin = 500;
+            this.PriceObject = 750000;
             this.Skin = R.drawable.ampoule;
         } else if(N == 6 || M.equals("Municipality")){
             this.Name = "Municipality";
-            this.CoinWin = 30000;
+            this.CoinWin = 1000;
             this.PriceObject = 5000000;
             this.Skin = R.drawable.ampoule;
         } else if(N == 7 || M.equals("Region")){
             this.Name = "Region";
-            this.CoinWin = 75000;
+            this.CoinWin = 2000;
             this.PriceObject = 25000000;
             this.Skin = R.drawable.ampoule;
         } else if(N == 8 || M.equals("Capital")){
             this.Name = "Capital";
-            this.CoinWin = 250000;
+            this.CoinWin = 10000;
             this.PriceObject = 40000000;
             this.Skin = R.drawable.ampoule;
         } else if(N == 9 || M.equals("Country")){
             this.Name = "Country";
-            this.CoinWin = 750000;
+            this.CoinWin = 20000;
             this.PriceObject = 75000000;
             this.Skin = R.drawable.ampoule;
         } else if(N == 10 || M.equals("Metropolis")){
             this.Name = "Metropolis";
-            this.CoinWin = 1000000;
+            this.CoinWin = 40000;
             this.PriceObject = 100000000;
             this.Skin = R.drawable.ampoule;
         } else if(N == 11 || M.equals("Continent")){
             this.Name = "Continent";
-            this.CoinWin = 6000000;
+            this.CoinWin = 80000;
             this.PriceObject = 500000000;
             this.Skin = R.drawable.ampoule;
         } else if(N == 12 || M.equals("Planet")){
             this.Name = "Planet";
-            this.CoinWin = 10000000;
+            this.CoinWin = 160000;
             this.PriceObject = 1000000000;
             this.Skin = R.drawable.ampoule;
         }
