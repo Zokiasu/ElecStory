@@ -7,4 +7,5 @@
     <dimen name="size_player_image_main">60dp</dimen>
     <dimen name="size_factory_adapter">100dp</dimen>
     <dimen name="size_unlock_image">190dp</dimen>
+    <dimen name="size_frame_text">160dp</dimen>
 </resources>

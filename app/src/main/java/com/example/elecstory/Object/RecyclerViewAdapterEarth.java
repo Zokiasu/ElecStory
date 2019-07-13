@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.elecstory.Database.Database;
 import com.example.elecstory.R;
-import com.example.elecstory.SalePopup;
+import com.example.elecstory.OtherClass.SalePopup;
 
 import java.util.ArrayList;
 
@@ -58,7 +57,9 @@ public class RecyclerViewAdapterEarth extends RecyclerView.Adapter<RecyclerViewA
                 final SalePopup salepopups = new SalePopup(activity);
                 salepopups.setMessageSale("You want sale " + mEarthObject.get(position).getName() + " for " + (mEarthObject.get(position).getPriceObject()/2) + " coins!");
                 salepopups.setNameObjectSale("Selling " + mEarthObject.get(position).getName());
-                salepopups.getConfirm().setOnClickListener(new View.OnClickListener() {
+                salepopups.getButton1().setText("Confirm");
+                salepopups.getButton2().setText("Cancel");
+                salepopups.getButton1().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if(mEarthObject.size() > 0) {
@@ -72,7 +73,7 @@ public class RecyclerViewAdapterEarth extends RecyclerView.Adapter<RecyclerViewA
                     }
                 });
 
-                salepopups.getCancel().setOnClickListener(new View.OnClickListener() {
+                salepopups.getButton2().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         salepopups.dismiss();

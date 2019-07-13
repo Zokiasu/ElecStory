@@ -1,4 +1,4 @@
-package com.example.elecstory;
+package com.example.elecstory.OtherClass;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -6,10 +6,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.elecstory.R;
+
 public class SalePopup extends Dialog {
 
     private Activity activity;
-    private Button Confirm, Cancel, Close;
+    private Button button1, button2, Close;
     private TextView MessageSaleView, NameObjectSaleView;
     private String MessageSale, NameObjectSale;
 
@@ -24,8 +26,8 @@ public class SalePopup extends Dialog {
         this.activity = activity;
         this.MessageSaleView = findViewById(R.id.messageSale);
         this.NameObjectSaleView = findViewById(R.id.nameObjectSale);
-        this.Confirm = findViewById(R.id.confirmSale);
-        this.Cancel = findViewById(R.id.cancelSale);
+        this.button1 = findViewById(R.id.confirmSale);
+        this.button2 = findViewById(R.id.cancelSale);
         this.Close = findViewById(R.id.closeWindows);
         this.MessageSale = "Hello\nHello\nHello\nHello\nHello\nHello\nHello\nHello";
         this.NameObjectSale = "NameObject";
@@ -69,20 +71,20 @@ public class SalePopup extends Dialog {
         this.activity = activity;
     }
 
-    public Button getConfirm() {
-        return Confirm;
+    public Button getButton1() {
+        return button1;
     }
 
-    public void setConfirm(Button confirm) {
-        Confirm = confirm;
+    public void setButton1(Button button1) {
+        this.button1 = button1;
     }
 
-    public Button getCancel() {
-        return Cancel;
+    public Button getButton2() {
+        return button2;
     }
 
-    public void setCancel(Button cancel) {
-        Cancel = cancel;
+    public void setButton2(Button button2) {
+        this.button2 = button2;
     }
 
     public TextView getMessageSaleView() {

@@ -15,14 +15,14 @@ import com.example.elecstory.R;
 
 import java.util.ArrayList;
 
-public class CraftAdapter extends BaseAdapter {
+public class EarthObjectAdapter extends BaseAdapter {
 
     public android.content.Context Context;
     public ArrayList<EarthObject> ListObject;
     public LayoutInflater layoutInflater;
     public View views;
 
-    public CraftAdapter (Context Contexts, ArrayList<EarthObject> ListCO) {
+    public EarthObjectAdapter(Context Contexts, ArrayList<EarthObject> ListCO) {
         this.Context = Contexts;
         this.ListObject = ListCO;
         this.layoutInflater = LayoutInflater.from(Context);

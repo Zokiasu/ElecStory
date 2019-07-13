@@ -5,5 +5,5 @@
     <string name="title_activity_temporary">TemporaryActivity</string>
     <string name="username">Username</string>
     <string name="age">Age</string>
-    <string name="confirm">Confirm</string>
+    <string name="button1">Confirm</string>
 </resources>

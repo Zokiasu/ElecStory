@@ -18,7 +18,7 @@ import com.example.elecstory.R;
 
 import java.util.ArrayList;
 
-public class CraftActivity extends AppCompatActivity {
+public class EarthObjectActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +40,7 @@ public class CraftActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 db.close();
-                Intent myIntent = new Intent(CraftActivity.this, MainActivity.class);
+                Intent myIntent = new Intent(EarthObjectActivity.this, MainActivity.class);
                 startActivity(myIntent);
                 finish();
             }
@@ -53,7 +53,7 @@ public class CraftActivity extends AppCompatActivity {
         ListEarthObjectPlayer = db.infoCity(ListEarthObjectPlayer);
 
         GridView GV = findViewById(R.id.GridCraft);
-        GV.setAdapter(new CraftAdapter(this, ListEarthObject));
+        GV.setAdapter(new EarthObjectAdapter(this, ListEarthObject));
 
         final ArrayList<EarthObject> finalListEarthObject = ListEarthObject;
         final ArrayList<EarthObject> finalListEarthObjectPlayer = ListEarthObjectPlayer;
@@ -67,7 +67,7 @@ public class CraftActivity extends AppCompatActivity {
                     db.insertCity(N.getNbObject(), N.getName(), N.getCoinWin(), N.getPriceObject(), N.getEnergyCost(), N.getSkin());
                     db.updateCoin(db.infoFirstPlayer().getName(), -N.getPriceObject());
                 } else {
-                    Toast.makeText(CraftActivity.this, "Vous n'avez pas assez d'argent ! ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EarthObjectActivity.this, "Vous n'avez pas assez d'argent ! ", Toast.LENGTH_SHORT).show();
                 }
             }
 

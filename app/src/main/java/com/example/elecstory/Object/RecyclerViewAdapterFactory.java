@@ -16,9 +16,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.elecstory.Database.Database;
-import com.example.elecstory.Database.PlayerData;
 import com.example.elecstory.R;
-import com.example.elecstory.SalePopup;
+import com.example.elecstory.OtherClass.SalePopup;
 
 import java.util.ArrayList;
 
@@ -61,44 +60,37 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
             @Override
             public void onClick(View v) {
                 final SalePopup salepopups = new SalePopup(activity);
-                salepopups.getConfirm().setText("Sell");
-                salepopups.getCancel().setText("Update");
+                salepopups.getButton1().setText("Sell");
+                salepopups.getButton2().setText("Update");
                 salepopups.setNameObjectSale(mFactory.get(position).getName() + "'s Info");
-                salepopups.setMessageSale(
-                        "Actual Level : " + mFactory.get(position).getFactoryLevel() +
-                        "\nUpdate Cost : " + mFactory.get(position).getUpgradeCost() +
-                        "\nSell Price : " + (mFactory.get(position).getPriceFactory()/2) +
-                        "\nEnergy Gen : " + mFactory.get(position).getEnergyProd() + "/s" +
-                        "\nOperating Cost : " + mFactory.get(position).getOperatingCost() + "/m" +
-                        "\nEnvironment Tax : " + mFactory.get(position).getPollutionTax() + "/m");
-
-                salepopups.getConfirm().setOnClickListener(new View.OnClickListener() {
+                if(mFactory.get(position).getFactoryLevel() >= 3) {
+                    salepopups.setMessageSale(
+                            "Actual Level : Level Max" +
+                            "\nSell Price : " + (mFactory.get(position).getPriceFactory() / 2) +
+                            "\nEnergy Gen : " + mFactory.get(position).getEnergyProd() + "/s" +
+                            "\nOperating Cost : " + mFactory.get(position).getOperatingCost() + "/m" +
+                            "\nEnvironment Tax : " + mFactory.get(position).getPollutionTax() + "/m");
+                } else {
+                    salepopups.setMessageSale(
+                            "Actual Level : " + mFactory.get(position).getFactoryLevel() +
+                            "\nUpdate Cost : " + mFactory.get(position).getUpgradeCost() +
+                            "\nSell Price : " + (mFactory.get(position).getPriceFactory() / 2) +
+                            "\nEnergy Gen : " + mFactory.get(position).getEnergyProd() + "/s" +
+                            "\nOperating Cost : " + mFactory.get(position).getOperatingCost() + "/m" +
+                            "\nEnvironment Tax : " + mFactory.get(position).getPollutionTax() + "/m");
+                }
+                salepopups.getButton1().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(mFactory.size() > 0) {
-                            db.deleteFactory(mFactory.get(position).getName());
-                            db.updateCoin(db.infoFirstPlayer().getName(), (mFactory.get(position).getPriceFactory() / 2));
-                            Toast.makeText(mContext, "This object will be deleted !", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(mContext, "You no longer have this object.", Toast.LENGTH_SHORT).show();
-                        }
+                        saleFactory(position, db);
                         salepopups.dismiss();
                     }
                 });
 
-                salepopups.getCancel().setOnClickListener(new View.OnClickListener() {
+                salepopups.getButton2().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(db.infoFirstPlayer().getCoin() >= mFactory.get(position).getUpgradeCost()) {
-                            if(mFactory.get(position).getFactoryLevel() == 5){
-                                Toast.makeText(activity, "You cannot improve this type of Factory.", Toast.LENGTH_LONG).show();
-                            } else {
-                                mFactory.get(position).Upgrade(mFactory.get(position), db);
-                                Toast.makeText(mContext, mFactory.get(position).getName() + " will be upgrade!", Toast.LENGTH_SHORT).show();
-                            }
-                        } else {
-                            Toast.makeText(mContext, "You don't have money!", Toast.LENGTH_SHORT).show();
-                        }
+                        upgradeFactory(db, position);
                         salepopups.dismiss();
                     }
                 });
@@ -117,23 +109,21 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
             @Override
             public boolean onLongClick(View v) {
                 final SalePopup salepopups = new SalePopup(activity);
+
                 salepopups.setMessageSale("You want sale " + mFactory.get(position).getName() + " for " + (mFactory.get(position).getPriceFactory()/2) + " coins!");
                 salepopups.setNameObjectSale("Selling " + mFactory.get(position).getName());
-                salepopups.getConfirm().setOnClickListener(new View.OnClickListener() {
+                salepopups.getButton1().setText("Confirm");
+                salepopups.getButton2().setText("Cancel");
+
+                salepopups.getButton1().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(mFactory.size() > 0) {
-                            db.deleteFactory(mFactory.get(position).getName());
-                            db.updateCoin(db.infoFirstPlayer().getName(), (mFactory.get(position).getPriceFactory()/2));
-                            Toast.makeText(mContext, "This object will be deleted !", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(mContext, "You no longer have this object.", Toast.LENGTH_SHORT).show();
-                        }
+                        saleFactory(position, db);
                         salepopups.dismiss();
                     }
                 });
 
-                salepopups.getCancel().setOnClickListener(new View.OnClickListener() {
+                salepopups.getButton2().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         salepopups.dismiss();
@@ -148,18 +138,7 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i(TAG, "Player.getCoin() : " + db.infoFirstPlayer().getCoin());
-                Log.i(TAG, "mFactory.get(position).getUpgradeCost() : " + mFactory.get(position).getUpgradeCost());
-                if(db.infoFirstPlayer().getCoin() >= mFactory.get(position).getUpgradeCost()) {
-                    if(mFactory.get(position).getFactoryLevel() == 5){
-                        Toast.makeText(activity, "You cannot improve this type of Factory.", Toast.LENGTH_LONG).show();
-                    } else {
-                        mFactory.get(position).Upgrade(mFactory.get(position), db);
-                        Toast.makeText(mContext, mFactory.get(position).getName() + " will be upgrade!", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                   Toast.makeText(mContext, "You don't have money!", Toast.LENGTH_SHORT).show();
-                }
+                upgradeFactory(db, position);
             }
         });
 
@@ -184,6 +163,30 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
             name = itemView.findViewById(R.id.imagename);
             nbObject = itemView.findViewById(R.id.NumberObject);
             button = itemView.findViewById(R.id.infoObject);
+        }
+    }
+
+    public void saleFactory(int position, Database db){
+        //Vendre une usine pour la moitié de son prix
+        if(mFactory.get(position).getNbObject() > 0) {
+            db.deleteFactory(mFactory.get(position).getName());
+            db.updateCoin(db.infoFirstPlayer().getName(), (mFactory.get(position).getPriceFactory() / 2));
+            Toast.makeText(mContext, "This object will be deleted !", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(mContext, "You no longer have this object.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void upgradeFactory(Database db, int position){
+        if(db.infoFirstPlayer().getCoin() >= mFactory.get(position).getUpgradeCost()) {
+            if(mFactory.get(position).getFactoryLevel() == 3){
+                Toast.makeText(activity, "You cannot improve this type of Factory.", Toast.LENGTH_LONG).show();
+            } else {
+                mFactory.get(position).Upgrade(mFactory.get(position), db, activity);
+                Toast.makeText(mContext, mFactory.get(position).getName() + " will be upgrade!", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(mContext, "You don't have money!", Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -1,8 +1,10 @@
 package com.example.elecstory.Object;
 
+import android.app.Activity;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.elecstory.Craft.EarthObjectActivity;
 import com.example.elecstory.Database.Database;
 import com.example.elecstory.R;
 
@@ -116,10 +118,8 @@ public class Factory {
         Skin = skin;
     }
 
-    public Factory Upgrade(Factory Fact, Database db){
-        if(Fact.getFactoryLevel() < 5) {
-
-            Log.i("Factory", "Fact.getUpgradeCost() : " + Fact.getUpgradeCost());
+    public Factory Upgrade(Factory Fact, Database db, Activity activitys){
+        if(Fact.getFactoryLevel() < 3) {
             db.updateCoin(db.infoFirstPlayer().getName(), -Fact.getUpgradeCost());
 
             Fact.setFactoryLevel(Fact.getFactoryLevel() + 1);
@@ -137,6 +137,8 @@ public class Factory {
             Fact.setPollutionTax(Fact.getPollutionTax()*2);
             db.updatePollutionTaxFactory(Fact.getName(), 2);
 
+        } else {
+            Toast.makeText(activitys, "Vous n'avez pas assez d'argent ! ", Toast.LENGTH_SHORT).show();
         }
         return Fact;
     }

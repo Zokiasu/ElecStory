@@ -3,6 +3,7 @@ package com.example.elecstory.Shop;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -31,7 +32,7 @@ public class ShopActivity extends AppCompatActivity {
         final Database db = new Database(this);
 
         TextView Title = findViewById(R.id.ShopTitle);
-        Title.setText("Factory's Shop");
+        Title.setText("Factory's ShopFactory");
 
         Button BackShop = findViewById(R.id.back);
         BackShop.setOnClickListener(new View.OnClickListener() {
@@ -81,7 +82,8 @@ public class ShopActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 Factory N = ListShopObject.get(position);
-                if((db.infoFirstPlayer().getCoin() >= N.getPriceFactory()) && (db.infoFirstPlayer().getCoin()-N.getPriceFactory() >= 0)) {
+                Log.i("ShopActivity", "(db.infoFirstPlayer().getCoin()-N.getPriceFactory()) : "+(db.infoFirstPlayer().getCoin()-N.getPriceFactory()));
+                if((db.infoFirstPlayer().getCoin() >= N.getPriceFactory()) && ((db.infoFirstPlayer().getCoin()-N.getPriceFactory()) >= 0)) {
                     db.insertFactory(N.getNbObject(), N.getName(), N.getFactoryLevel(), N.getPriceFactory(), N.getUpgradeCost(), N.getEnergyProd(), N.getOperatingCost(), N.getPollutionTax(), N.getSkin());
                     db.updateCoin(db.infoFirstPlayer().getName(), -N.getPriceFactory());
                 } else {

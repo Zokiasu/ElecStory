@@ -1,7 +1,5 @@
 package com.example.elecstory.Object;
 
-import android.util.Log;
-
 import com.example.elecstory.R;
 
 public class EarthObject {

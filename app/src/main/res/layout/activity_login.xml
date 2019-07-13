@@ -45,7 +45,7 @@
         android:id="@+id/Confirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/confirm"
+        android:text="@string/button1"
         android:textAllCaps="false"/>
 
     <Space

@@ -17,11 +17,10 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.elecstory.Craft.CraftActivity;
+import com.example.elecstory.Craft.EarthObjectActivity;
 import com.example.elecstory.Database.Database;
 import com.example.elecstory.Object.EarthObject;
 import com.example.elecstory.Object.Factory;
@@ -52,11 +51,11 @@ public class MainActivity extends AppCompatActivity {
     protected TextView CoinWins;
     protected TextView DisplayQuestName;
 
-    protected Button UpElecPoint;
-    protected Button Shop;
+    protected Button UpPoint;
     protected Button Unlock;
-    protected Button ListCraft;
     protected Button RandomBonus;
+    protected Button ShopFactory;
+    protected Button ShopEarthObject;
 
     protected RecyclerView recyclerViewCity;
     protected RecyclerView recyclerViewFactory;
@@ -70,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("SimpleDateFormat")
     protected DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
-
+    //Variable pub
     protected TextView CoinAdText;
     protected CardView CoinAd;
     protected Calendar CoinAdEnd;
@@ -247,8 +246,6 @@ public class MainActivity extends AppCompatActivity {
                 updatingList();
                 adapterE.notifyDataSetChanged();
                 adapterF.notifyDataSetChanged();
-                initFactoryVar();
-                initEarthObjectVar();
             }
 
             checkBoostAds();
@@ -455,10 +452,10 @@ public class MainActivity extends AppCompatActivity {
         DisplayQuestName = findViewById(R.id.requestName);
 
         //Button
-        Shop = findViewById(R.id.ShopButton);
+        ShopFactory = findViewById(R.id.ShopButton);
         Unlock = findViewById(R.id.ActionCraft);
-        ListCraft = findViewById(R.id.ListCraft);
-        UpElecPoint = findViewById(R.id.ElecUp);
+        ShopEarthObject = findViewById(R.id.ListCraft);
+        UpPoint = findViewById(R.id.ElecUp);
         RandomBonus = findViewById(R.id.randomButton);
 
         //Affichage liste
@@ -467,7 +464,7 @@ public class MainActivity extends AppCompatActivity {
         gv = findViewById(R.id.requestObject);
     }
 
-    //Initialise les différentes actions que font chaque bouton
+    //Initialise les différentes actions des boutons
     protected void initButtonAction(){
         CoinAd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -507,16 +504,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ListCraft.setOnClickListener(new View.OnClickListener() {
+        ShopEarthObject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent myIntent = new Intent(MainActivity.this, CraftActivity.class);
+                Intent myIntent = new Intent(MainActivity.this, EarthObjectActivity.class);
                 startActivity(myIntent);
                 finish();
             }
         });
 
-        Shop.setOnClickListener(new View.OnClickListener() {
+        ShopFactory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent myIntent = new Intent(MainActivity.this, ShopActivity.class);
@@ -525,7 +522,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        UpElecPoint.setOnClickListener(new View.OnClickListener() {
+        UpPoint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 upgradeEnergy();
@@ -588,7 +585,7 @@ public class MainActivity extends AppCompatActivity {
 
     protected String displayHMS(Calendar Deb, Calendar Fin){
 
-        int Y, M, D, h, m, s, totalS;
+        int Y, M, D, h, m, s, totalSecond;
 
         SimpleDateFormat hours = new SimpleDateFormat("HH");
         SimpleDateFormat minute = new SimpleDateFormat("mm");
@@ -606,7 +603,7 @@ public class MainActivity extends AppCompatActivity {
         m = Integer.valueOf(minute.format(Deb.getTime()));
         s = Integer.valueOf(second.format(Deb.getTime()));
 
-        Date deb1 = new GregorianCalendar(Y,M,D,h,m,s).getTime();
+        Date deb = new GregorianCalendar(Y,M,D,h,m,s).getTime();
 
         Y = Integer.valueOf(year.format(Fin.getTime()));
         M = Integer.valueOf(month.format(Fin.getTime()));
@@ -616,13 +613,13 @@ public class MainActivity extends AppCompatActivity {
         m = Integer.valueOf(minute.format(Fin.getTime()));
         s = Integer.valueOf(second.format(Fin.getTime()));
 
-        Date fin2 = new GregorianCalendar(Y,M,D,h,m,s).getTime();
+        Date fin = new GregorianCalendar(Y,M,D,h,m,s).getTime();
 
-        long hello = deb1.getTime() - fin2.getTime();
-        totalS = Math.abs((int)((hello)/(1000)));
-        h = totalS/(60*60);
-        m = (totalS/60)%60;
-        s = totalS%60;
+        long hello = deb.getTime() - fin.getTime();
+        totalSecond = Math.abs((int)((hello)/(1000)));
+        h = totalSecond/(60*60);
+        m = (totalSecond/60)%60;
+        s = totalSecond%60;
 
         return h+":"+m+":"+s;
     }
@@ -699,7 +696,7 @@ public class MainActivity extends AppCompatActivity {
             db.insertSpeedAds(dateFormat.format(SpeedAdEnd.getTime()));
 
             Speed = 2;
-            Toast.makeText(MainActivity.this,"The speed has been multiplied by 2!",Toast.LENGTH_LONG);
+            Toast.makeText(MainActivity.this,"The speed has been multiplied by 2!",Toast.LENGTH_LONG).show();
         }
     }
 
@@ -712,7 +709,7 @@ public class MainActivity extends AppCompatActivity {
             db.insertMultiAds(dateFormat.format(MultiAdEnd.getTime()));
 
             Multiple = 2;
-            Toast.makeText(MainActivity.this,"You earn " + Multiple + " times more coins",Toast.LENGTH_LONG);
+            Toast.makeText(MainActivity.this,"You earn " + Multiple + " times more coins",Toast.LENGTH_LONG).show();
         }
     }
 }
