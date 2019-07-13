@@ -33,7 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="@color/colorPrimary">
+                android:background="#0194CB">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -79,7 +79,7 @@
                                 android:id="@+id/requestImage"
                                 android:layout_width="@dimen/size_unlock_image"
                                 android:layout_height="@dimen/size_unlock_image"
-                                android:background="@color/colorPrimary"
+                                android:background="#0194CB"
                                 app:srcCompat="@drawable/ampoule"
                                 tools:ignore="MissingConstraints" />
 
@@ -120,8 +120,10 @@
                             android:id="@+id/requestObject"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:verticalSpacing="10dp"
+                            android:horizontalSpacing="10dp"
                             android:padding="15dp"
-                            android:background="@color/colorPrimary"
+                            android:background="#0194CB"
                             android:columnWidth="80dp"
                             android:fastScrollEnabled="true"
                             android:numColumns="auto_fit">
@@ -148,7 +150,7 @@
 
             <android.support.v4.widget.Space
                 android:layout_width="match_parent"
-                android:layout_height="10dp" />
+                android:layout_height="5dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -194,7 +196,7 @@
 
             <android.support.v4.widget.Space
                 android:layout_width="match_parent"
-                android:layout_height="10dp" />
+                android:layout_height="5dp" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerViewCity"
@@ -203,6 +205,8 @@
                 android:orientation="horizontal"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
+                android:horizontalSpacing="10dp"
+                android:verticalSpacing="10dp"
                 android:padding="10dp"
                 app:layout_constraintBottom_toTopOf="@+id/Factorys"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -213,7 +217,7 @@
 
             <android.support.v4.widget.Space
                 android:layout_width="match_parent"
-                android:layout_height="10dp" />
+                android:layout_height="5dp" />
 
             <LinearLayout
                 android:id="@+id/FactoryInfo"
@@ -257,7 +261,7 @@
 
             <android.support.v4.widget.Space
                 android:layout_width="match_parent"
-                android:layout_height="10dp" />
+                android:layout_height="5dp" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerViewFactory"
@@ -353,132 +357,212 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
-        android:background="#FFF"
-        android:orientation="horizontal"
-        android:gravity="center"
+        android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         tools:ignore="MissingConstraints">
 
-        <ImageView
-            android:id="@+id/imagePlayer"
-            android:layout_width="@dimen/size_player_image"
-            android:layout_height="@dimen/size_player_image"
-            app:srcCompat="@drawable/ampoule"
-            tools:ignore="MissingConstraints" />
-
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:padding="5dp"
+            tools:ignore="MissingConstraints">
 
-            <TextView
-                android:id="@+id/ElecStockage"
+            <Space
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ElecStockage"
-                android:textSize="@dimen/size_text" />
+                android:layout_weight="1" />
 
-            <TextView
-                android:id="@+id/ElecCoins"
+            <android.support.v7.widget.CardView
+                android:layout_width="@dimen/size_frame_text"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="10dp">
+
+                <TextView
+                    android:id="@+id/ElecStockage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="Energy"
+                    android:textSize="@dimen/size_text" />
+
+            </android.support.v7.widget.CardView>
+
+            <Space
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="CoinPlayer"
-                android:textSize="@dimen/size_text" />
+                android:layout_weight="1" />
+
+            <android.support.v7.widget.CardView
+                android:layout_width="@dimen/size_frame_text"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="10dp">
+
+                <TextView
+                    android:id="@+id/ElecCoins"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="Coin"
+                    android:textSize="@dimen/size_text" />
+
+            </android.support.v7.widget.CardView>
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
 
         </LinearLayout>
 
-        <Space
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"/>
-
-        <RelativeLayout
-            android:id="@+id/coinAds"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
             android:gravity="center"
-            android:orientation="vertical">
+            tools:ignore="MissingConstraints">
 
-            <ImageView
-                android:id="@+id/coinAdsImage"
-                android:layout_width="@dimen/size_player_image"
-                android:layout_height="@dimen/size_player_image"
-                app:srcCompat="@drawable/play"
-                tools:ignore="MissingConstraints" />
+            <android.support.v7.widget.CardView
+                android:layout_width="@dimen/size_player_image_main"
+                android:layout_height="@dimen/size_player_image_main"
+                app:cardCornerRadius="10dp">
 
-            <TextView
-                android:id="@+id/coinAdsText"
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/imagePlayer"
+                        android:layout_width="@dimen/size_player_image_main"
+                        android:layout_height="@dimen/size_player_image_main"
+                        android:background="#0194CB"
+                        app:srcCompat="@drawable/ampoule"
+                        tools:ignore="MissingConstraints" />
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <Space
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/coinAdsImage"
-                android:layout_alignRight="@+id/coinAdsImage"
-                android:layout_alignLeft="@+id/coinAdsImage"
-                android:gravity="center"
-                android:text="Ads"/>
+                android:layout_weight="15"/>
 
-        </RelativeLayout>
+            <android.support.v7.widget.CardView
+                android:id="@+id/coinAds"
+                android:layout_width="@dimen/size_player_image_main"
+                android:layout_height="@dimen/size_player_image_main"
+                app:cardCornerRadius="10dp">
 
-        <Space
-            android:layout_width="10dp"
-            android:layout_height="wrap_content"/>
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
-        <RelativeLayout
-            android:id="@+id/speedAds"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
+                    <ImageView
+                        android:id="@+id/coinAdsImage"
+                        android:layout_width="@dimen/size_player_image_main"
+                        android:layout_height="@dimen/size_player_image_main"
+                        app:srcCompat="@drawable/play"
+                        tools:ignore="MissingConstraints" />
 
-            <ImageView
-                android:id="@+id/speedAdsImage"
-                android:layout_width="@dimen/size_player_image"
-                android:layout_height="@dimen/size_player_image"
-                app:srcCompat="@drawable/play"
-                tools:ignore="MissingConstraints" />
+                    <TextView
+                        android:id="@+id/coinAdsText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/coinAdsImage"
+                        android:layout_alignRight="@+id/coinAdsImage"
+                        android:layout_alignLeft="@+id/coinAdsImage"
+                        android:gravity="center"
+                        android:text="Ads"/>
 
-            <TextView
-                android:id="@+id/speedAdsText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/speedAdsImage"
-                android:layout_alignRight="@+id/speedAdsImage"
-                android:layout_alignLeft="@+id/speedAdsImage"
-                android:gravity="center"
-                android:text="Speed"/>
+                </RelativeLayout>
 
-        </RelativeLayout>
+            </android.support.v7.widget.CardView>
 
-        <Space
-            android:layout_width="10dp"
-            android:layout_height="wrap_content"/>
+            <Space
+                android:layout_width="10dp"
+                android:layout_height="wrap_content"/>
 
-        <RelativeLayout
-            android:id="@+id/multiAds"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
+            <android.support.v7.widget.CardView
+                android:id="@+id/speedAds"
+                android:layout_width="@dimen/size_player_image_main"
+                android:layout_height="@dimen/size_player_image_main"
+                app:cardCornerRadius="10dp">
 
-            <ImageView
-                android:id="@+id/multiAdsImage"
-                android:layout_width="@dimen/size_player_image"
-                android:layout_height="@dimen/size_player_image"
-                app:srcCompat="@drawable/play"
-                tools:ignore="MissingConstraints" />
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/multiAdsText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/multiAdsImage"
-                android:layout_alignRight="@+id/multiAdsImage"
-                android:layout_alignLeft="@+id/multiAdsImage"
-                android:gravity="center"
-                android:text="Coin X2"/>
+                    <ImageView
+                        android:id="@+id/speedAdsImage"
+                        android:layout_width="@dimen/size_player_image_main"
+                        android:layout_height="@dimen/size_player_image_main"
+                        app:srcCompat="@drawable/play"
+                        tools:ignore="MissingConstraints" />
 
-        </RelativeLayout>
+                    <TextView
+                        android:id="@+id/speedAdsText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/speedAdsImage"
+                        android:layout_alignRight="@+id/speedAdsImage"
+                        android:layout_alignLeft="@+id/speedAdsImage"
+                        android:gravity="center"
+                        android:text="Speed"/>
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <Space
+                android:layout_width="10dp"
+                android:layout_height="wrap_content"/>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/multiAds"
+                android:layout_width="@dimen/size_player_image_main"
+                android:layout_height="@dimen/size_player_image_main"
+                app:cardCornerRadius="10dp">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/multiAdsImage"
+                        android:layout_width="@dimen/size_player_image_main"
+                        android:layout_height="@dimen/size_player_image_main"
+                        app:srcCompat="@drawable/play"
+                        tools:ignore="MissingConstraints" />
+
+                    <TextView
+                        android:id="@+id/multiAdsText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/multiAdsImage"
+                        android:layout_alignRight="@+id/multiAdsImage"
+                        android:layout_alignLeft="@+id/multiAdsImage"
+                        android:gravity="center"
+                        android:text="Coin X2"/>
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
 
     </LinearLayout>
 

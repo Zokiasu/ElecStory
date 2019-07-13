@@ -64,13 +64,8 @@ public class CraftActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 EarthObject N = finalListEarthObject.get(position);
                 if((db.infoFirstPlayer().getCoin() >= N.getPriceObject()) && (db.infoFirstPlayer().getCoin()-N.getPriceObject() >= 0)) {
-                    //if(position == 0 || checkObject(finalListEarthObjectPlayer, position, db)) {
-                        db.insertCity(N.getNbObject(), N.getName(), N.getCoinWin(), N.getPriceObject(), N.getEnergyCost(), N.getSkin());
-                        db.updateCoin(db.infoFirstPlayer().getName(), -N.getPriceObject());
-                        Toast.makeText(CraftActivity.this, "Unlock effectué ! ", Toast.LENGTH_SHORT).show();
-                   /* } else {
-                        Toast.makeText(CraftActivity.this, "Vous n'avez pas les objets requis ! ", Toast.LENGTH_SHORT).show();
-                    }*/
+                    db.insertCity(N.getNbObject(), N.getName(), N.getCoinWin(), N.getPriceObject(), N.getEnergyCost(), N.getSkin());
+                    db.updateCoin(db.infoFirstPlayer().getName(), -N.getPriceObject());
                 } else {
                     Toast.makeText(CraftActivity.this, "Vous n'avez pas assez d'argent ! ", Toast.LENGTH_SHORT).show();
                 }

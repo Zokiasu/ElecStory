@@ -32,7 +32,7 @@ public class Factory {
                 this.UpgradeCost = 100;
                 this.EnergyProd = 2;
                 this.OperatingCost = 1;
-                this.PollutionTax = 1;
+                this.PollutionTax = 2;
                 this.Skin = R.drawable.eclair;
                 break;
             case 0 :
@@ -76,7 +76,7 @@ public class Factory {
                 this.UpgradeCost = 10000;
                 this.EnergyProd = 5000;
                 this.OperatingCost = 50;
-                this.PollutionTax = 15;
+                this.PollutionTax = 20;
                 this.Skin = R.drawable.eclair;
                 break;
             case 4 :
@@ -87,7 +87,7 @@ public class Factory {
                 this.UpgradeCost = 15000;
                 this.EnergyProd = 40000;
                 this.OperatingCost = 150;
-                this.PollutionTax = 25;
+                this.PollutionTax = 50;
                 this.Skin = R.drawable.eclair;
                 break;
             case 5 :
@@ -98,7 +98,7 @@ public class Factory {
                 this.UpgradeCost = 20000;
                 this.EnergyProd = 300000;
                 this.OperatingCost = 250;
-                this.PollutionTax = 50;
+                this.PollutionTax = 100;
                 this.Skin = R.drawable.eclair;
                 break;
         }

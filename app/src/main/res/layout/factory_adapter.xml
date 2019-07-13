@@ -9,6 +9,7 @@
         android:layout_width="@dimen/size_factory_adapter"
         android:layout_height="@dimen/size_factory_adapter"
         android:layout_centerInParent="true"
+        android:layout_margin="10dp"
         app:cardCornerRadius="10dp"
         tools:ignore="MissingConstraints">
 

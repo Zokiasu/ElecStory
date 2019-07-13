@@ -36,4 +36,5 @@ dependencies {
 
     //circle imageview
     api 'de.hdodenhof:circleimageview:2.2.0'
+    implementation 'com.android.support:design:28.0.0'
 }

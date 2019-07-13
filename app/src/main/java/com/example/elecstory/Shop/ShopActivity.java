@@ -84,7 +84,6 @@ public class ShopActivity extends AppCompatActivity {
                 if((db.infoFirstPlayer().getCoin() >= N.getPriceFactory()) && (db.infoFirstPlayer().getCoin()-N.getPriceFactory() >= 0)) {
                     db.insertFactory(N.getNbObject(), N.getName(), N.getFactoryLevel(), N.getPriceFactory(), N.getUpgradeCost(), N.getEnergyProd(), N.getOperatingCost(), N.getPollutionTax(), N.getSkin());
                     db.updateCoin(db.infoFirstPlayer().getName(), -N.getPriceFactory());
-                    Toast.makeText(ShopActivity.this, "Achat effectué !", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(ShopActivity.this, "Vous n'avez pas assez d'argent !", Toast.LENGTH_SHORT).show();
                 }
