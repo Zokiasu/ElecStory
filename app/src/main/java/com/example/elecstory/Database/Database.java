@@ -175,17 +175,20 @@ public class Database extends SQLiteOpenHelper {
     public void updateCoin (String name, int nbcoin) {
         Log.i(TAG,"Call updateCoin");
         name = name.replace("'", "''");
-        String strSql = "UPDATE " + TABLE_PLAYER + " SET " + COIN_PLAYER + " = "+ COIN_PLAYER + " + " + nbcoin + " WHERE " + USERNAME_PLAYER + " = '" + name + "'";
+        String strSql = "UPDATE " + TABLE_PLAYER + " SET " + COIN_PLAYER + " = " + nbcoin + " WHERE " + USERNAME_PLAYER + " = '" + name + "'";
         this.getWritableDatabase().execSQL(strSql);
     }
 
-    public void updateElecPoint (String name, int point) {
-        Log.i(TAG,"Call updateElecPoint");
-        if(this.infoFirstPlayer().getElectricityPoint() + point >= 0) {
+    public void updateEnergyPoint(String name, int point) {
+        Log.i(TAG,"Call updateEnergyPoint");
+        if(this.infoFirstPlayer().getEnergyPoint() + point >= 0) {
             name = name.replace("'", "''");
-            String strSql = "UPDATE " + TABLE_PLAYER + " SET " + ELECPOINT_PLAYER + " = " + ELECPOINT_PLAYER + " + " + point + " WHERE " + USERNAME_PLAYER + " = '" + name + "'";
+            String strSql = "UPDATE " + TABLE_PLAYER + " SET " + ELECPOINT_PLAYER + " = " + point + " WHERE " + USERNAME_PLAYER + " = '" + name + "'";
             this.getWritableDatabase().execSQL(strSql);
         } else {
+            name = name.replace("'", "''");
+            String strSql = "UPDATE " + TABLE_PLAYER + " SET " + ELECPOINT_PLAYER + " = " + ELECPOINT_PLAYER + " - " + ELECPOINT_PLAYER + " WHERE " + USERNAME_PLAYER + " = '" + name + "'";
+            this.getWritableDatabase().execSQL(strSql);
             Log.i(TAG, "Second Test Energy + Point");
         }
     }
@@ -196,16 +199,16 @@ public class Database extends SQLiteOpenHelper {
         this.getWritableDatabase().execSQL(strSql);
     }
 
-    ////// Earth function //////
-    public void insertCity (int NbObject, String name, int coinwin, int price, int energycost, int skin) {
-        Log.i(TAG,"Call insertCity");
+    ////// EarthObject function //////
+    public void insertEarthObject(int NbObject, String name, int coinwin, int price, int energycost, int skin) {
+        Log.i(TAG,"Call insertEarthObject");
         ArrayList<EarthObject> Test = new ArrayList<>();
         int i = 0;
-        Test = this.infoCity(Test);
+        Test = this.infoEarthObject(Test);
         if(Test.size() > 0){
             for(i = 0; i < Test.size(); i++){
                 if(Test.get(i).getName().equals(name)){
-                    this.updateNbObject(name,1);
+                    this.updateNbEarthObject(name,1);
                     i = Test.size();
                 }
             }
@@ -219,31 +222,31 @@ public class Database extends SQLiteOpenHelper {
         }
     }
 
-    public void updateNbObject (String name, int X) {
-        Log.i(TAG,"Call updateNbObject");
+    public void updateNbEarthObject(String name, int X) {
+        Log.i(TAG,"Call updateNbEarthObject");
         name = name.replace("'", "''");
         String strSql = "UPDATE " + TABLE_EARTH + " SET " + NUMBER_OBJECT + " = "+ NUMBER_OBJECT + " + "+ X +" WHERE " + NAME_BUILDING + " = '" + name + "'";
         this.getWritableDatabase().execSQL(strSql);
     }
 
-    public void clearAllCity() {
-        Log.i(TAG,"Call clearAllCity");
+    public void clearAllEarthObject() {
+        Log.i(TAG,"Call clearAllEarthObject");
         String strSql = "DELETE FROM " + TABLE_EARTH;
         this.getWritableDatabase().execSQL(strSql);
     }
 
-    public void deleteCity(String name) {
-        Log.i(TAG,"Call deleteCity");
+    public void deleteEarthObject(String name) {
+        Log.i(TAG,"Call deleteEarthObject");
         ArrayList<EarthObject> Test = new ArrayList<>();
         int i = 0;
-        Test = this.infoCity(Test);
+        Test = this.infoEarthObject(Test);
 
         if(Test.size() > 0){
             for(i = 0; i < Test.size(); i++){
                 if(Test.get(i).getNbObject() == 1) {
                     i = Test.size();
                 } else if(Test.get(i).getName().equals(name)){
-                    this.updateNbObject(name, -1);
+                    this.updateNbEarthObject(name, -1);
                     i = Test.size()+1;
                 }
             }
@@ -256,8 +259,8 @@ public class Database extends SQLiteOpenHelper {
         }
     }
 
-    public ArrayList<EarthObject> infoCity(ArrayList<EarthObject> earthObjectList) {
-        Log.i(TAG,"Call infoCity");
+    public ArrayList<EarthObject> infoEarthObject(ArrayList<EarthObject> earthObjectList) {
+        Log.i(TAG,"Call infoEarthObject");
 
         String strSql = " SELECT * FROM " + TABLE_EARTH;
         Cursor cursor = this.getReadableDatabase().rawQuery( strSql, null);
@@ -377,25 +380,6 @@ public class Database extends SQLiteOpenHelper {
             String strSql = "DELETE FROM " + TABLE_FACTORY + " WHERE " + NAME_FACTORY + " = '" + name + "'";
             this.getWritableDatabase().execSQL(strSql);
         }
-    }
-
-    public Factory infoFirstFactory() {
-        Log.i(TAG,"Call infoFirstFactory");
-        String strSql = " SELECT * FROM " + TABLE_FACTORY;
-        Cursor cursor = this.getReadableDatabase().rawQuery( strSql, null);
-        cursor.moveToFirst();
-
-        Factory fact = new Factory(
-                cursor.getInt(0), //NbObject
-                cursor.getString(1), //Name
-                cursor.getInt(2), //Level
-                cursor.getInt(3), //Cost
-                cursor.getInt(4), //UpgradeCost
-                cursor.getInt(5), //PointGenerate
-                cursor.getInt(6), //ActualFactoryCost
-                cursor.getInt(7), //ActualFactoryTax
-                cursor.getInt(8)); //Skin
-        return fact;
     }
 
     public ArrayList<Factory> infoFactory(ArrayList<Factory> FactoryList) {

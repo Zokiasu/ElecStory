@@ -20,18 +20,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.elecstory.Craft.EarthObjectActivity;
-import com.example.elecstory.Database.Database;
-import com.example.elecstory.Object.EarthObject;
-import com.example.elecstory.Object.Factory;
-import com.example.elecstory.Database.PlayerData;
-import com.example.elecstory.Object.RecyclerViewAdapterEarth;
-import com.example.elecstory.Object.RecyclerViewAdapterFactory;
-import com.example.elecstory.Quest.Quest;
-import com.example.elecstory.Quest.QuestAdapter;
-import com.example.elecstory.Shop.ShopActivity;
+import com.example.elecstory.ShopEarthObject.ShopEarthActivity;
+import com.example.elecstory.Database.*;
+import com.example.elecstory.Object.*;
+import com.example.elecstory.Quest.*;
+import com.example.elecstory.ShopFactory.ShopFactoryActivity;
 
 import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -107,6 +103,8 @@ public class MainActivity extends AppCompatActivity {
 
     protected Boolean Start = true;
 
+    protected NumberFormat numberFormat = NumberFormat.getInstance(java.util.Locale.FRENCH);
+
     protected static final String TAG = "MainActivity";
 
     @SuppressLint("SetTextI18n")
@@ -139,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        updateByDb();
         Log.i(TAG, "onPause");
     }
 
@@ -170,12 +169,12 @@ public class MainActivity extends AppCompatActivity {
         displayQuest();
 
         ActualCoin.setText("Coin : " + ActualPlayer.getCoin());
-        ActualElecPoint.setText("Energy : " + ActualPlayer.getElectricityPoint());
+        ActualElecPoint.setText("Energy : " + ActualPlayer.getEnergyPoint());
 
         mFactory.clear();
         mFactory = db.infoFactory(mFactory);
         mEarthObject.clear();
-        mEarthObject = db.infoCity(mEarthObject);
+        mEarthObject = db.infoEarthObject(mEarthObject);
 
         if(mFactory.size() < 1) {
             recyclerViewFactory.setVisibility(View.INVISIBLE);
@@ -199,7 +198,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void recursionUpDownPoint(int N){
-        ActualPlayer = db.infoFirstPlayer();
 
         View decorView = getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
@@ -209,21 +207,21 @@ public class MainActivity extends AppCompatActivity {
             //Augmente l'énergie en fonction de des usines actuelles
             if (mFactory.size() > 0) {
                 if (FactoryEnergyWin != 0) {
-                    db.updateElecPoint(ActualPlayer.getName(), FactoryEnergyWin);
+                    ActualPlayer.setEnergyPoint(ActualPlayer.getEnergyPoint() + FactoryEnergyWin);
                 }
 
                 if (N%60 == 1) {
-                    db.updateCoin(ActualPlayer.getName(), -(FactoryCost + FactoryPollution));
+                    ActualPlayer.setCoin(ActualPlayer.getCoin() - (FactoryCost + FactoryPollution));
                 }
             }
 
             //Réduit l'énergie & donne des coins en fonction des bâtiments possédé
             if (mEarthObject.size() > 0) {
-                if (ActualPlayer.getElectricityPoint() >= EarthObjectEnergyCost &&
-                   (ActualPlayer.getElectricityPoint() - EarthObjectEnergyCost) >= 0 && N%2 == 1)
+                if (ActualPlayer.getEnergyPoint() >= EarthObjectEnergyCost &&
+                   (ActualPlayer.getEnergyPoint() - EarthObjectEnergyCost) >= 0 && N%2 == 1)
                 {
-                    db.updateElecPoint(ActualPlayer.getName(), -EarthObjectEnergyCost);
-                    db.updateCoin(ActualPlayer.getName(), EarthObjectCoinWin*Multiple);
+                    ActualPlayer.setEnergyPoint(ActualPlayer.getEnergyPoint() - EarthObjectEnergyCost);
+                    ActualPlayer.setCoin(ActualPlayer.getCoin() + EarthObjectCoinWin*Multiple);
                 }
             }
 
@@ -237,25 +235,25 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            if(N%60 == 1 && N > 1){
-                //randomButton();
+            if(N == 120){
+                updateByDb();
                 N = 0;
             }
 
-            if(N%30 == 1 && N > 1) {
-                updatingList();
-                adapterE.notifyDataSetChanged();
-                adapterF.notifyDataSetChanged();
+            if(N%60 == 1 && N > 1){
+                //randomButton();
+                /*adapterE.notifyDataSetChanged();
+                adapterF.notifyDataSetChanged();*/
             }
 
             checkBoostAds();
 
-            ActualElecPoint.setText("Energy : " + ActualPlayer.getElectricityPoint());
-            ActualCoin.setText("Coin : " + ActualPlayer.getCoin());
-            ElecCost.setText("Energy Use: " + EarthObjectEnergyCost);
-            CoinWins.setText("Coin Win: " + EarthObjectCoinWin*Multiple);
-            ElecGenerate.setText("Energy Prod: " + FactoryEnergyWin + "/s");
-            ActualFactoryCost.setText("Coin Use: " + FactoryCost + "/m");
+            ActualElecPoint.setText("Energy : " + numberFormat.format(ActualPlayer.getEnergyPoint()));
+            ActualCoin.setText("Coin : " + numberFormat.format(ActualPlayer.getCoin()));
+            ElecCost.setText("Energy Use: " + numberFormat.format(EarthObjectEnergyCost));
+            CoinWins.setText("Coin Win: " + numberFormat.format(EarthObjectCoinWin*Multiple));
+            ElecGenerate.setText("Energy Prod: " + numberFormat.format(FactoryEnergyWin) + "/s");
+            ActualFactoryCost.setText("Coin Use: " + numberFormat.format(FactoryCost) + "/m");
 
             refreshRecursion(1000/Speed, N);
         }
@@ -323,11 +321,10 @@ public class MainActivity extends AppCompatActivity {
 
     //Vérifie que la quête actuelle est réalisé et passe à la quête suivante
     protected void upgradeQuest(){
-        ActualPlayer = db.infoFirstPlayer();
         if(ActualQuest.checkQuest(mEarthObject, db)) {
 
             mEarthObject.clear();
-            mEarthObject = db.infoCity(mEarthObject);
+            mEarthObject = db.infoEarthObject(mEarthObject);
             initRecyclerViewEarthObject();
 
             EarthObject TmpObject = new EarthObject(ActualQuest.getIdQuest(), ActualQuest.getNameReward());
@@ -361,14 +358,13 @@ public class MainActivity extends AppCompatActivity {
 
     //Fonction du bouton +1
     protected void upgradeEnergy() {
-        ActualPlayer = db.infoFirstPlayer();
-        ActualElecPoint.setText("Energy : " + ActualPlayer.getElectricityPoint());
-        db.updateElecPoint(ActualPlayer.getName(), 1);
+        ActualPlayer.setEnergyPoint(ActualPlayer.getEnergyPoint() + 1);
+        ActualPlayer.setCoin(ActualPlayer.getCoin() + 1);
 
-        db.updateCoin(ActualPlayer.getName(), 1);
+        ActualElecPoint.setText("Energy : " + ActualPlayer.getEnergyPoint());
         ActualCoin.setText("Coin : " + ActualPlayer.getCoin());
 
-        if(db.infoFirstPlayer().getCoin() >= 10 && mFactory.size() == 0){
+        if(ActualPlayer.getCoin() >= 10 && mFactory.size() == 0){
             Factory MyFact = new Factory(-1);
             db.insertFactory(MyFact.getNbObject(), MyFact.getName(), MyFact.getFactoryLevel(), MyFact.getPriceFactory(), MyFact.getUpgradeCost(), MyFact.getEnergyProd(), MyFact.getOperatingCost(), MyFact.getPollutionTax(), MyFact.getSkin());
             mFactory = db.infoFactory(mFactory);
@@ -382,14 +378,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Update les listes utiliser par les recyclerview
-    protected void  updatingList(){
+    protected void updateByDb(){
         int X, Y;
         X = mFactory.size();
         Y = mEarthObject.size();
         mFactory.clear();
         mFactory = db.infoFactory(mFactory);
         mEarthObject.clear();
-        mEarthObject = db.infoCity(mEarthObject);
+        mEarthObject = db.infoEarthObject(mEarthObject);
+
+        db.updateEnergyPoint(ActualPlayer.getName(), ActualPlayer.getEnergyPoint());
+        db.updateCoin(ActualPlayer.getName(), ActualPlayer.getCoin());
+
+        ActualPlayer = db.infoFirstPlayer();
+
         if(Y != mEarthObject.size()) {
             adapterE.notifyDataSetChanged();
         }
@@ -400,8 +402,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void reset(){
-        db.clearAllCity();
+        db.clearAllEarthObject();
         db.clearAllFactory();
+        db.updateCoin(ActualPlayer.getName(), -ActualPlayer.getCoin());
+        db.updateEnergyPoint(ActualPlayer.getName(), -ActualPlayer.getEnergyPoint());
     }
 
     //Initialise les RecyclerView des EarthObject
@@ -507,7 +511,7 @@ public class MainActivity extends AppCompatActivity {
         ShopEarthObject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent myIntent = new Intent(MainActivity.this, EarthObjectActivity.class);
+                Intent myIntent = new Intent(MainActivity.this, ShopEarthActivity.class);
                 startActivity(myIntent);
                 finish();
             }
@@ -516,7 +520,7 @@ public class MainActivity extends AppCompatActivity {
         ShopFactory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent myIntent = new Intent(MainActivity.this, ShopActivity.class);
+                Intent myIntent = new Intent(MainActivity.this, ShopFactoryActivity.class);
                 startActivity(myIntent);
                 finish();
             }
@@ -554,35 +558,69 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    protected void initAdEnd(){
+    /////Fonction Ads/////
+    protected void coinAds(){
+        Calendar ActualDate = Calendar.getInstance();
+        if(ActualDate.after(CoinAdEnd)) {
+            CoinAdEnd = Calendar.getInstance();
+            CoinAdEnd.add(Calendar.HOUR, 4);
+            db.insertCoinAds(dateFormat.format(CoinAdEnd.getTime()));
 
-        Date date = null;
-
-        SpeedAdEnd = Calendar.getInstance();
-        try {
-            date = dateFormat.parse(db.infoSpeedAds());
-        } catch (ParseException e) {
-            e.printStackTrace();
+            Random X = new Random();
+            int nombreAleatoire = X.nextInt(100 - 1 + 1) + 1, A = 0;
+            initEarthObjectVar();
+            if (nombreAleatoire > 1 && nombreAleatoire < 20) {
+                A = EarthObjectCoinWin*(300);
+                ActualPlayer.setCoin(ActualPlayer.getCoin() + A);
+                Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
+            } else if (nombreAleatoire > 20 && nombreAleatoire < 50) {
+                A = EarthObjectCoinWin*(600);
+                ActualPlayer.setCoin(ActualPlayer.getCoin() + A);
+                Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
+            } else if (nombreAleatoire > 50 && nombreAleatoire < 80) {
+                A = EarthObjectCoinWin*(900);
+                ActualPlayer.setCoin(ActualPlayer.getCoin() + A);
+                Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
+            } else if (nombreAleatoire > 80 && nombreAleatoire < 100) {
+                A = EarthObjectCoinWin*(1200);
+                ActualPlayer.setCoin(ActualPlayer.getCoin() + A);
+                Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
+            } else {
+                A = EarthObjectCoinWin*(3600);
+                ActualPlayer.setCoin(ActualPlayer.getCoin() + A);
+                Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
+            }
         }
-        SpeedAdEnd.setTime(date);
-
-        CoinAdEnd = Calendar.getInstance();
-        try {
-            date = dateFormat.parse(db.infoCoinAds());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        CoinAdEnd.setTime(date);
-
-        MultiAdEnd = Calendar.getInstance();
-        try {
-            date = dateFormat.parse(db.infoMultiAds());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        MultiAdEnd.setTime(date);
+        ActualCoin.setText("Coin : " + ActualPlayer.getCoin());
     }
 
+    protected void speedAds(){
+        Calendar ActualDate = Calendar.getInstance();
+        if(ActualDate.after(SpeedAdEnd)) {
+
+            SpeedAdEnd = Calendar.getInstance();
+            SpeedAdEnd.add(Calendar.HOUR, 4);
+            db.insertSpeedAds(dateFormat.format(SpeedAdEnd.getTime()));
+
+            Speed = 2;
+            Toast.makeText(MainActivity.this,"The speed has been multiplied by 2!",Toast.LENGTH_LONG).show();
+        }
+    }
+
+    protected void multiAds(){
+        Calendar ActualDate = Calendar.getInstance();
+        if(ActualDate.after(MultiAdEnd)) {
+
+            MultiAdEnd = Calendar.getInstance();
+            MultiAdEnd.add(Calendar.HOUR, 4);
+            db.insertMultiAds(dateFormat.format(MultiAdEnd.getTime()));
+
+            Multiple = 2;
+            Toast.makeText(MainActivity.this,"You earn " + Multiple + " times more coins",Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @SuppressLint("SimpleDateFormat")
     protected String displayHMS(Calendar Deb, Calendar Fin){
 
         int Y, M, D, h, m, s, totalSecond;
@@ -651,65 +689,32 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /////Fonction Ads/////
-    protected void coinAds(){
-        Calendar ActualDate = Calendar.getInstance();
-        if(ActualDate.after(CoinAdEnd)) {
-            CoinAdEnd = Calendar.getInstance();
-            CoinAdEnd.add(Calendar.HOUR, 4);
-            db.insertCoinAds(dateFormat.format(CoinAdEnd.getTime()));
+    protected void initAdEnd(){
 
-            Random X = new Random();
-            int nombreAleatoire = X.nextInt(100 - 1 + 1) + 1, A = 0;
-            initEarthObjectVar();
-            if (nombreAleatoire > 1 && nombreAleatoire < 20) {
-                A = EarthObjectCoinWin*(300);
-                db.updateCoin(db.infoFirstPlayer().getName(), A);
-                Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
-            } else if (nombreAleatoire > 20 && nombreAleatoire < 50) {
-                A = EarthObjectCoinWin*(600);
-                db.updateCoin(db.infoFirstPlayer().getName(), A);
-                Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
-            } else if (nombreAleatoire > 50 && nombreAleatoire < 80) {
-                A = EarthObjectCoinWin*(900);
-                db.updateCoin(db.infoFirstPlayer().getName(), A);
-                Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
-            } else if (nombreAleatoire > 80 && nombreAleatoire < 100) {
-                A = EarthObjectCoinWin*(1200);
-                db.updateCoin(db.infoFirstPlayer().getName(), A);
-                Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
-            } else {
-                A = EarthObjectCoinWin*(3600);
-                db.updateCoin(db.infoFirstPlayer().getName(), A);
-                Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
-            }
+        Date date = null;
+
+        SpeedAdEnd = Calendar.getInstance();
+        try {
+            date = dateFormat.parse(db.infoSpeedAds());
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
-        ActualCoin.setText("Coin : " + db.infoFirstPlayer().getCoin());
-    }
+        SpeedAdEnd.setTime(date);
 
-    protected void speedAds(){
-        Calendar ActualDate = Calendar.getInstance();
-        if(ActualDate.after(SpeedAdEnd)) {
-
-            SpeedAdEnd = Calendar.getInstance();
-            SpeedAdEnd.add(Calendar.HOUR, 4);
-            db.insertSpeedAds(dateFormat.format(SpeedAdEnd.getTime()));
-
-            Speed = 2;
-            Toast.makeText(MainActivity.this,"The speed has been multiplied by 2!",Toast.LENGTH_LONG).show();
+        CoinAdEnd = Calendar.getInstance();
+        try {
+            date = dateFormat.parse(db.infoCoinAds());
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
-    }
+        CoinAdEnd.setTime(date);
 
-    protected void multiAds(){
-        Calendar ActualDate = Calendar.getInstance();
-        if(ActualDate.after(MultiAdEnd)) {
-
-            MultiAdEnd = Calendar.getInstance();
-            MultiAdEnd.add(Calendar.HOUR, 4);
-            db.insertMultiAds(dateFormat.format(MultiAdEnd.getTime()));
-
-            Multiple = 2;
-            Toast.makeText(MainActivity.this,"You earn " + Multiple + " times more coins",Toast.LENGTH_LONG).show();
+        MultiAdEnd = Calendar.getInstance();
+        try {
+            date = dateFormat.parse(db.infoMultiAds());
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
+        MultiAdEnd.setTime(date);
     }
 }

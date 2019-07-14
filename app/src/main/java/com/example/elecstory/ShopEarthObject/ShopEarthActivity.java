@@ -1,8 +1,9 @@
-package com.example.elecstory.Craft;
+package com.example.elecstory.ShopEarthObject;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.elecstory.Database.Database;
+import com.example.elecstory.Database.PlayerData;
 import com.example.elecstory.MainActivity;
 import com.example.elecstory.Object.EarthObject;
 import com.example.elecstory.Quest.Quest;
@@ -18,7 +20,7 @@ import com.example.elecstory.R;
 
 import java.util.ArrayList;
 
-public class EarthObjectActivity extends AppCompatActivity {
+public class ShopEarthActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,34 +42,35 @@ public class EarthObjectActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 db.close();
-                Intent myIntent = new Intent(EarthObjectActivity.this, MainActivity.class);
+                Intent myIntent = new Intent(ShopEarthActivity.this, MainActivity.class);
                 startActivity(myIntent);
                 finish();
             }
         });
 
         ArrayList<EarthObject> ListEarthObject = new ArrayList<>();
-        ArrayList<EarthObject> ListEarthObjectPlayer = new ArrayList<>();
 
         ListEarthObject = db.infoCraft(ListEarthObject);
-        ListEarthObjectPlayer = db.infoCity(ListEarthObjectPlayer);
 
         GridView GV = findViewById(R.id.GridCraft);
-        GV.setAdapter(new EarthObjectAdapter(this, ListEarthObject));
+        GV.setAdapter(new ShopEarthAdapter(this, ListEarthObject));
 
         final ArrayList<EarthObject> finalListEarthObject = ListEarthObject;
-        final ArrayList<EarthObject> finalListEarthObjectPlayer = ListEarthObjectPlayer;
 
         GV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                final PlayerData ActualPlayer = db.infoFirstPlayer();
                 EarthObject N = finalListEarthObject.get(position);
-                if((db.infoFirstPlayer().getCoin() >= N.getPriceObject()) && (db.infoFirstPlayer().getCoin()-N.getPriceObject() >= 0)) {
-                    db.insertCity(N.getNbObject(), N.getName(), N.getCoinWin(), N.getPriceObject(), N.getEnergyCost(), N.getSkin());
-                    db.updateCoin(db.infoFirstPlayer().getName(), -N.getPriceObject());
+                Log.i("ShopEarthActivit", "ActualPlayer.getCoin() : " + ActualPlayer.getCoin());
+                Log.i("ShopEarthActivit", "N.getPriceObject() : " + N.getPriceObject());
+                Log.i("ShopEarthActivit", "(ActualPlayer.getCoin()-N.getPriceObject()) : " + (ActualPlayer.getCoin()-N.getPriceObject()));
+                if((ActualPlayer.getCoin() >= N.getPriceObject()) && ((ActualPlayer.getCoin()-N.getPriceObject()) >= 0)) {
+                    db.insertEarthObject(N.getNbObject(), N.getName(), N.getCoinWin(), N.getPriceObject(), N.getEnergyCost(), N.getSkin());
+                    db.updateCoin(ActualPlayer.getName(), ActualPlayer.getCoin() - N.getPriceObject());
                 } else {
-                    Toast.makeText(EarthObjectActivity.this, "Vous n'avez pas assez d'argent ! ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ShopEarthActivity.this, "Vous n'avez pas assez d'argent ! ", Toast.LENGTH_SHORT).show();
                 }
             }
 

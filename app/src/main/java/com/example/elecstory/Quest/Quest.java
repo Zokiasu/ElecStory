@@ -236,11 +236,11 @@ public class Quest {
                     }
                 }
 
-                db.clearAllCity();
+                db.clearAllEarthObject();
                 EarthObject TmpObject = new EarthObject(this.getIdQuest(), this.getNameReward());
                 earthObjectLists.add(TmpObject); //Ajoute l'objet qui doit être craft
                 for (int k = 0; k < earthObjectLists.size(); k++) { //Check toute la liste du joueur
-                    db.insertCity(earthObjectLists.get(k).getNbObject(),earthObjectLists.get(k).getName(),earthObjectLists.get(k).getCoinWin(),earthObjectLists.get(k).getPriceObject(),earthObjectLists.get(k).getEnergyCost(),earthObjectLists.get(k).getSkin());
+                    db.insertEarthObject(earthObjectLists.get(k).getNbObject(),earthObjectLists.get(k).getName(),earthObjectLists.get(k).getCoinWin(),earthObjectLists.get(k).getPriceObject(),earthObjectLists.get(k).getEnergyCost(),earthObjectLists.get(k).getSkin());
                 }
                 return true;
             }

@@ -1,14 +1,10 @@
 package com.example.elecstory.Object;
 
 import android.app.Activity;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.example.elecstory.Craft.EarthObjectActivity;
 import com.example.elecstory.Database.Database;
 import com.example.elecstory.R;
-
-import static android.widget.Toast.LENGTH_LONG;
 
 public class Factory {
 
@@ -33,7 +29,7 @@ public class Factory {
                 this.PriceFactory = 500;
                 this.UpgradeCost = 100;
                 this.EnergyProd = 2;
-                this.OperatingCost = 1;
+                this.OperatingCost = 4;
                 this.PollutionTax = 2;
                 this.Skin = R.drawable.eclair;
                 break;
@@ -41,10 +37,10 @@ public class Factory {
                 this.NbObject = 1;
                 this.Name = "Solar Factory";
                 this.FactoryLevel = 1;
-                this.PriceFactory = 100000;
-                this.UpgradeCost = 1000;
+                this.PriceFactory = 1000000;
+                this.UpgradeCost = 5000;
                 this.EnergyProd = 20;
-                this.OperatingCost = 10;
+                this.OperatingCost = 40;
                 this.PollutionTax = 5;
                 this.Skin = R.drawable.eclair;
                 break;
@@ -52,10 +48,10 @@ public class Factory {
                 this.NbObject = 1;
                 this.Name = "Geothermal Factory";
                 this.FactoryLevel = 1;
-                this.PriceFactory = 250000;
-                this.UpgradeCost = 1500;
-                this.EnergyProd = 150;
-                this.OperatingCost = 15;
+                this.PriceFactory = 2500000;
+                this.UpgradeCost = 7500;
+                this.EnergyProd = 50;
+                this.OperatingCost = 100;
                 this.PollutionTax = 5;
                 this.Skin = R.drawable.eclair;
                 break;
@@ -63,10 +59,10 @@ public class Factory {
                 this.NbObject = 1;
                 this.Name = "Wind Factory";
                 this.FactoryLevel = 1;
-                this.PriceFactory = 300000;
-                this.UpgradeCost = 2000;
-                this.EnergyProd = 1000;
-                this.OperatingCost = 10;
+                this.PriceFactory = 3000000;
+                this.UpgradeCost = 10000;
+                this.EnergyProd = 75;
+                this.OperatingCost = 150;
                 this.PollutionTax = 5;
                 this.Skin = R.drawable.eclair;
                 break;
@@ -74,10 +70,10 @@ public class Factory {
                 this.NbObject = 1;
                 this.Name = "Hydroelectric Factory";
                 this.FactoryLevel = 1;
-                this.PriceFactory = 500000;
-                this.UpgradeCost = 10000;
-                this.EnergyProd = 5000;
-                this.OperatingCost = 50;
+                this.PriceFactory = 7500000;
+                this.UpgradeCost = 50000;
+                this.EnergyProd = 100;
+                this.OperatingCost = 200;
                 this.PollutionTax = 20;
                 this.Skin = R.drawable.eclair;
                 break;
@@ -85,10 +81,10 @@ public class Factory {
                 this.NbObject = 1;
                 this.Name = "Thermic Factory";
                 this.FactoryLevel = 1;
-                this.PriceFactory = 750000;
-                this.UpgradeCost = 15000;
-                this.EnergyProd = 40000;
-                this.OperatingCost = 150;
+                this.PriceFactory = 10000000;
+                this.UpgradeCost = 75000;
+                this.EnergyProd = 150;
+                this.OperatingCost = 300;
                 this.PollutionTax = 50;
                 this.Skin = R.drawable.eclair;
                 break;
@@ -96,10 +92,10 @@ public class Factory {
                 this.NbObject = 1;
                 this.Name = "Nuclear Factory";
                 this.FactoryLevel = 1;
-                this.PriceFactory = 1000000;
-                this.UpgradeCost = 20000;
-                this.EnergyProd = 300000;
-                this.OperatingCost = 250;
+                this.PriceFactory = 100000000;
+                this.UpgradeCost = 100000;
+                this.EnergyProd = 250;
+                this.OperatingCost = 500;
                 this.PollutionTax = 100;
                 this.Skin = R.drawable.eclair;
                 break;

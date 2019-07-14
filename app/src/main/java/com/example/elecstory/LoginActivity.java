@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.elecstory.Database.Database;
@@ -76,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 db.insertPlayer(Pseudo.getText().toString(), Integer.parseInt(Age.getText().toString()), 0, 0, generateUniqueId(Pseudo.getText().toString(), Integer.parseInt(Age.getText().toString())));
                 EarthObject Test = new EarthObject(0,"");
-                db.insertCity(Test.getNbObject(),Test.getName(), Test.getCoinWin(), Test.getPriceObject(), Test.getEnergyCost(), Test.getSkin());
+                db.insertEarthObject(Test.getNbObject(),Test.getName(), Test.getCoinWin(), Test.getPriceObject(), Test.getEnergyCost(), Test.getSkin());
                 db.insertFirstCraft();
                 db.insertAllAds();
                 db.close();

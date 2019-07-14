@@ -1,8 +1,7 @@
-package com.example.elecstory.Craft;
+package com.example.elecstory.ShopFactory;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,19 +9,21 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.elecstory.Object.EarthObject;
+import com.example.elecstory.Object.Factory;
 import com.example.elecstory.R;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 
-public class EarthObjectAdapter extends BaseAdapter {
+public class ShopFactoryAdapter extends BaseAdapter {
 
-    public android.content.Context Context;
-    public ArrayList<EarthObject> ListObject;
+    public Context Context;
+    public ArrayList<Factory> ListObject;
     public LayoutInflater layoutInflater;
     public View views;
+    public NumberFormat numberFormat = NumberFormat.getInstance(java.util.Locale.FRENCH);
 
-    public EarthObjectAdapter(Context Contexts, ArrayList<EarthObject> ListCO) {
+    public ShopFactoryAdapter(Context Contexts, ArrayList<Factory> ListCO) {
         this.Context = Contexts;
         this.ListObject = ListCO;
         this.layoutInflater = LayoutInflater.from(Context);
@@ -43,26 +44,22 @@ public class EarthObjectAdapter extends BaseAdapter {
         return position;
     }
 
-    @SuppressLint({"ServiceCast", "LongLogTag"})
+    @SuppressLint("ServiceCast")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
         layoutInflater = (LayoutInflater) Context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         views = new View(Context);
-        views = layoutInflater.inflate(R.layout.shop_craft_adapter, null);
+        views = layoutInflater.inflate(R.layout.shop_adapter, null);
 
         ImageView imageView = views.findViewById(R.id.objectView);
+        TextView objectPrice = views.findViewById(R.id.objectCount);
         TextView objectName = views.findViewById(R.id.objectName);
-        TextView objectPrice = views.findViewById(R.id.objectCost);
-        TextView coinProduc = views.findViewById(R.id.CoinProduc);
-        TextView costProduc = views.findViewById(R.id.CostProduction);
 
-        imageView.setImageResource(ListObject.get(position).getSkin());
+        objectPrice.setText(numberFormat.format(ListObject.get(position).getPriceFactory()) + "Coins");
         objectName.setText(String.valueOf(ListObject.get(position).getName()));
-        objectPrice.setText("Price : " + ListObject.get(position).getPriceObject() + " Coins");
-        coinProduc.setText("Coin win : " + ListObject.get(position).getCoinWin() + "/s");
-        costProduc.setText("Energy Cost : " + ListObject.get(position).getEnergyCost() + "/s");
+        imageView.setImageResource(ListObject.get(position).getSkin());
 
         return views;
     }

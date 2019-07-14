@@ -7,16 +7,16 @@ public class PlayerData {
     protected String Name;
     protected int Age;
     protected int Coin;
-    protected int ElectricityPoint;
+    protected int EnergyPoint;
     protected int QuestId;
 
-    public PlayerData(int idPlayer, String uniqueId, String name, int age, int coin, int ElectricityPoints, int questId) {
+    public PlayerData(int idPlayer, String uniqueId, String name, int age, int coin, int EnergyPoints, int questId) {
         IdPlayer = idPlayer;
         UniqueId = uniqueId;
         Name = name;
         Age = age;
         Coin = coin;
-        ElectricityPoint = ElectricityPoints;
+        EnergyPoint = EnergyPoints;
         QuestId = questId;
     }
 
@@ -60,12 +60,12 @@ public class PlayerData {
         Coin = coin;
     }
 
-    public int getElectricityPoint() {
-        return ElectricityPoint;
+    public int getEnergyPoint() {
+        return EnergyPoint;
     }
 
-    public void setElectricityPoint(int ElectricityPoints) {
-        ElectricityPoint = ElectricityPoints;
+    public void setEnergyPoint(int EnergyPoints) {
+        EnergyPoint = EnergyPoints;
     }
 
     public int getQuestId() {

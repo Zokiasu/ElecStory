@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.elecstory.Database.Database;
+import com.example.elecstory.Database.PlayerData;
 import com.example.elecstory.R;
 import com.example.elecstory.OtherClass.SalePopup;
 
@@ -45,6 +46,8 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         final Database db = new Database(mContext);
+        final PlayerData ActualPlayer = db.infoFirstPlayer();
+
         Log.i(TAG, "Call onBindViewHolder");
 
         Glide.with(mContext)
@@ -82,7 +85,7 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
                 salepopups.getButton1().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        saleFactory(position, db);
+                        saleFactory(position, db, ActualPlayer);
                         salepopups.dismiss();
                     }
                 });
@@ -90,7 +93,7 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
                 salepopups.getButton2().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        upgradeFactory(db, position);
+                        upgradeFactory(db, position, ActualPlayer);
                         salepopups.dismiss();
                     }
                 });
@@ -118,7 +121,7 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
                 salepopups.getButton1().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        saleFactory(position, db);
+                        saleFactory(position, db, ActualPlayer);
                         salepopups.dismiss();
                     }
                 });
@@ -138,7 +141,7 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                upgradeFactory(db, position);
+                upgradeFactory(db, position, ActualPlayer);
             }
         });
 
@@ -166,19 +169,19 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    public void saleFactory(int position, Database db){
+    public void saleFactory(int position, Database db, PlayerData ActualPlayer){
         //Vendre une usine pour la moitié de son prix
         if(mFactory.get(position).getNbObject() > 0) {
             db.deleteFactory(mFactory.get(position).getName());
-            db.updateCoin(db.infoFirstPlayer().getName(), (mFactory.get(position).getPriceFactory() / 2));
+            db.updateCoin(ActualPlayer.getName(), ActualPlayer.getCoin() + (mFactory.get(position).getPriceFactory() / 2));
             Toast.makeText(mContext, "This object will be deleted !", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(mContext, "You no longer have this object.", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void upgradeFactory(Database db, int position){
-        if(db.infoFirstPlayer().getCoin() >= mFactory.get(position).getUpgradeCost()) {
+    public void upgradeFactory(Database db, int position, PlayerData ActualPlayer){
+        if(ActualPlayer.getCoin() >= mFactory.get(position).getUpgradeCost()) {
             if(mFactory.get(position).getFactoryLevel() == 3){
                 Toast.makeText(activity, "You cannot improve this type of Factory.", Toast.LENGTH_LONG).show();
             } else {

@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.elecstory.Database.Database;
+import com.example.elecstory.Database.PlayerData;
 import com.example.elecstory.R;
 import com.example.elecstory.OtherClass.SalePopup;
 
@@ -41,6 +42,7 @@ public class RecyclerViewAdapterEarth extends RecyclerView.Adapter<RecyclerViewA
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         final Database db = new Database(mContext);
+        final PlayerData ActualPlayer = db.infoFirstPlayer();
 
         Glide.with(mContext)
                 .asBitmap()
@@ -63,8 +65,8 @@ public class RecyclerViewAdapterEarth extends RecyclerView.Adapter<RecyclerViewA
                     @Override
                     public void onClick(View v) {
                         if(mEarthObject.size() > 0) {
-                            db.deleteCity(mEarthObject.get(position).getName());
-                            db.updateCoin(db.infoFirstPlayer().getName(), (mEarthObject.get(position).getPriceObject()/2));
+                            db.deleteEarthObject(mEarthObject.get(position).getName());
+                            db.updateCoin(ActualPlayer.getName(), ActualPlayer.getCoin() + (mEarthObject.get(position).getPriceObject()/2));
                             Toast.makeText(mContext, "This object will be deleted !", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(mContext, "You no longer have this object.", Toast.LENGTH_SHORT).show();
