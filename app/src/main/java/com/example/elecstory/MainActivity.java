@@ -9,12 +9,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -49,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
     protected Button UpPoint;
     protected Button Unlock;
-    protected Button RandomBonus;
+    protected ImageButton AnimationBallon;
     protected Button ShopFactory;
     protected Button ShopEarthObject;
 
@@ -66,6 +69,10 @@ public class MainActivity extends AppCompatActivity {
     protected DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
     //Variable pub
+    protected TextView CoinFreeText;
+    protected CardView CoinFree;
+    protected Calendar CoinFreeEnd;
+
     protected TextView CoinAdText;
     protected CardView CoinAd;
     protected Calendar CoinAdEnd;
@@ -155,10 +162,6 @@ public class MainActivity extends AppCompatActivity {
     protected void createOrRestart(){
         setContentView(R.layout.activity_main);
 
-        View decorView = getWindow().getDecorView();
-        int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-        decorView.setSystemUiVisibility(uiOptions);
-
         initFindViewById();
 
         ActualPlayer = db.infoFirstPlayer();
@@ -181,7 +184,8 @@ public class MainActivity extends AppCompatActivity {
             FactoryInfos.setVisibility(View.INVISIBLE);
         }
 
-        RandomBonus.setVisibility(View.INVISIBLE);
+        CoinFree.setVisibility(View.INVISIBLE);
+        AnimationBallon.setVisibility(View.INVISIBLE);
         CoinAd.setVisibility(View.INVISIBLE);
         SpeedAd.setVisibility(View.INVISIBLE);
         MultiAd.setVisibility(View.INVISIBLE);
@@ -198,10 +202,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void recursionUpDownPoint(int N){
-
-        View decorView = getWindow().getDecorView();
-        int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-        decorView.setSystemUiVisibility(uiOptions);
 
         if(Start) {
             //Augmente l'énergie en fonction de des usines actuelles
@@ -235,15 +235,17 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            if(N == 120){
-                updateByDb();
+            if(N == 300){
+                CoinFreeAnimation();
                 N = 0;
             }
 
-            if(N%60 == 1 && N > 1){
-                //randomButton();
-                /*adapterE.notifyDataSetChanged();
-                adapterF.notifyDataSetChanged();*/
+            if(N%120 == 1 && N > 1){
+                updateByDb();
+            }
+
+            if(N%30 == 1 && N > 1){
+                AnimationBallon();
             }
 
             checkBoostAds();
@@ -274,20 +276,37 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Choisit le bouton bonus à afficher aléatoirement toute les minutes
-    protected void randomButton(){
-        Random r = new Random();
-        AlphaAnimation alphaAnim = new AlphaAnimation(1.0f,0.0f);
-        alphaAnim.setStartOffset(1);
-        alphaAnim.setDuration(10000);
-        alphaAnim.setAnimationListener(new Animation.AnimationListener()
-        {
+    protected void AnimationBallon(){
+
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        TranslateAnimation test = null;
+
+        Random rand = new Random();
+        int nombreAleatoire = rand.nextInt(3 - 1 + 1) + 1;
+        switch (nombreAleatoire){
+            case 1:
+                test = new TranslateAnimation(0, metrics.widthPixels, metrics.heightPixels, -metrics.heightPixels);
+                break;
+            case 2:
+                test = new TranslateAnimation(metrics.widthPixels, -metrics.widthPixels, metrics.heightPixels, -metrics.heightPixels);
+                break;
+            case 3:
+                test = new TranslateAnimation(metrics.widthPixels/2,0,metrics.heightPixels, -metrics.heightPixels);
+                break;
+        }
+
+        test.setStartOffset(100);
+        test.setDuration(35000);
+        test.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                RandomBonus.setVisibility(View.VISIBLE);
+                AnimationBallon.setVisibility(View.VISIBLE);
             }
 
+            @Override
             public void onAnimationEnd(Animation animation) {
-                RandomBonus.setVisibility(View.INVISIBLE);
+                AnimationBallon.setVisibility(View.INVISIBLE);
             }
 
             @Override
@@ -295,23 +314,30 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        RandomBonus.setAnimation(alphaAnim);
+        AnimationBallon.setAnimation(test);
     }
 
-    //Convertis les millisecondes en string format hh:mm:ss
-    protected static String timeConversion(int milli) {
+    protected void CoinFreeAnimation(){
+        AlphaAnimation alphaAnim = new AlphaAnimation(1.0f,0.0f);
+        alphaAnim.setStartOffset(1);
+        alphaAnim.setDuration(30000);
+        alphaAnim.setAnimationListener(new Animation.AnimationListener()
+        {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                CoinFree.setVisibility(View.VISIBLE);
+            }
 
-        final int MINUTES_IN_AN_HOUR = 60;
-        final int SECONDS_IN_A_MINUTE = 60;
-        final int MILLISECOND_IN_A_SECOND = 1000;
-        int totalSeconds = milli/MILLISECOND_IN_A_SECOND;
+            public void onAnimationEnd(Animation animation) {
+                CoinFree.setVisibility(View.INVISIBLE);
+            }
 
-        int seconds = totalSeconds % SECONDS_IN_A_MINUTE;
-        int totalMinutes = totalSeconds / SECONDS_IN_A_MINUTE;
-        int minutes = totalMinutes % MINUTES_IN_AN_HOUR;
-        int hours = totalMinutes / MINUTES_IN_AN_HOUR;
+            @Override
+            public void onAnimationRepeat(Animation animation) {
 
-        return hours + ":" + minutes + ":" + seconds;
+            }
+        });
+        CoinFree.setAnimation(alphaAnim);
     }
 
     //Affiche la quête actuel du joueur
@@ -401,13 +427,6 @@ public class MainActivity extends AppCompatActivity {
         db.close();
     }
 
-    protected void reset(){
-        db.clearAllEarthObject();
-        db.clearAllFactory();
-        db.updateCoin(ActualPlayer.getName(), -ActualPlayer.getCoin());
-        db.updateEnergyPoint(ActualPlayer.getName(), -ActualPlayer.getEnergyPoint());
-    }
-
     //Initialise les RecyclerView des EarthObject
     protected void initRecyclerViewEarthObject(){
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
@@ -431,10 +450,12 @@ public class MainActivity extends AppCompatActivity {
         FactoryInfos = findViewById(R.id.FactoryInfo);
 
         //Relative ads
+        CoinFree = findViewById(R.id.coinFree);
         CoinAd = findViewById(R.id.coinAds);
         SpeedAd = findViewById(R.id.speedAds);
         MultiAd = findViewById(R.id.multiAds);
 
+        CoinFreeText = findViewById(R.id.coinFreeText);
         CoinAdText = findViewById(R.id.coinAdsText);
         SpeedAdText = findViewById(R.id.speedAdsText);
         MultiAdText = findViewById(R.id.multiAdsText);
@@ -460,7 +481,7 @@ public class MainActivity extends AppCompatActivity {
         Unlock = findViewById(R.id.ActionCraft);
         ShopEarthObject = findViewById(R.id.ListCraft);
         UpPoint = findViewById(R.id.ElecUp);
-        RandomBonus = findViewById(R.id.randomButton);
+        AnimationBallon = findViewById(R.id.ballon);
 
         //Affichage liste
         recyclerViewCity = findViewById(R.id.recyclerViewCity);
@@ -470,6 +491,15 @@ public class MainActivity extends AppCompatActivity {
 
     //Initialise les différentes actions des boutons
     protected void initButtonAction(){
+
+        CoinFree.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG,"Call CoinFree");
+                coinFree();
+            }
+        });
+
         CoinAd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -491,13 +521,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.i(TAG,"Call MultiAd");
                 multiAds();
-            }
-        });
-
-        RandomBonus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                /////IDK
             }
         });
 
@@ -529,6 +552,10 @@ public class MainActivity extends AppCompatActivity {
         UpPoint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AlphaAnimation alpha = new AlphaAnimation(0f, 1f);
+                alpha.setDuration(200);
+
+                UpPoint.startAnimation(alpha);
                 upgradeEnergy();
             }
         });
@@ -559,6 +586,40 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /////Fonction Ads/////
+    protected void coinFree(){
+        Calendar ActualDate = Calendar.getInstance();
+        if(ActualDate.after(CoinFreeEnd)) {
+            CoinFreeEnd = Calendar.getInstance();
+            CoinFreeEnd.add(Calendar.MINUTE, 5);
+
+            Random X = new Random();
+            int nombreAleatoire = X.nextInt(100 - 1 + 1) + 1, A = 0;
+            initEarthObjectVar();
+            if (nombreAleatoire > 1 && nombreAleatoire < 20) {
+                A = EarthObjectCoinWin*(30);
+                ActualPlayer.setCoin(ActualPlayer.getCoin() + A);
+                Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
+            } else if (nombreAleatoire > 20 && nombreAleatoire < 50) {
+                A = EarthObjectCoinWin*(60);
+                ActualPlayer.setCoin(ActualPlayer.getCoin() + A);
+                Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
+            } else if (nombreAleatoire > 50 && nombreAleatoire < 80) {
+                A = EarthObjectCoinWin*(90);
+                ActualPlayer.setCoin(ActualPlayer.getCoin() + A);
+                Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
+            } else if (nombreAleatoire > 80 && nombreAleatoire < 100) {
+                A = EarthObjectCoinWin*(120);
+                ActualPlayer.setCoin(ActualPlayer.getCoin() + A);
+                Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
+            } else {
+                A = EarthObjectCoinWin*(150);
+                ActualPlayer.setCoin(ActualPlayer.getCoin() + A);
+                Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
+            }
+        }
+        ActualCoin.setText("Coin : " + ActualPlayer.getCoin());
+    }
+
     protected void coinAds(){
         Calendar ActualDate = Calendar.getInstance();
         if(ActualDate.after(CoinAdEnd)) {
@@ -687,6 +748,12 @@ public class MainActivity extends AppCompatActivity {
         } else {
             CoinAdText.setText(displayHMS(ActualDate, CoinAdEnd));
         }
+
+        if(ActualDate.after(CoinFreeEnd)) {
+            CoinFreeText.setText("CoinFree");
+        } else {
+            CoinFreeText.setText(displayHMS(ActualDate, CoinFreeEnd));
+        }
     }
 
     protected void initAdEnd(){
@@ -708,6 +775,14 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         CoinAdEnd.setTime(date);
+
+        CoinFreeEnd = Calendar.getInstance();
+        try {
+            date = new Date();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        CoinFreeEnd.setTime(date);
 
         MultiAdEnd = Calendar.getInstance();
         try {

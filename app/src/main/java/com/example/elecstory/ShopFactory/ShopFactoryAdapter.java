@@ -54,10 +54,17 @@ public class ShopFactoryAdapter extends BaseAdapter {
         views = layoutInflater.inflate(R.layout.shop_adapter, null);
 
         ImageView imageView = views.findViewById(R.id.objectView);
-        TextView objectPrice = views.findViewById(R.id.objectCount);
+        TextView objectPrice = views.findViewById(R.id.factoryCost);
         TextView objectName = views.findViewById(R.id.objectName);
 
-        objectPrice.setText(numberFormat.format(ListObject.get(position).getPriceFactory()) + "Coins");
+        TextView energyGen = views.findViewById(R.id.EnergyProduc);
+        TextView operatingCost = views.findViewById(R.id.CostProduction);
+        TextView operatingTax = views.findViewById(R.id.TaxProduction);
+
+        energyGen.setText("Energy Prod : " + ListObject.get(position).getEnergyProd() + "/s");
+        operatingCost.setText("Operating Cost : " + ListObject.get(position).getOperatingCost() + "/m");
+        operatingTax.setText("Pollution Tax : " + ListObject.get(position).getPollutionTax() + "/m");
+        objectPrice.setText("Price : " + numberFormat.format(ListObject.get(position).getPriceFactory()) + " Coins");
         objectName.setText(String.valueOf(ListObject.get(position).getName()));
         imageView.setImageResource(ListObject.get(position).getSkin());
 

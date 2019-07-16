@@ -19,10 +19,6 @@ public class SalePopup extends Dialog {
         super(activity, R.style.Theme_AppCompat_DayNight_Dialog);
         setContentView(R.layout.sale_popup);
 
-        View decorView = getWindow().getDecorView();
-        int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-        decorView.setSystemUiVisibility(uiOptions);
-
         this.activity = activity;
         this.MessageSaleView = findViewById(R.id.messageSale);
         this.NameObjectSaleView = findViewById(R.id.nameObjectSale);

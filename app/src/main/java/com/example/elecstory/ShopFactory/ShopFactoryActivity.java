@@ -25,14 +25,10 @@ public class ShopFactoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop);
 
-        View decorView = getWindow().getDecorView();
-        int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-        decorView.setSystemUiVisibility(uiOptions);
-
         final Database db = new Database(this);
 
         TextView Title = findViewById(R.id.ShopTitle);
-        Title.setText("Factory's ShopFactory");
+        Title.setText("Factory's Shop");
 
         Button BackShop = findViewById(R.id.back);
         BackShop.setOnClickListener(new View.OnClickListener() {

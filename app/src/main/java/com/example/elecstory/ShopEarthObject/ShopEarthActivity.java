@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,10 +17,12 @@ import com.example.elecstory.Database.Database;
 import com.example.elecstory.Database.PlayerData;
 import com.example.elecstory.MainActivity;
 import com.example.elecstory.Object.EarthObject;
+import com.example.elecstory.OtherClass.ShopPopup;
 import com.example.elecstory.Quest.Quest;
 import com.example.elecstory.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ShopEarthActivity extends AppCompatActivity {
 
@@ -27,14 +31,10 @@ public class ShopEarthActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_craft);
 
-        View decorView = getWindow().getDecorView();
-        int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-        decorView.setSystemUiVisibility(uiOptions);
-
         final Database db = new Database(this);
 
         TextView Title = findViewById(R.id.CraftTitle);
-        Title.setText("Unlock List");
+        Title.setText("Object's Shop");
 
         Button BackCraft = findViewById(R.id.back);
 
@@ -52,23 +52,55 @@ public class ShopEarthActivity extends AppCompatActivity {
 
         ListEarthObject = db.infoCraft(ListEarthObject);
 
+        final ArrayList<EarthObject> finalListEarthObject = ListEarthObject;
+
+        final List<Integer> number = new ArrayList<Integer>();
+
+        for (int i = 1; i < 101; i++){
+            if(i%5 == 0){
+                number.add(i);
+            } else if (i == 1) {
+                number.add(i);
+            }
+        }
+
         GridView GV = findViewById(R.id.GridCraft);
         GV.setAdapter(new ShopEarthAdapter(this, ListEarthObject));
-
-        final ArrayList<EarthObject> finalListEarthObject = ListEarthObject;
 
         GV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 final PlayerData ActualPlayer = db.infoFirstPlayer();
-                EarthObject N = finalListEarthObject.get(position);
-                Log.i("ShopEarthActivit", "ActualPlayer.getCoin() : " + ActualPlayer.getCoin());
-                Log.i("ShopEarthActivit", "N.getPriceObject() : " + N.getPriceObject());
-                Log.i("ShopEarthActivit", "(ActualPlayer.getCoin()-N.getPriceObject()) : " + (ActualPlayer.getCoin()-N.getPriceObject()));
+                final EarthObject N = finalListEarthObject.get(position);
                 if((ActualPlayer.getCoin() >= N.getPriceObject()) && ((ActualPlayer.getCoin()-N.getPriceObject()) >= 0)) {
-                    db.insertEarthObject(N.getNbObject(), N.getName(), N.getCoinWin(), N.getPriceObject(), N.getEnergyCost(), N.getSkin());
-                    db.updateCoin(ActualPlayer.getName(), ActualPlayer.getCoin() - N.getPriceObject());
+                    final ShopPopup shopPopup = new ShopPopup(ShopEarthActivity.this);
+
+                    shopPopup.setNumber(number);
+                    shopPopup.setObjectsBuy(N.getName());
+                    //Confirm
+                    shopPopup.getButton1().setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String Recup = shopPopup.getShopSpinner().getSelectedItem().toString();
+                            int RecupNb = Integer.valueOf(Recup);
+                            if((ActualPlayer.getCoin() >= (N.getPriceObject() * RecupNb)) && ((ActualPlayer.getCoin()-(N.getPriceObject() * RecupNb)) >= 0)) {
+                                db.insertEarthObject(N.getNbObject() * RecupNb, N.getName(), N.getCoinWin(), N.getPriceObject(), N.getEnergyCost(), N.getSkin());
+                                db.updateCoin(ActualPlayer.getName(), ActualPlayer.getCoin() - (N.getPriceObject() * RecupNb));
+                            } else {
+                                Toast.makeText(ShopEarthActivity.this, "Vous n'avez pas assez d'argent ! ", Toast.LENGTH_SHORT).show();
+                            }
+                            shopPopup.dismiss();
+                        }
+                    });
+                    //Cancel
+                    shopPopup.getButton2().setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            shopPopup.dismiss();
+                        }
+                    });
+                    shopPopup.build();
                 } else {
                     Toast.makeText(ShopEarthActivity.this, "Vous n'avez pas assez d'argent ! ", Toast.LENGTH_SHORT).show();
                 }

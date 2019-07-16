@@ -208,7 +208,7 @@ public class Database extends SQLiteOpenHelper {
         if(Test.size() > 0){
             for(i = 0; i < Test.size(); i++){
                 if(Test.get(i).getName().equals(name)){
-                    this.updateNbEarthObject(name,1);
+                    this.updateNbEarthObject(name, NbObject);
                     i = Test.size();
                 }
             }
