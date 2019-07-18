@@ -51,7 +51,7 @@ public class ShopEarthAdapter extends BaseAdapter {
         layoutInflater = (LayoutInflater) Context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         views = new View(Context);
-        views = layoutInflater.inflate(R.layout.shop_craft_adapter, null);
+        views = layoutInflater.inflate(R.layout.shop_object_adapter, null);
 
         ImageView imageView = views.findViewById(R.id.objectView);
         TextView objectName = views.findViewById(R.id.objectName);

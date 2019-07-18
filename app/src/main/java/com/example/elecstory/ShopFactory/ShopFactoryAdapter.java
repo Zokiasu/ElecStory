@@ -51,7 +51,7 @@ public class ShopFactoryAdapter extends BaseAdapter {
         layoutInflater = (LayoutInflater) Context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         views = new View(Context);
-        views = layoutInflater.inflate(R.layout.shop_adapter, null);
+        views = layoutInflater.inflate(R.layout.shop_factory_adapter, null);
 
         ImageView imageView = views.findViewById(R.id.objectView);
         TextView objectPrice = views.findViewById(R.id.factoryCost);

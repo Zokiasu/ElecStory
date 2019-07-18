@@ -7,11 +7,13 @@
     android:orientation="vertical"
     android:gravity="center"
     android:layout_gravity="center"
+    android:background="@drawable/test"
     tools:context=".ShopFactory.ShopFactoryActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingVertical="5dp"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -37,7 +39,9 @@
             android:id="@+id/back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="B" />
+            android:text="Back"
+            android:textAllCaps="false"
+            android:background="@drawable/custom_unlock_button"/>
 
         <Space
             android:layout_width="wrap_content"
@@ -50,6 +54,8 @@
         android:id="@+id/GridShop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp"
         android:columnWidth="200dp"
         android:verticalSpacing="10dp"
         android:horizontalSpacing="10dp"

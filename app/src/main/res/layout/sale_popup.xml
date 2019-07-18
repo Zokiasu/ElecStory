@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="NameSelling"
-            android:textSize="@dimen/size_text_pseudo"/>
+            android:textSize="@dimen/size_text"/>
 
         <android.support.v4.widget.Space
             android:layout_width="wrap_content"

@@ -3,13 +3,10 @@ package com.example.elecstory.ShopEarthObject;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,7 +26,7 @@ public class ShopEarthActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_craft);
+        setContentView(R.layout.activity_earthobject);
 
         final Database db = new Database(this);
 
@@ -57,9 +54,9 @@ public class ShopEarthActivity extends AppCompatActivity {
         final List<Integer> number = new ArrayList<Integer>();
 
         for (int i = 1; i < 101; i++){
-            if(i%5 == 0){
+            if(i%10 == 0){
                 number.add(i);
-            } else if (i == 1) {
+            } else if (i == 1 || i == 5) {
                 number.add(i);
             }
         }

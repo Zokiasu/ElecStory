@@ -1,10 +1,15 @@
 package com.example.elecstory;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.elecstory.Database.Database;
@@ -17,8 +22,8 @@ import java.util.Random;
 
 public class LoginActivity extends AppCompatActivity {
 
-    TextView Pseudo, Age;
-    Button Confirm;
+    protected TextView Pseudo, Age;
+    protected Button Confirm;
     private Database db;
 
     private static final String TAG = "LoginActivity";

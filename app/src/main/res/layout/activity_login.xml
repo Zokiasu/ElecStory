@@ -6,17 +6,33 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
+    android:background="@drawable/test"
     tools:context=".LoginActivity">
 
     <Space
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="10" />
+        android:layout_weight="5" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Elecstory"
+        android:textSize="50dp"/>
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="5" />
 
     <EditText
         android:id="@+id/Pseudo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="10dp"
+        android:background="@drawable/custom_menu"
         android:ems="10"
         android:hint="@string/username"
         android:inputType="textPersonName"
@@ -31,6 +47,9 @@
         android:id="@+id/Age"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="10dp"
+        android:background="@drawable/custom_menu"
         android:ems="10"
         android:hint="@string/age"
         android:inputType="number"
@@ -39,13 +58,14 @@
     <Space
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:layout_weight="5" />
 
     <Button
         android:id="@+id/Confirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/button1"
+        android:background="@drawable/custom_button"
         android:textAllCaps="false"/>
 
     <Space

@@ -23,6 +23,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.elecstory.OtherClass.ItemOffsetDecoration;
+import com.example.elecstory.OtherClass.RecyclerViewAdapterEarth;
+import com.example.elecstory.OtherClass.RecyclerViewAdapterFactory;
 import com.example.elecstory.ShopEarthObject.ShopEarthActivity;
 import com.example.elecstory.Database.*;
 import com.example.elecstory.Object.*;
@@ -68,14 +71,12 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("SimpleDateFormat")
     protected DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
+    protected CardView CardPlayer;
+    protected TextView PseudoPlayer;
     //Variable pub
     protected TextView CoinFreeText;
     protected CardView CoinFree;
     protected Calendar CoinFreeEnd;
-
-    protected TextView CoinAdText;
-    protected CardView CoinAd;
-    protected Calendar CoinAdEnd;
 
     protected TextView SpeedAdText;
     protected CardView SpeedAd;
@@ -93,6 +94,8 @@ public class MainActivity extends AppCompatActivity {
 
     protected int EarthObjectEnergyCost = 0;
     protected int EarthObjectCoinWin = 0;
+
+    protected int AfkCoinWin = 0;
 
     protected LinearLayout FactoryInfos;
 
@@ -132,12 +135,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        Start = true;
         Log.i(TAG, "onStop");
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        Start = true;
         Log.i(TAG, "onStart");
     }
 
@@ -165,14 +170,15 @@ public class MainActivity extends AppCompatActivity {
         initFindViewById();
 
         ActualPlayer = db.infoFirstPlayer();
+        PseudoPlayer.setText(ActualPlayer.getName());
         ActualQuest = new Quest(ActualPlayer.getQuestId());
 
         DisplayQuestName.setText(ActualQuest.getNameReward());
         DisplayQuestImage.setImageResource(ActualQuest.getSkinReward());
         displayQuest();
 
-        ActualCoin.setText("Coin : " + ActualPlayer.getCoin());
-        ActualElecPoint.setText("Energy : " + ActualPlayer.getEnergyPoint());
+        ActualElecPoint.setText(numberFormat.format(ActualPlayer.getEnergyPoint()));
+        ActualCoin.setText(numberFormat.format(ActualPlayer.getCoin()));
 
         mFactory.clear();
         mFactory = db.infoFactory(mFactory);
@@ -186,7 +192,6 @@ public class MainActivity extends AppCompatActivity {
 
         CoinFree.setVisibility(View.INVISIBLE);
         AnimationBallon.setVisibility(View.INVISIBLE);
-        CoinAd.setVisibility(View.INVISIBLE);
         SpeedAd.setVisibility(View.INVISIBLE);
         MultiAd.setVisibility(View.INVISIBLE);
 
@@ -225,37 +230,29 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            if(ActualQuest.getIdQuest() >= 2){
-                CoinAd.setVisibility(View.VISIBLE);
-                if(ActualQuest.getIdQuest() >= 3) {
-                    MultiAd.setVisibility(View.VISIBLE);
-                    if(ActualQuest.getIdQuest() >= 4) {
-                        SpeedAd.setVisibility(View.VISIBLE);
-                    }
+            if(ActualQuest.getIdQuest() >= 3) {
+                MultiAd.setVisibility(View.VISIBLE);
+                if(ActualQuest.getIdQuest() >= 4) {
+                    SpeedAd.setVisibility(View.VISIBLE);
                 }
             }
 
-            if(N == 300){
+            if(N%300 == 1 && N > 1){
                 CoinFreeAnimation();
-                N = 0;
             }
 
             if(N%120 == 1 && N > 1){
                 updateByDb();
             }
 
-            if(N%30 == 1 && N > 1){
+            if(N%60 == 1 && N > 1){
                 AnimationBallon();
             }
 
             checkBoostAds();
 
-            ActualElecPoint.setText("Energy : " + numberFormat.format(ActualPlayer.getEnergyPoint()));
-            ActualCoin.setText("Coin : " + numberFormat.format(ActualPlayer.getCoin()));
-            ElecCost.setText("Energy Use: " + numberFormat.format(EarthObjectEnergyCost));
-            CoinWins.setText("Coin Win: " + numberFormat.format(EarthObjectCoinWin*Multiple));
-            ElecGenerate.setText("Energy Prod: " + numberFormat.format(FactoryEnergyWin) + "/s");
-            ActualFactoryCost.setText("Coin Use: " + numberFormat.format(FactoryCost) + "/m");
+            ActualElecPoint.setText(numberFormat.format(ActualPlayer.getEnergyPoint()));
+            ActualCoin.setText(numberFormat.format(ActualPlayer.getCoin()));
 
             refreshRecursion(1000/Speed, N);
         }
@@ -318,9 +315,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void CoinFreeAnimation(){
-        AlphaAnimation alphaAnim = new AlphaAnimation(1.0f,0.0f);
-        alphaAnim.setStartOffset(1);
-        alphaAnim.setDuration(30000);
+        AlphaAnimation alphaAnim = new AlphaAnimation(0.0f,1.0f);
+        alphaAnim.setDuration(60000);
         alphaAnim.setAnimationListener(new Animation.AnimationListener()
         {
             @Override
@@ -387,8 +383,8 @@ public class MainActivity extends AppCompatActivity {
         ActualPlayer.setEnergyPoint(ActualPlayer.getEnergyPoint() + 1);
         ActualPlayer.setCoin(ActualPlayer.getCoin() + 1);
 
-        ActualElecPoint.setText("Energy : " + ActualPlayer.getEnergyPoint());
-        ActualCoin.setText("Coin : " + ActualPlayer.getCoin());
+        ActualElecPoint.setText(numberFormat.format(ActualPlayer.getEnergyPoint()));
+        ActualCoin.setText(numberFormat.format(ActualPlayer.getCoin()));
 
         if(ActualPlayer.getCoin() >= 10 && mFactory.size() == 0){
             Factory MyFact = new Factory(-1);
@@ -421,9 +417,11 @@ public class MainActivity extends AppCompatActivity {
         if(Y != mEarthObject.size()) {
             adapterE.notifyDataSetChanged();
         }
+
         if(X != mFactory.size()) {
             adapterF.notifyDataSetChanged();
         }
+
         db.close();
     }
 
@@ -433,7 +431,8 @@ public class MainActivity extends AppCompatActivity {
         recyclerViewCity.setLayoutManager(layoutManager);
         adapterE = new RecyclerViewAdapterEarth(this, mEarthObject, this);
         recyclerViewCity.setAdapter(adapterE);
-
+        ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(this, R.dimen.size_factory_adapter_space);
+        recyclerViewCity.addItemDecoration(itemDecoration);
     }
 
     //Initialise les RecyclerView des Factory
@@ -442,35 +441,28 @@ public class MainActivity extends AppCompatActivity {
         recyclerViewFactory.setLayoutManager(layoutManager);
         adapterF = new RecyclerViewAdapterFactory(this, mFactory, this);
         recyclerViewFactory.setAdapter(adapterF);
+        ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(this, R.dimen.size_factory_adapter_space);
+        recyclerViewFactory.addItemDecoration(itemDecoration);
     }
 
     //Initialise tout les findViewById
     protected void initFindViewById(){
         currentLayout = findViewById(R.id.activity_main);
-        FactoryInfos = findViewById(R.id.FactoryInfo);
+        CardPlayer = findViewById(R.id.cardPlayer);
+        PseudoPlayer = findViewById(R.id.pseudoPlayer);
 
         //Relative ads
         CoinFree = findViewById(R.id.coinFree);
-        CoinAd = findViewById(R.id.coinAds);
         SpeedAd = findViewById(R.id.speedAds);
         MultiAd = findViewById(R.id.multiAds);
 
         CoinFreeText = findViewById(R.id.coinFreeText);
-        CoinAdText = findViewById(R.id.coinAdsText);
         SpeedAdText = findViewById(R.id.speedAdsText);
         MultiAdText = findViewById(R.id.multiAdsText);
 
         //Information Player
         ActualCoin = findViewById(R.id.ElecCoins);
         ActualElecPoint = findViewById(R.id.ElecStockage);
-
-        //Information Factory
-        ElecGenerate = findViewById(R.id.ElecGenerate);
-        ActualFactoryCost = findViewById(R.id.OperatingCost);
-
-        //Information ObjectEarth
-        ElecCost = findViewById(R.id.EnergyCost);
-        CoinWins = findViewById(R.id.CoinWins);
 
         //Quest
         DisplayQuestImage = findViewById(R.id.requestImage);
@@ -497,14 +489,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.i(TAG,"Call CoinFree");
                 coinFree();
-            }
-        });
-
-        CoinAd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(TAG,"Call CoinAd");
-                coinAds();
             }
         });
 
@@ -596,63 +580,28 @@ public class MainActivity extends AppCompatActivity {
             int nombreAleatoire = X.nextInt(100 - 1 + 1) + 1, A = 0;
             initEarthObjectVar();
             if (nombreAleatoire > 1 && nombreAleatoire < 20) {
+                A = EarthObjectCoinWin*(15);
+                ActualPlayer.setCoin(ActualPlayer.getCoin() + A);
+                Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
+            } else if (nombreAleatoire > 20 && nombreAleatoire < 50) {
                 A = EarthObjectCoinWin*(30);
                 ActualPlayer.setCoin(ActualPlayer.getCoin() + A);
                 Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
-            } else if (nombreAleatoire > 20 && nombreAleatoire < 50) {
+            } else if (nombreAleatoire > 50 && nombreAleatoire < 80) {
                 A = EarthObjectCoinWin*(60);
                 ActualPlayer.setCoin(ActualPlayer.getCoin() + A);
                 Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
-            } else if (nombreAleatoire > 50 && nombreAleatoire < 80) {
+            } else if (nombreAleatoire > 80 && nombreAleatoire < 100) {
                 A = EarthObjectCoinWin*(90);
                 ActualPlayer.setCoin(ActualPlayer.getCoin() + A);
                 Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
-            } else if (nombreAleatoire > 80 && nombreAleatoire < 100) {
+            } else {
                 A = EarthObjectCoinWin*(120);
                 ActualPlayer.setCoin(ActualPlayer.getCoin() + A);
                 Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
-            } else {
-                A = EarthObjectCoinWin*(150);
-                ActualPlayer.setCoin(ActualPlayer.getCoin() + A);
-                Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
             }
         }
-        ActualCoin.setText("Coin : " + ActualPlayer.getCoin());
-    }
-
-    protected void coinAds(){
-        Calendar ActualDate = Calendar.getInstance();
-        if(ActualDate.after(CoinAdEnd)) {
-            CoinAdEnd = Calendar.getInstance();
-            CoinAdEnd.add(Calendar.HOUR, 4);
-            db.insertCoinAds(dateFormat.format(CoinAdEnd.getTime()));
-
-            Random X = new Random();
-            int nombreAleatoire = X.nextInt(100 - 1 + 1) + 1, A = 0;
-            initEarthObjectVar();
-            if (nombreAleatoire > 1 && nombreAleatoire < 20) {
-                A = EarthObjectCoinWin*(300);
-                ActualPlayer.setCoin(ActualPlayer.getCoin() + A);
-                Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
-            } else if (nombreAleatoire > 20 && nombreAleatoire < 50) {
-                A = EarthObjectCoinWin*(600);
-                ActualPlayer.setCoin(ActualPlayer.getCoin() + A);
-                Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
-            } else if (nombreAleatoire > 50 && nombreAleatoire < 80) {
-                A = EarthObjectCoinWin*(900);
-                ActualPlayer.setCoin(ActualPlayer.getCoin() + A);
-                Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
-            } else if (nombreAleatoire > 80 && nombreAleatoire < 100) {
-                A = EarthObjectCoinWin*(1200);
-                ActualPlayer.setCoin(ActualPlayer.getCoin() + A);
-                Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
-            } else {
-                A = EarthObjectCoinWin*(3600);
-                ActualPlayer.setCoin(ActualPlayer.getCoin() + A);
-                Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
-            }
-        }
-        ActualCoin.setText("Coin : " + ActualPlayer.getCoin());
+        ActualCoin.setText(numberFormat.format(ActualPlayer.getCoin()));
     }
 
     protected void speedAds(){
@@ -729,7 +678,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(ActualDate.after(MultiAdEnd)) {
             Multiple = 1;
-            MultiAdText.setText("X2");
+            MultiAdText.setText("Coin x2");
         } else {
             Multiple = 2;
             MultiAdText.setText(displayHMS(ActualDate, MultiAdEnd));
@@ -737,20 +686,14 @@ public class MainActivity extends AppCompatActivity {
 
         if(ActualDate.after(SpeedAdEnd)) {
             Speed = 1;
-            SpeedAdText.setText("Speed");
+            SpeedAdText.setText("Time x2");
         } else {
             Speed = 2;
             SpeedAdText.setText(displayHMS(ActualDate, SpeedAdEnd));
         }
 
-        if(ActualDate.after(CoinAdEnd)) {
-            CoinAdText.setText("Coins");
-        } else {
-            CoinAdText.setText(displayHMS(ActualDate, CoinAdEnd));
-        }
-
         if(ActualDate.after(CoinFreeEnd)) {
-            CoinFreeText.setText("CoinFree");
+            CoinFreeText.setText("Free Coin");
         } else {
             CoinFreeText.setText(displayHMS(ActualDate, CoinFreeEnd));
         }
@@ -767,14 +710,6 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         SpeedAdEnd.setTime(date);
-
-        CoinAdEnd = Calendar.getInstance();
-        try {
-            date = dateFormat.parse(db.infoCoinAds());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        CoinAdEnd.setTime(date);
 
         CoinFreeEnd = Calendar.getInstance();
         try {
