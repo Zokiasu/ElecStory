@@ -97,8 +97,6 @@ public class MainActivity extends AppCompatActivity {
 
     protected int AfkCoinWin = 0;
 
-    protected LinearLayout FactoryInfos;
-
     protected ConstraintLayout currentLayout;
 
     protected GridView gv;
@@ -187,7 +185,6 @@ public class MainActivity extends AppCompatActivity {
 
         if(mFactory.size() < 1) {
             recyclerViewFactory.setVisibility(View.INVISIBLE);
-            FactoryInfos.setVisibility(View.INVISIBLE);
         }
 
         CoinFree.setVisibility(View.INVISIBLE);
@@ -394,7 +391,6 @@ public class MainActivity extends AppCompatActivity {
             initEarthObjectVar();
             initRecyclerViewFactory();
             recyclerViewFactory.setVisibility(View.VISIBLE);
-            FactoryInfos.setVisibility(View.VISIBLE);
             Toast.makeText(MainActivity.this, "You win a "+ MyFact.getName() +"!", Toast.LENGTH_SHORT).show();
         }
     }
