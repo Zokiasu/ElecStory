@@ -83,7 +83,7 @@ public class ShopEarthActivity extends AppCompatActivity {
                             int RecupNb = Integer.valueOf(Recup);
                             if((ActualPlayer.getCoin() >= (N.getPriceObject() * RecupNb)) && ((ActualPlayer.getCoin()-(N.getPriceObject() * RecupNb)) >= 0)) {
                                 db.insertEarthObject(N.getNbObject() * RecupNb, N.getName(), N.getCoinWin(), N.getPriceObject(), N.getEnergyCost(), N.getSkin());
-                                db.updateCoin(ActualPlayer.getName(), ActualPlayer.getCoin() - (N.getPriceObject() * RecupNb));
+                                db.updateCoin(ActualPlayer.getName(), ActualPlayer.getCoin() - (int)(N.getPriceObject() * RecupNb));
                             } else {
                                 Toast.makeText(ShopEarthActivity.this, "Vous n'avez pas assez d'argent ! ", Toast.LENGTH_SHORT).show();
                             }

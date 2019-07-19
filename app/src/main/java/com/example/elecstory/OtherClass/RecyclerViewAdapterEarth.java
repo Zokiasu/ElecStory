@@ -66,7 +66,7 @@ public class RecyclerViewAdapterEarth extends RecyclerView.Adapter<RecyclerViewA
                     public void onClick(View v) {
                         if(mEarthObject.size() > 0) {
                             db.deleteEarthObject(mEarthObject.get(position).getName());
-                            db.updateCoin(ActualPlayer.getName(), ActualPlayer.getCoin() + (mEarthObject.get(position).getPriceObject()/2));
+                            db.updateCoin(ActualPlayer.getName(), ActualPlayer.getCoin() + (int)(mEarthObject.get(position).getPriceObject()/2));
                             Toast.makeText(mContext, "This object will be deleted !", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(mContext, "You no longer have this object.", Toast.LENGTH_SHORT).show();

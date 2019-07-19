@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
     protected int FactoryPollution = 0;
     protected int FactoryCost = 0;
 
-    protected int EarthObjectEnergyCost = 0;
+    protected long EarthObjectEnergyCost = 0;
     protected int EarthObjectCoinWin = 0;
 
     protected int AfkCoinWin = 0;

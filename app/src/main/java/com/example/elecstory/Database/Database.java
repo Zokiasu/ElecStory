@@ -172,14 +172,14 @@ public class Database extends SQLiteOpenHelper {
         return player;
     }
 
-    public void updateCoin (String name, int nbcoin) {
+    public void updateCoin (String name, long nbcoin) {
         Log.i(TAG,"Call updateCoin");
         name = name.replace("'", "''");
         String strSql = "UPDATE " + TABLE_PLAYER + " SET " + COIN_PLAYER + " = " + nbcoin + " WHERE " + USERNAME_PLAYER + " = '" + name + "'";
         this.getWritableDatabase().execSQL(strSql);
     }
 
-    public void updateEnergyPoint(String name, int point) {
+    public void updateEnergyPoint(String name, long point) {
         Log.i(TAG,"Call updateEnergyPoint");
         if(this.infoFirstPlayer().getEnergyPoint() + point >= 0) {
             name = name.replace("'", "''");
@@ -200,7 +200,7 @@ public class Database extends SQLiteOpenHelper {
     }
 
     ////// EarthObject function //////
-    public void insertEarthObject(int NbObject, String name, int coinwin, int price, int energycost, int skin) {
+    public void insertEarthObject(int NbObject, String name, int coinwin, long price, int energycost, int skin) {
         Log.i(TAG,"Call insertEarthObject");
         ArrayList<EarthObject> Test = new ArrayList<>();
         int i = 0;
@@ -270,7 +270,7 @@ public class Database extends SQLiteOpenHelper {
                     cursor.getInt(0), //NbObject
                     cursor.getString(1), //Name
                     cursor.getInt(2), //CoinWin
-                    cursor.getInt(3), //Price
+                    cursor.getLong(3), //Price
                     cursor.getInt(4), //EnergyCost
                     cursor.getInt(5)); //Skin
             earthObjectList.add(citys);
@@ -419,7 +419,7 @@ public class Database extends SQLiteOpenHelper {
         this.getWritableDatabase().execSQL(strSql);
     }
 
-    public void insertCraft (int NbObject, String name, int coinwin, int price, int energycost, int skin) {
+    public void insertCraft (int NbObject, String name, int coinwin, long price, int energycost, int skin) {
         Log.i(TAG,"Call insertCraft");
         name = name.replace("'", "''");
         String strSql =
