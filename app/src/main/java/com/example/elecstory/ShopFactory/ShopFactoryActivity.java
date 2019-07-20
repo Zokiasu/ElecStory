@@ -73,6 +73,7 @@ public class ShopFactoryActivity extends AppCompatActivity {
                                 .edit()
                                 .putInt(PREFS_COIN, (sharedPreferences.getInt(PREFS_COIN, 0) - N.getPriceFactory()))
                                 .apply();
+                        Toast.makeText(ShopFactoryActivity.this, "Vous avez acheté " + N.getName() +" !", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(ShopFactoryActivity.this, "Vous n'avez pas assez d'argent !", Toast.LENGTH_SHORT).show();
                     }

@@ -2,10 +2,10 @@
 <resources>
     <dimen name="size_text">15sp</dimen>
     <dimen name="size_text_plus">25sp</dimen>
-    <dimen name="size_frame_text">140dp</dimen>
+    <dimen name="size_frame_text">120dp</dimen>
 
     <!-- Info Player -->
-    <dimen name="size_player_image_main">60dp</dimen>
+    <dimen name="size_player_image_main">50dp</dimen>
 
     <!-- Unlock Object -->
     <dimen name="size_unlock_image">150dp</dimen>

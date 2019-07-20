@@ -463,7 +463,7 @@ public class MainActivity extends AppCompatActivity {
             initEarthObjectVar();
             initRecyclerViewFactory();
             recyclerViewFactory.setVisibility(View.VISIBLE);
-            Toast.makeText(MainActivity.this, "You win a "+ MyFact.getName() +"!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "You have win a "+ MyFact.getName() +"!", Toast.LENGTH_SHORT).show();
         }
     }
 
