@@ -1,6 +1,7 @@
 package com.example.elecstory.ShopFactory;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -20,10 +21,17 @@ import java.util.ArrayList;
 
 public class ShopFactoryActivity extends AppCompatActivity {
 
+
+    private static final String PREFS = "PREFS";
+    private static final String PREFS_COIN = "PREFS_COIN";
+    private static final String PREFS_ENERGY = "PREFS_ENERGY";
+    SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop);
+        sharedPreferences = getApplicationContext().getSharedPreferences(PREFS, MODE_PRIVATE);
 
         final Database db = new Database(this);
 
@@ -58,10 +66,12 @@ public class ShopFactoryActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 Factory N = ListShopObject.get(position);
-                final PlayerData ActualPlayer = db.infoFirstPlayer();
-                if((ActualPlayer.getCoin() >= N.getPriceFactory()) && ((ActualPlayer.getCoin()-N.getPriceFactory()) >= 0)) {
+                if((sharedPreferences.getInt(PREFS_COIN, 0) >= N.getPriceFactory()) && ((sharedPreferences.getInt(PREFS_COIN, 0) - N.getPriceFactory()) >= 0)) {
                     db.insertFactory(N.getNbObject(), N.getName(), N.getFactoryLevel(), N.getPriceFactory(), N.getUpgradeCost(), N.getEnergyProd(), N.getOperatingCost(), N.getPollutionTax(), N.getSkin());
-                    db.updateCoin(ActualPlayer.getName(), ActualPlayer.getCoin() - N.getPriceFactory());
+                    sharedPreferences
+                            .edit()
+                            .putInt(PREFS_COIN, (sharedPreferences.getInt(PREFS_COIN, 0) - N.getPriceFactory()))
+                            .apply();
                 } else {
                     Toast.makeText(ShopFactoryActivity.this, "Vous n'avez pas assez d'argent !", Toast.LENGTH_SHORT).show();
                 }

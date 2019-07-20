@@ -2,6 +2,7 @@ package com.example.elecstory;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
@@ -73,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
     protected CardView CardPlayer;
     protected TextView PseudoPlayer;
-    //Variable pub
+
     protected TextView CoinFreeText;
     protected CardView CoinFree;
     protected Calendar CoinFreeEnd;
@@ -113,48 +114,62 @@ public class MainActivity extends AppCompatActivity {
 
     protected NumberFormat numberFormat = NumberFormat.getInstance(java.util.Locale.FRENCH);
 
+    private static final String PREFS = "PREFS";
+    private static final String PREFS_COIN = "PREFS_COIN";
+    private static final String PREFS_ENERGY = "PREFS_ENERGY";
+    SharedPreferences sharedPreferences;
+
     protected static final String TAG = "MainActivity";
 
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sharedPreferences = getApplicationContext().getSharedPreferences(PREFS, MODE_PRIVATE);
         Log.i(TAG, "onCreate");
         createOrRestart();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.i(TAG, "onStart");
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
         Log.i(TAG, "onRestart");
+        Start = true;
         recursionUpDownPoint(0);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        Start = true;
         Log.i(TAG, "onStop");
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Start = true;
-        Log.i(TAG, "onStart");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        updateByDb();
-        Log.i(TAG, "onPause");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         Log.i(TAG, "onResume");
+        updateByDb();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i(TAG, "onPause");
+        Start = false;
+        updateByDb();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        sharedPreferences.edit().clear().apply();
+        Log.i(TAG, "onDestroy");
     }
 
     @Override
@@ -169,14 +184,12 @@ public class MainActivity extends AppCompatActivity {
 
         ActualPlayer = db.infoFirstPlayer();
         PseudoPlayer.setText(ActualPlayer.getName());
+
         ActualQuest = new Quest(ActualPlayer.getQuestId());
 
         DisplayQuestName.setText(ActualQuest.getNameReward());
         DisplayQuestImage.setImageResource(ActualQuest.getSkinReward());
         displayQuest();
-
-        ActualElecPoint.setText(numberFormat.format(ActualPlayer.getEnergyPoint()));
-        ActualCoin.setText(numberFormat.format(ActualPlayer.getCoin()));
 
         mFactory.clear();
         mFactory = db.infoFactory(mFactory);
@@ -185,6 +198,20 @@ public class MainActivity extends AppCompatActivity {
 
         if(mFactory.size() < 1) {
             recyclerViewFactory.setVisibility(View.INVISIBLE);
+        }
+
+        if(sharedPreferences.contains(PREFS_COIN) && sharedPreferences.contains(PREFS_COIN)) {
+            ActualElecPoint.setText(numberFormat.format(sharedPreferences.getLong(PREFS_ENERGY, 0)));
+            ActualCoin.setText(numberFormat.format(sharedPreferences.getInt(PREFS_COIN, 0)));
+        } else {
+            sharedPreferences
+                    .edit()
+                    .putInt(PREFS_COIN, ActualPlayer.getCoin())
+                    .putLong(PREFS_ENERGY, ActualPlayer.getEnergyPoint())
+                    .apply();
+
+            ActualElecPoint.setText(numberFormat.format(sharedPreferences.getLong(PREFS_ENERGY, 0)));
+            ActualCoin.setText(numberFormat.format(sharedPreferences.getInt(PREFS_COIN, 0)));
         }
 
         CoinFree.setVisibility(View.INVISIBLE);
@@ -203,27 +230,72 @@ public class MainActivity extends AppCompatActivity {
         db.close();
     }
 
+    //Initialise tout les findViewById
+    protected void initFindViewById(){
+        currentLayout = findViewById(R.id.activity_main);
+        CardPlayer = findViewById(R.id.cardPlayer);
+        PseudoPlayer = findViewById(R.id.pseudoPlayer);
+
+        //Relative ads
+        CoinFree = findViewById(R.id.coinFree);
+        SpeedAd = findViewById(R.id.speedAds);
+        MultiAd = findViewById(R.id.multiAds);
+
+        CoinFreeText = findViewById(R.id.coinFreeText);
+        SpeedAdText = findViewById(R.id.speedAdsText);
+        MultiAdText = findViewById(R.id.multiAdsText);
+
+        //Information Player
+        ActualCoin = findViewById(R.id.ElecCoins);
+        ActualElecPoint = findViewById(R.id.ElecStockage);
+
+        //Quest
+        DisplayQuestImage = findViewById(R.id.requestImage);
+        DisplayQuestName = findViewById(R.id.requestName);
+
+        //Button
+        ShopFactory = findViewById(R.id.ShopButton);
+        Unlock = findViewById(R.id.ActionCraft);
+        ShopEarthObject = findViewById(R.id.ListCraft);
+        UpPoint = findViewById(R.id.ElecUp);
+        AnimationBallon = findViewById(R.id.ballon);
+
+        //Affichage liste
+        recyclerViewCity = findViewById(R.id.recyclerViewCity);
+        recyclerViewFactory = findViewById(R.id.recyclerViewFactory);
+        gv = findViewById(R.id.requestObject);
+    }
+
     protected void recursionUpDownPoint(int N){
 
         if(Start) {
             //Augmente l'énergie en fonction de des usines actuelles
             if (mFactory.size() > 0) {
                 if (FactoryEnergyWin != 0) {
-                    ActualPlayer.setEnergyPoint(ActualPlayer.getEnergyPoint() + FactoryEnergyWin);
+                    sharedPreferences
+                            .edit()
+                            .putLong(PREFS_ENERGY, (sharedPreferences.getLong(PREFS_ENERGY, 0) + FactoryEnergyWin))
+                            .apply();
                 }
 
                 if (N%60 == 1) {
-                    ActualPlayer.setCoin(ActualPlayer.getCoin() - (FactoryCost + FactoryPollution));
+                    sharedPreferences
+                            .edit()
+                            .putInt(PREFS_COIN, (sharedPreferences.getInt(PREFS_COIN, 0) - (FactoryCost + FactoryPollution)))
+                            .apply();
                 }
             }
 
             //Réduit l'énergie & donne des coins en fonction des bâtiments possédé
             if (mEarthObject.size() > 0) {
-                if (ActualPlayer.getEnergyPoint() >= EarthObjectEnergyCost &&
-                   (ActualPlayer.getEnergyPoint() - EarthObjectEnergyCost) >= 0 && N%2 == 1)
+                if (sharedPreferences.getLong(PREFS_ENERGY, 0) >= EarthObjectEnergyCost &&
+                   (sharedPreferences.getLong(PREFS_ENERGY, 0) - EarthObjectEnergyCost) >= 0 && N%2 == 1)
                 {
-                    ActualPlayer.setEnergyPoint(ActualPlayer.getEnergyPoint() - EarthObjectEnergyCost);
-                    ActualPlayer.setCoin(ActualPlayer.getCoin() + EarthObjectCoinWin*Multiple);
+                    sharedPreferences
+                            .edit()
+                            .putInt(PREFS_COIN, (sharedPreferences.getInt(PREFS_COIN, 0) + EarthObjectCoinWin*Multiple))
+                            .putLong(PREFS_ENERGY,(sharedPreferences.getLong(PREFS_ENERGY, 0) - EarthObjectEnergyCost))
+                            .apply();
                 }
             }
 
@@ -248,8 +320,8 @@ public class MainActivity extends AppCompatActivity {
 
             checkBoostAds();
 
-            ActualElecPoint.setText(numberFormat.format(ActualPlayer.getEnergyPoint()));
-            ActualCoin.setText(numberFormat.format(ActualPlayer.getCoin()));
+            ActualElecPoint.setText(numberFormat.format(sharedPreferences.getLong(PREFS_ENERGY, 0)));
+            ActualCoin.setText(numberFormat.format(sharedPreferences.getInt(PREFS_COIN, 0)));
 
             refreshRecursion(1000/Speed, N);
         }
@@ -377,13 +449,16 @@ public class MainActivity extends AppCompatActivity {
 
     //Fonction du bouton +1
     protected void upgradeEnergy() {
-        ActualPlayer.setEnergyPoint(ActualPlayer.getEnergyPoint() + 1);
-        ActualPlayer.setCoin(ActualPlayer.getCoin() + 1);
+        sharedPreferences
+                .edit()
+                .putInt(PREFS_COIN, (sharedPreferences.getInt(PREFS_COIN, 0) + 1))
+                .putLong(PREFS_ENERGY,(sharedPreferences.getLong(PREFS_ENERGY, 0) + 1))
+                .apply();
 
-        ActualElecPoint.setText(numberFormat.format(ActualPlayer.getEnergyPoint()));
-        ActualCoin.setText(numberFormat.format(ActualPlayer.getCoin()));
+        ActualElecPoint.setText(numberFormat.format(sharedPreferences.getLong(PREFS_ENERGY, 0)));
+        ActualCoin.setText(numberFormat.format(sharedPreferences.getInt(PREFS_COIN, 0)));
 
-        if(ActualPlayer.getCoin() >= 10 && mFactory.size() == 0){
+        if(sharedPreferences.getInt(PREFS_COIN, 0) >= 10 && mFactory.size() == 0){
             Factory MyFact = new Factory(-1);
             db.insertFactory(MyFact.getNbObject(), MyFact.getName(), MyFact.getFactoryLevel(), MyFact.getPriceFactory(), MyFact.getUpgradeCost(), MyFact.getEnergyProd(), MyFact.getOperatingCost(), MyFact.getPollutionTax(), MyFact.getSkin());
             mFactory = db.infoFactory(mFactory);
@@ -396,7 +471,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Update les listes utiliser par les recyclerview
-    protected void updateByDb(){
+    public void updateByDb(){
         int X, Y;
         X = mFactory.size();
         Y = mEarthObject.size();
@@ -405,8 +480,8 @@ public class MainActivity extends AppCompatActivity {
         mEarthObject.clear();
         mEarthObject = db.infoEarthObject(mEarthObject);
 
-        db.updateEnergyPoint(ActualPlayer.getName(), ActualPlayer.getEnergyPoint());
-        db.updateCoin(ActualPlayer.getName(), ActualPlayer.getCoin());
+        db.updateEnergyPoint(ActualPlayer.getName(), sharedPreferences.getLong(PREFS_ENERGY, 0));
+        db.updateCoin(ActualPlayer.getName(), sharedPreferences.getInt(PREFS_COIN, 0));
 
         ActualPlayer = db.infoFirstPlayer();
 
@@ -439,42 +514,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerViewFactory.setAdapter(adapterF);
         ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(this, R.dimen.size_factory_adapter_space);
         recyclerViewFactory.addItemDecoration(itemDecoration);
-    }
-
-    //Initialise tout les findViewById
-    protected void initFindViewById(){
-        currentLayout = findViewById(R.id.activity_main);
-        CardPlayer = findViewById(R.id.cardPlayer);
-        PseudoPlayer = findViewById(R.id.pseudoPlayer);
-
-        //Relative ads
-        CoinFree = findViewById(R.id.coinFree);
-        SpeedAd = findViewById(R.id.speedAds);
-        MultiAd = findViewById(R.id.multiAds);
-
-        CoinFreeText = findViewById(R.id.coinFreeText);
-        SpeedAdText = findViewById(R.id.speedAdsText);
-        MultiAdText = findViewById(R.id.multiAdsText);
-
-        //Information Player
-        ActualCoin = findViewById(R.id.ElecCoins);
-        ActualElecPoint = findViewById(R.id.ElecStockage);
-
-        //Quest
-        DisplayQuestImage = findViewById(R.id.requestImage);
-        DisplayQuestName = findViewById(R.id.requestName);
-
-        //Button
-        ShopFactory = findViewById(R.id.ShopButton);
-        Unlock = findViewById(R.id.ActionCraft);
-        ShopEarthObject = findViewById(R.id.ListCraft);
-        UpPoint = findViewById(R.id.ElecUp);
-        AnimationBallon = findViewById(R.id.ballon);
-
-        //Affichage liste
-        recyclerViewCity = findViewById(R.id.recyclerViewCity);
-        recyclerViewFactory = findViewById(R.id.recyclerViewFactory);
-        gv = findViewById(R.id.requestObject);
     }
 
     //Initialise les différentes actions des boutons
@@ -516,7 +555,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent myIntent = new Intent(MainActivity.this, ShopEarthActivity.class);
                 startActivity(myIntent);
-                finish();
             }
         });
 
@@ -525,7 +563,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent myIntent = new Intent(MainActivity.this, ShopFactoryActivity.class);
                 startActivity(myIntent);
-                finish();
             }
         });
 
@@ -577,27 +614,27 @@ public class MainActivity extends AppCompatActivity {
             initEarthObjectVar();
             if (nombreAleatoire > 1 && nombreAleatoire < 20) {
                 A = EarthObjectCoinWin*(15);
-                ActualPlayer.setCoin(ActualPlayer.getCoin() + A);
                 Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
             } else if (nombreAleatoire > 20 && nombreAleatoire < 50) {
                 A = EarthObjectCoinWin*(30);
-                ActualPlayer.setCoin(ActualPlayer.getCoin() + A);
                 Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
             } else if (nombreAleatoire > 50 && nombreAleatoire < 80) {
                 A = EarthObjectCoinWin*(60);
-                ActualPlayer.setCoin(ActualPlayer.getCoin() + A);
                 Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
             } else if (nombreAleatoire > 80 && nombreAleatoire < 100) {
                 A = EarthObjectCoinWin*(90);
-                ActualPlayer.setCoin(ActualPlayer.getCoin() + A);
                 Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
             } else {
                 A = EarthObjectCoinWin*(120);
-                ActualPlayer.setCoin(ActualPlayer.getCoin() + A);
                 Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
             }
+
+            sharedPreferences
+                    .edit()
+                    .putInt(PREFS_COIN, (sharedPreferences.getInt(PREFS_COIN, 0) + A))
+                    .apply();
         }
-        ActualCoin.setText(numberFormat.format(ActualPlayer.getCoin()));
+        ActualCoin.setText(numberFormat.format(sharedPreferences.getInt(PREFS_COIN, 0)));
     }
 
     protected void speedAds(){

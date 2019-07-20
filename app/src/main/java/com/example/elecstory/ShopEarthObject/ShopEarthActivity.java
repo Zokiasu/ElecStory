@@ -1,8 +1,10 @@
 package com.example.elecstory.ShopEarthObject;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -23,10 +25,16 @@ import java.util.List;
 
 public class ShopEarthActivity extends AppCompatActivity {
 
+
+    private static final String PREFS = "PREFS";
+    private static final String PREFS_COIN = "PREFS_COIN";
+    private static final String PREFS_ENERGY = "PREFS_ENERGY";
+    SharedPreferences sharedPreferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_earthobject);
+        sharedPreferences = getApplicationContext().getSharedPreferences(PREFS, MODE_PRIVATE);
 
         final Database db = new Database(this);
 
@@ -70,7 +78,7 @@ public class ShopEarthActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 final PlayerData ActualPlayer = db.infoFirstPlayer();
                 final EarthObject N = finalListEarthObject.get(position);
-                if((ActualPlayer.getCoin() >= N.getPriceObject()) && ((ActualPlayer.getCoin()-N.getPriceObject()) >= 0)) {
+                if((sharedPreferences.getInt(PREFS_COIN, 0) >= N.getPriceObject()) && ((sharedPreferences.getInt(PREFS_COIN, 0) - N.getPriceObject()) >= 0)) {
                     final ShopPopup shopPopup = new ShopPopup(ShopEarthActivity.this);
 
                     shopPopup.setNumber(number);
@@ -81,9 +89,14 @@ public class ShopEarthActivity extends AppCompatActivity {
                         public void onClick(View v) {
                             String Recup = shopPopup.getShopSpinner().getSelectedItem().toString();
                             int RecupNb = Integer.valueOf(Recup);
-                            if((ActualPlayer.getCoin() >= (N.getPriceObject() * RecupNb)) && ((ActualPlayer.getCoin()-(N.getPriceObject() * RecupNb)) >= 0)) {
+                            if((sharedPreferences.getInt(PREFS_COIN, 0) >= (N.getPriceObject() * RecupNb)) && ((sharedPreferences.getInt(PREFS_COIN, 0) - (N.getPriceObject() * RecupNb)) >= 0)) {
                                 db.insertEarthObject(N.getNbObject() * RecupNb, N.getName(), N.getCoinWin(), N.getPriceObject(), N.getEnergyCost(), N.getSkin());
-                                db.updateCoin(ActualPlayer.getName(), ActualPlayer.getCoin() - (int)(N.getPriceObject() * RecupNb));
+
+                                sharedPreferences
+                                        .edit()
+                                        .putInt(PREFS_COIN, (sharedPreferences.getInt(PREFS_COIN, 0) - (int)(N.getPriceObject() * RecupNb)))
+                                        .apply();
+
                             } else {
                                 Toast.makeText(ShopEarthActivity.this, "Vous n'avez pas assez d'argent ! ", Toast.LENGTH_SHORT).show();
                             }

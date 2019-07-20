@@ -1,10 +1,13 @@
 package com.example.elecstory.Object;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.widget.Toast;
 
 import com.example.elecstory.Database.Database;
 import com.example.elecstory.R;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class Factory {
 
@@ -17,6 +20,11 @@ public class Factory {
     protected int OperatingCost; /*Coût d'utilisation hebdomadaire*/
     protected int PollutionTax; /*Taxe de pollution*/
     protected int Skin;
+
+    private static final String PREFS = "PREFS";
+    private static final String PREFS_COIN = "PREFS_COIN";
+    private static final String PREFS_ENERGY = "PREFS_ENERGY";
+    SharedPreferences sharedPreferences;
 
 
     /*Constructeur des centrales préfaites*/
@@ -115,8 +123,14 @@ public class Factory {
     }
 
     public Factory Upgrade(Factory Fact, Database db, Activity activitys){
+
+        sharedPreferences = activitys.getSharedPreferences(PREFS, MODE_PRIVATE);
+
         if(Fact.getFactoryLevel() < 3) {
-            db.updateCoin(db.infoFirstPlayer().getName(), -Fact.getUpgradeCost());
+            sharedPreferences
+                    .edit()
+                    .putInt(PREFS_COIN, (sharedPreferences.getInt(PREFS_COIN, 0) - Fact.getUpgradeCost()))
+                    .apply();
 
             Fact.setFactoryLevel(Fact.getFactoryLevel() + 1);
             db.updateLvLFactory(Fact.getName());
