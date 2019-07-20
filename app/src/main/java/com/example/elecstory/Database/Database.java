@@ -18,7 +18,7 @@ public class Database extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "Database.db";
 
     //Database Version
-    public static final int DATABASE_VERSION = 5;
+    public static final int DATABASE_VERSION = 6;
 
     //Table Name
     public static final String TABLE_PLAYER = "player_table";
@@ -26,6 +26,7 @@ public class Database extends SQLiteOpenHelper {
     public static final String TABLE_FACTORY = "factory_table";
     public static final String TABLE_CRAFT = "craft_table";
     public static final String TABLE_ADS = "ads_table";
+    public static final String TABLE_FACTORY_SHOP = "factory_shop_table";
 
     //Common Column names
     public static final String KEY_ID = "id";
@@ -68,6 +69,16 @@ public class Database extends SQLiteOpenHelper {
     public static final String TIMEEND_SPEEDADS = "end_speed";
     public static final String TIMEEND_COINADS = "end_coin";
     public static final String TIMEEND_MULTIADS = "end_multi";
+
+    //Factory Shop Table - Column names
+    public static final String NAME_FACTORY_SHOP = "name";
+    public static final String LEVEL_FACTORY_SHOP = "level";
+    public static final String PRICE_FACTORY_SHOP = "cost";
+    public static final String UPGRADE_FACTORY_SHOP = "upgadecost";
+    public static final String POINTGENERATE_FACTORY_SHOP = "pointgenerate";
+    public static final String OPERATINGPRICE_FACTORY_SHOP = "operatingcost";
+    public static final String POLLUTIONTAX_FACTORY_SHOP = "pollutiontax";
+    public static final String SKIN_FACTORY_SHOP = "skin";
 
 
     //PlayerData Table Create
@@ -116,6 +127,18 @@ public class Database extends SQLiteOpenHelper {
             + TIMEEND_COINADS + " TEXT NOT NULL,"
             + TIMEEND_MULTIADS + " TEXT NOT NULL)";
 
+    //Factory Table Create
+    public static final String CREATE_TABLE_FACTORY_SHOP = "CREATE TABLE " + TABLE_FACTORY_SHOP
+            + " (" + NUMBER_OBJECT + " INTEGER DEFAULT 1, "
+            + NAME_FACTORY_SHOP + " TEXT NOT NULL,"
+            + LEVEL_FACTORY_SHOP + " INTEGER DEFAULT 0,"
+            + PRICE_FACTORY_SHOP + " INTEGER DEFAULT 0,"
+            + UPGRADE_FACTORY_SHOP + " INTEGER DEFAULT 0,"
+            + POINTGENERATE_FACTORY_SHOP + " INTEGER DEFAULT 0,"
+            + OPERATINGPRICE_FACTORY_SHOP + " INTEGER DEFAULT 0,"
+            + POLLUTIONTAX_FACTORY_SHOP + " INTEGER DEFAULT 0,"
+            + SKIN_FACTORY_SHOP + " INTEGER DEFAULT NULL)";
+
     ////// Basic db's function //////
 
     public Database(Context context) {
@@ -131,6 +154,7 @@ public class Database extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_FACTORY);
         db.execSQL(CREATE_TABLE_CRAFT);
         db.execSQL(CREATE_TABLE_ADS);
+        db.execSQL(CREATE_TABLE_FACTORY_SHOP);
     }
 
     @Override
@@ -141,6 +165,7 @@ public class Database extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FACTORY);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CRAFT);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ADS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_FACTORY_SHOP);
         onCreate(db);
     }
 
@@ -199,7 +224,7 @@ public class Database extends SQLiteOpenHelper {
         this.getWritableDatabase().execSQL(strSql);
     }
 
-    ////// EarthObject function //////
+    ////// EarthObject Player function //////
     public void insertEarthObject(int NbObject, String name, int coinwin, long price, int energycost, int skin) {
         Log.i(TAG,"Call insertEarthObject");
         ArrayList<EarthObject> Test = new ArrayList<>();
@@ -280,7 +305,7 @@ public class Database extends SQLiteOpenHelper {
         return earthObjectList;
     }
 
-    ////// Factory function //////
+    ////// Factory Player function //////
     public void insertFactory (int NbObject, String name, int level, int cost, int upgadecost, int pointgenerate, int operatingcost, int pollutiontax, int skin) {
         Log.i(TAG,"Call insertFactory");
         ArrayList<Factory> Test = new ArrayList<>();
@@ -503,5 +528,50 @@ public class Database extends SQLiteOpenHelper {
         Cursor cursor = this.getReadableDatabase().rawQuery( strSql, null);
         cursor.moveToFirst();
         return cursor.getString(2);
+    }
+
+    ////// Factory Shop function //////
+    public void insertFactoryShop (int NbObject, String name, int level, int cost, int upgadecost, int pointgenerate, int operatingcost, int pollutiontax, int skin) {
+        Log.i(TAG,"Call insertFactory");
+        name = name.replace("'", "''");
+        String strSql =
+        "INSERT INTO " + TABLE_FACTORY_SHOP + "(number_object, name, level, cost, upgadecost, pointgenerate, operatingcost, pollutiontax, skin) " +
+        "VALUES ('" + NbObject + "','" + name + "', '" + level + "', '" + cost + "', '" + upgadecost + "', '" + pointgenerate +  "', '" + operatingcost + "', '" + pollutiontax + "', '" + skin + "')";
+        this.getWritableDatabase().execSQL(strSql);
+    }
+
+
+    public ArrayList<Factory> infoFactoryShop(ArrayList<Factory> FactoryList) {
+        Log.i(TAG,"Call infoFactory");
+
+        String strSql = " SELECT * FROM " + TABLE_FACTORY_SHOP;
+        Cursor cursor = this.getReadableDatabase().rawQuery( strSql, null);
+        cursor.moveToFirst();
+
+        while (!cursor.isAfterLast()) {
+            Factory factorys = new Factory(
+                    cursor.getInt(0), //NbObject
+                    cursor.getString(1), //Name
+                    cursor.getInt(2), //Level
+                    cursor.getInt(3), //Cost
+                    cursor.getInt(4), //UpgradeCost
+                    cursor.getInt(5), //PointGenerate
+                    cursor.getInt(6), //ActualFactoryCost
+                    cursor.getInt(7), //ActualFactoryTax
+                    cursor.getInt(8)); //Skin
+            FactoryList.add(factorys);
+            cursor.moveToNext();
+        }
+
+        return FactoryList;
+    }
+
+    public void fillShopFactory(){
+        Factory test;
+        for (int i = -1; i < 6; i++){
+            test = new Factory(i);
+            Log.i(TAG, "Name " + test.getName());
+            insertFactoryShop(test.getNbObject(),test.getName(),test.getFactoryLevel(),test.getPriceFactory(),test.getUpgradeCost(),test.getEnergyProd(),test.getOperatingCost(),test.getPollutionTax(),test.getSkin());
+        }
     }
 }

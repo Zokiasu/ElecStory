@@ -306,16 +306,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            if(N%300 == 1 && N > 1){
+            if(N%90 == 1 && N > 1){
                 CoinFreeAnimation();
-            }
-
-            if(N%120 == 1 && N > 1){
-                updateByDb();
             }
 
             if(N%60 == 1 && N > 1){
                 AnimationBallon();
+                updateByDb();
             }
 
             checkBoostAds();
@@ -384,8 +381,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void CoinFreeAnimation(){
-        AlphaAnimation alphaAnim = new AlphaAnimation(0.0f,1.0f);
-        alphaAnim.setDuration(60000);
+        AlphaAnimation alphaAnim = new AlphaAnimation(0.7f,1.0f);
+        alphaAnim.setDuration(15000);
         alphaAnim.setAnimationListener(new Animation.AnimationListener()
         {
             @Override
@@ -569,8 +566,8 @@ public class MainActivity extends AppCompatActivity {
         UpPoint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlphaAnimation alpha = new AlphaAnimation(0f, 1f);
-                alpha.setDuration(200);
+                AlphaAnimation alpha = new AlphaAnimation(0.5f, 1f);
+                alpha.setDuration(100);
 
                 UpPoint.startAnimation(alpha);
                 upgradeEnergy();
@@ -607,7 +604,7 @@ public class MainActivity extends AppCompatActivity {
         Calendar ActualDate = Calendar.getInstance();
         if(ActualDate.after(CoinFreeEnd)) {
             CoinFreeEnd = Calendar.getInstance();
-            CoinFreeEnd.add(Calendar.MINUTE, 5);
+            CoinFreeEnd.add(Calendar.MINUTE, 2);
 
             Random X = new Random();
             int nombreAleatoire = X.nextInt(100 - 1 + 1) + 1, A = 0;

@@ -49,36 +49,53 @@ public class ShopFactoryActivity extends AppCompatActivity {
             }
         });
 
-        final ArrayList<Factory> ListShopObject = new ArrayList<>();
-        ListShopObject.add(new Factory(-1));
-        ListShopObject.add(new Factory(0));
-        ListShopObject.add(new Factory(1));
-        ListShopObject.add(new Factory(2));
-        ListShopObject.add(new Factory(3));
-        ListShopObject.add(new Factory(4));
-        ListShopObject.add(new Factory(5));
+        ArrayList<Factory> ListFactoryShop = new ArrayList<>();
+        ListFactoryShop = db.infoFactoryShop(ListFactoryShop);
+
+        ArrayList<Factory> ListFactoryPlayer = new ArrayList<>();
+        ListFactoryPlayer = db.infoFactory(ListFactoryPlayer);
+
+        final ArrayList<Factory> finalListShopObject = ListFactoryShop;
+        final ArrayList<Factory> finalListFactoryPlayer = ListFactoryPlayer;
 
         GridView GV = findViewById(R.id.GridShop);
-        GV.setAdapter(new ShopFactoryAdapter(this, ListShopObject));
+        GV.setAdapter(new ShopFactoryAdapter(this, ListFactoryShop));
 
         GV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                Factory N = ListShopObject.get(position);
-                if((sharedPreferences.getInt(PREFS_COIN, 0) >= N.getPriceFactory()) && ((sharedPreferences.getInt(PREFS_COIN, 0) - N.getPriceFactory()) >= 0)) {
-                    db.insertFactory(N.getNbObject(), N.getName(), N.getFactoryLevel(), N.getPriceFactory(), N.getUpgradeCost(), N.getEnergyProd(), N.getOperatingCost(), N.getPollutionTax(), N.getSkin());
-                    sharedPreferences
-                            .edit()
-                            .putInt(PREFS_COIN, (sharedPreferences.getInt(PREFS_COIN, 0) - N.getPriceFactory()))
-                            .apply();
+                Factory N = finalListShopObject.get(position);
+                if(checkNumberItemPlayer(N.getName(), finalListFactoryPlayer)) {
+                    if ((sharedPreferences.getInt(PREFS_COIN, 0) >= N.getPriceFactory()) && ((sharedPreferences.getInt(PREFS_COIN, 0) - N.getPriceFactory()) >= 0)) {
+                        db.insertFactory(N.getNbObject(), N.getName(), N.getFactoryLevel(), N.getPriceFactory(), N.getUpgradeCost(), N.getEnergyProd(), N.getOperatingCost(), N.getPollutionTax(), N.getSkin());
+                        sharedPreferences
+                                .edit()
+                                .putInt(PREFS_COIN, (sharedPreferences.getInt(PREFS_COIN, 0) - N.getPriceFactory()))
+                                .apply();
+                    } else {
+                        Toast.makeText(ShopFactoryActivity.this, "Vous n'avez pas assez d'argent !", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-                    Toast.makeText(ShopFactoryActivity.this, "Vous n'avez pas assez d'argent !", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ShopFactoryActivity.this, "Vous possédez le nombre maximum de " + N.getName() + " autorisé.", Toast.LENGTH_SHORT).show();
                 }
             }
 
         });
         db.close();
+    }
+
+    public boolean checkNumberItemPlayer(String NameFactory, ArrayList<Factory> ListPlayer){
+        for (int i = 0; i < ListPlayer.size(); i++){
+            if(ListPlayer.get(i).getName().equals(NameFactory)){
+                if(ListPlayer.get(i).getNbObject() < 5){
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     @Override

@@ -195,7 +195,7 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
     }
 
     public void upgradeFactory(Database db, int position, PlayerData ActualPlayer){
-        if(ActualPlayer.getCoin() >= mFactory.get(position).getUpgradeCost()) {
+        if(sharedPreferences.getInt(PREFS_COIN, 0) >= mFactory.get(position).getUpgradeCost()) {
             if(mFactory.get(position).getFactoryLevel() == 3){
                 Toast.makeText(activity, "You cannot improve this type of Factory.", Toast.LENGTH_LONG).show();
             } else {
