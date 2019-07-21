@@ -402,7 +402,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:padding="5dp"
+                android:padding="10dp"
                 android:orientation="horizontal">
 
             </LinearLayout>
@@ -446,7 +446,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:padding="5dp"
+                android:padding="10dp"
                 android:orientation="horizontal">
 
             </LinearLayout>

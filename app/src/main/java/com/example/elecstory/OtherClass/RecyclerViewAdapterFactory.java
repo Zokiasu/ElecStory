@@ -15,11 +15,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.example.elecstory.Database.Database;
 import com.example.elecstory.Object.Factory;
 import com.example.elecstory.R;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -36,6 +36,7 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
     private static final String PREFS = "PREFS";
     private static final String PREFS_COIN = "PREFS_COIN";
     private SharedPreferences sharedPreferences;
+    protected NumberFormat numberFormat = NumberFormat.getInstance(java.util.Locale.FRENCH);
 
     public RecyclerViewAdapterFactory(Context context, ArrayList<Factory> mFactorys, Activity activitys) {
         mFactory = mFactorys;
@@ -72,18 +73,18 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
                 if(mFactory.get(position).getFactoryLevel() >= 3) {
                     salepopups.setMessageSale(
                             "Actual Level : Level Max" +
-                            "\nSell Price : " + (mFactory.get(position).getPriceFactory() / 2) +
-                            "\nEnergy Gen : " + mFactory.get(position).getEnergyProd() + "/s" +
-                            "\nOperating Cost : " + mFactory.get(position).getOperatingCost() + "/m" +
-                            "\nEnvironment Tax : " + mFactory.get(position).getPollutionTax() + "/m");
+                            "\nSell Price : " + numberFormat.format(mFactory.get(position).getPriceFactory() / 2) +
+                            "\nEnergy Gen : " + numberFormat.format(mFactory.get(position).getEnergyProd()) + "/s" +
+                            "\nOperating Cost : " + numberFormat.format(mFactory.get(position).getOperatingCost()) + "/m" +
+                            "\nEnvironment Tax : " + numberFormat.format(mFactory.get(position).getPollutionTax()) + "/m");
                 } else {
                     salepopups.setMessageSale(
                             "Actual Level : " + mFactory.get(position).getFactoryLevel() +
-                            "\nUpdate Cost : " + mFactory.get(position).getUpgradeCost() +
-                            "\nSell Price : " + (mFactory.get(position).getPriceFactory() / 2) +
-                            "\nEnergy Gen : " + mFactory.get(position).getEnergyProd() + "/s" +
-                            "\nOperating Cost : " + mFactory.get(position).getOperatingCost() + "/m" +
-                            "\nEnvironment Tax : " + mFactory.get(position).getPollutionTax() + "/m");
+                            "\nUpdate Cost : " + numberFormat.format(mFactory.get(position).getUpgradeCost()) +
+                            "\nSell Price : " + numberFormat.format(mFactory.get(position).getPriceFactory() / 2) +
+                            "\nEnergy Gen : " + numberFormat.format(mFactory.get(position).getEnergyProd()) + "/s" +
+                            "\nOperating Cost : " + numberFormat.format(mFactory.get(position).getOperatingCost()) + "/m" +
+                            "\nEnvironment Tax : " + numberFormat.format(mFactory.get(position).getPollutionTax()) + "/m");
                 }
                 salepopups.getButton1().setOnClickListener(new View.OnClickListener() {
                     @Override

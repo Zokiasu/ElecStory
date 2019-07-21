@@ -22,7 +22,6 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,7 +30,6 @@ import com.example.elecstory.OtherClass.InformationPopup;
 import com.example.elecstory.OtherClass.ItemOffsetDecoration;
 import com.example.elecstory.OtherClass.RecyclerViewAdapterEarth;
 import com.example.elecstory.OtherClass.RecyclerViewAdapterFactory;
-import com.example.elecstory.OtherClass.SalePopup;
 import com.example.elecstory.ShopEarthObject.ShopEarthActivity;
 import com.example.elecstory.Database.*;
 import com.example.elecstory.Object.*;
@@ -51,7 +49,7 @@ import java.util.Random;
 @SuppressLint("SetTextI18n")
 public class MainActivity extends AppCompatActivity {
 
-    protected TextView ActualElecPoint;
+    protected TextView ActualEnergyPoint;
     protected TextView ActualCoin;
     protected TextView DisplayQuestName;
     protected TextView MyFactory;
@@ -123,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String PREFS_ENERGY = "PREFS_ENERGY";
     SharedPreferences sharedPreferences;
 
-    protected static final String TAG = "MainActivity";
+    protected static final String TAG = "Elecstory.MainActivity";
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -144,13 +142,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         Log.i(TAG, "onRestart");
-        recursionUpDownPoint(0);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         Log.i(TAG, "onStop");
+        Start = false;
     }
 
     @Override
@@ -158,6 +156,8 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         Log.i(TAG, "onResume");
         updateByDb();
+        initFactoryVar();
+        initEarthObjectVar();
     }
 
     @Override
@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if(sharedPreferences.contains(PREFS_COIN) && sharedPreferences.contains(PREFS_COIN)) {
-            ActualElecPoint.setText(numberFormat.format(sharedPreferences.getLong(PREFS_ENERGY, 0)));
+            ActualEnergyPoint.setText(numberFormat.format(sharedPreferences.getLong(PREFS_ENERGY, 0)));
             ActualCoin.setText(numberFormat.format(sharedPreferences.getInt(PREFS_COIN, 0)));
         } else {
             sharedPreferences
@@ -212,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
                     .putLong(PREFS_ENERGY, ActualPlayer.getEnergyPoint())
                     .apply();
 
-            ActualElecPoint.setText(numberFormat.format(sharedPreferences.getLong(PREFS_ENERGY, 0)));
+            ActualEnergyPoint.setText(numberFormat.format(sharedPreferences.getLong(PREFS_ENERGY, 0)));
             ActualCoin.setText(numberFormat.format(sharedPreferences.getInt(PREFS_COIN, 0)));
         }
 
@@ -249,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Information Player
         ActualCoin = findViewById(R.id.ElecCoins);
-        ActualElecPoint = findViewById(R.id.ElecStockage);
+        ActualEnergyPoint = findViewById(R.id.ElecStockage);
         MyFactory = findViewById(R.id.MyFactorys);
         MyItem = findViewById(R.id.MyItems);
 
@@ -277,7 +277,6 @@ public class MainActivity extends AppCompatActivity {
             //Augmente l'énergie en fonction de des usines actuelles
             if (mFactory.size() > 0) {
                 if (FactoryEnergyWin != 0) {
-                    Log.i(TAG, "FactoryEnergyWin : " + FactoryEnergyWin);
                     sharedPreferences
                             .edit()
                             .putLong(PREFS_ENERGY, (sharedPreferences.getLong(PREFS_ENERGY, 0) + FactoryEnergyWin))
@@ -294,8 +293,7 @@ public class MainActivity extends AppCompatActivity {
 
             //Réduit l'énergie & donne des coins en fonction des bâtiments possédé
             if (mEarthObject.size() > 0) {
-                if (sharedPreferences.getLong(PREFS_ENERGY, 0) >= EarthObjectEnergyCost &&
-                        (sharedPreferences.getLong(PREFS_ENERGY, 0) - EarthObjectEnergyCost) >= 0 && N % 2 == 1) {
+                if (sharedPreferences.getLong(PREFS_ENERGY, 0) >= EarthObjectEnergyCost && (sharedPreferences.getLong(PREFS_ENERGY, 0) - EarthObjectEnergyCost) >= 0 && N % 2 == 1) {
                     sharedPreferences
                             .edit()
                             .putInt(PREFS_COIN, (sharedPreferences.getInt(PREFS_COIN, 0) + EarthObjectCoinWin * Multiple))
@@ -311,9 +309,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            if (N%120 == 1 && N > 1) {
+            if (N % 120 == 1 && N > 1) {
                 Random X = new Random();
-                int nombreAleatoire = X.nextInt(3 - 1 + 1) + 1;
+                int nombreAleatoire = X.nextInt(5 - 1 + 1) + 1;
 
                 switch (nombreAleatoire) {
                     case 1:
@@ -329,14 +327,14 @@ public class MainActivity extends AppCompatActivity {
                 CoinFreeAnimation();
             }
 
-            if (N % 60 == 1 && N > 1) {
+            if (N % (60*Speed) == 1 && N > 1) {
                 AnimationBallon();
                 updateByDb();
             }
 
             checkBoostAds();
 
-            ActualElecPoint.setText(numberFormat.format(sharedPreferences.getLong(PREFS_ENERGY, 0)));
+            ActualEnergyPoint.setText(numberFormat.format(sharedPreferences.getLong(PREFS_ENERGY, 0)));
             ActualCoin.setText(numberFormat.format(sharedPreferences.getInt(PREFS_COIN, 0)));
 
             refreshRecursion(1000 / Speed, N);
@@ -400,7 +398,7 @@ public class MainActivity extends AppCompatActivity {
 
     protected void CoinFreeAnimation(){
         AlphaAnimation alphaAnim = new AlphaAnimation(1.0f,1.0f);
-        alphaAnim.setDuration(10000);
+        alphaAnim.setDuration(15000);
         alphaAnim.setAnimationListener(new Animation.AnimationListener()
         {
             @Override
@@ -470,7 +468,7 @@ public class MainActivity extends AppCompatActivity {
                 .putLong(PREFS_ENERGY,(sharedPreferences.getLong(PREFS_ENERGY, 0) + 1))
                 .apply();
 
-        ActualElecPoint.setText(numberFormat.format(sharedPreferences.getLong(PREFS_ENERGY, 0)));
+        ActualEnergyPoint.setText(numberFormat.format(sharedPreferences.getLong(PREFS_ENERGY, 0)));
         ActualCoin.setText(numberFormat.format(sharedPreferences.getInt(PREFS_COIN, 0)));
 
         if(sharedPreferences.getInt(PREFS_COIN, 0) >= 10 && mFactory.size() == 0){
@@ -488,8 +486,10 @@ public class MainActivity extends AppCompatActivity {
     //Update les listes utiliser par les recyclerview
     public void updateByDb(){
         int X, Y;
+
         X = mFactory.size();
         Y = mEarthObject.size();
+
         mFactory.clear();
         mFactory = db.infoFactory(mFactory);
         mEarthObject.clear();
@@ -569,7 +569,6 @@ public class MainActivity extends AppCompatActivity {
         CoinFree.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(TAG,"Call CoinFree");
                 if(FreeCoinAd) {
                     coinFreeAd();
                 } else {
@@ -658,7 +657,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(ActualDate.after(CoinFreeEnd)) {
             CoinFreeEnd = Calendar.getInstance();
-            CoinFreeEnd.add(Calendar.SECOND, 90);
+            CoinFreeEnd.add(Calendar.SECOND, 30);
             int nombreAleatoire = X.nextInt(100 - 1 + 1) + 1, A = 0;
             initEarthObjectVar();
             if (nombreAleatoire > 1 && nombreAleatoire < 20) {
@@ -689,12 +688,10 @@ public class MainActivity extends AppCompatActivity {
 
         if(ActualDate.after(CoinFreeEnd)) {
             CoinFreeEnd = Calendar.getInstance();
-            int nombreAleatoire = X.nextInt(100 - 1 + 1) + 1, A = 0;
+            int nombreAleatoire = X.nextInt(100 - 1 + 1) + 1, A;
             initEarthObjectVar();
 
-            if (nombreAleatoire > 1 && nombreAleatoire < 20) {
-                A = EarthObjectCoinWin*(60);
-            } else if (nombreAleatoire > 20 && nombreAleatoire < 50) {
+            if (nombreAleatoire > 1 && nombreAleatoire < 50) {
                 A = EarthObjectCoinWin*(120);
             } else if (nombreAleatoire > 50 && nombreAleatoire < 80) {
                 A = EarthObjectCoinWin*(180);
@@ -714,7 +711,7 @@ public class MainActivity extends AppCompatActivity {
             adPopups.getButton1().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    CoinFreeEnd.add(Calendar.SECOND, 90);
+                    CoinFreeEnd.add(Calendar.SECOND, 30);
                     Toast.makeText(MainActivity.this,"You have won "+numberFormat.format(finalA)+" coins",Toast.LENGTH_LONG).show();
                     sharedPreferences
                             .edit()

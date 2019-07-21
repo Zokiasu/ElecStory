@@ -15,6 +15,8 @@ public class Quest {
     public ArrayList<EarthObject> earthObjectRequest;
     public ArrayList<Integer> NbRequest;
 
+    protected static final String TAG = "Elecstory.Quest";
+
     public Quest(int idQuest, String nameReward, int skinReward, ArrayList<EarthObject> earthObjectRequest, ArrayList<Integer> nbRequest) {
         IdQuest = idQuest;
         NameReward = nameReward;
@@ -57,24 +59,26 @@ public class Quest {
                 this.earthObjectRequest.add(new EarthObject(1, "Floor Lamp"));
                 this.NbRequest = new ArrayList<>();
                 this.NbRequest.add(8);
-                this.NbRequest.add(10);
+                this.NbRequest.add(20);
                 break;
             /*District Quest*/
             case 4 :
                 this.IdQuest = 4;
-                this.SkinReward = R.drawable.lamp;
+                this.SkinReward = R.drawable.district;
                 this.NameReward = "District";
                 this.earthObjectRequest = new ArrayList<>();
                 this.earthObjectRequest.add(new EarthObject(3, "Street"));
                 this.earthObjectRequest.add(new EarthObject(1, "Floor Lamp"));
+                this.earthObjectRequest.add(new EarthObject(2, "House"));
                 this.NbRequest = new ArrayList<>();
                 this.NbRequest.add(10);
                 this.NbRequest.add(20);
+                this.NbRequest.add(8);
                 break;
             /*City Quest*/
             case 5 :
                 this.IdQuest = 5;
-                this.SkinReward = R.drawable.lamp;
+                this.SkinReward = R.drawable.city;
                 this.NameReward = "City";
                 this.earthObjectRequest = new ArrayList<>();
                 this.earthObjectRequest.add(new EarthObject(4, "District"));
@@ -82,13 +86,13 @@ public class Quest {
                 this.earthObjectRequest.add(new EarthObject(1, "Floor Lamp"));
                 this.NbRequest = new ArrayList<>();
                 this.NbRequest.add(10);
-                this.NbRequest.add(5);
-                this.NbRequest.add(10);
+                this.NbRequest.add(20);
+                this.NbRequest.add(50);
                 break;
             /*Municipality Quest*/
             case 6 :
                 this.IdQuest = 6;
-                this.SkinReward = R.drawable.lamp;
+                this.SkinReward = R.drawable.municipality;
                 this.NameReward = "Municipality";
                 this.earthObjectRequest = new ArrayList<>();
                 this.earthObjectRequest.add(new EarthObject(5, "City"));
@@ -96,8 +100,8 @@ public class Quest {
                 this.earthObjectRequest.add(new EarthObject(1, "Floor Lamp"));
                 this.NbRequest = new ArrayList<>();
                 this.NbRequest.add(5);
-                this.NbRequest.add(10);
-                this.NbRequest.add(20);
+                this.NbRequest.add(35);
+                this.NbRequest.add(100);
                 break;
             /*Region Quest*/
             case 7 :
@@ -109,9 +113,9 @@ public class Quest {
                 this.earthObjectRequest.add(new EarthObject(3, "Street"));
                 this.earthObjectRequest.add(new EarthObject(1, "Floor Lamp"));
                 this.NbRequest = new ArrayList<>();
-                this.NbRequest.add(6);
                 this.NbRequest.add(10);
                 this.NbRequest.add(50);
+                this.NbRequest.add(150);
                 break;
             /*Capital Quest*/
             case 8 :
@@ -124,8 +128,8 @@ public class Quest {
                 this.earthObjectRequest.add(new EarthObject(1, "Floor Lamp"));
                 this.NbRequest = new ArrayList<>();
                 this.NbRequest.add(20);
-                this.NbRequest.add(15);
-                this.NbRequest.add(30);
+                this.NbRequest.add(50);
+                this.NbRequest.add(150);
                 break;
             /*Country Quest*/
             case 9 :
@@ -140,8 +144,8 @@ public class Quest {
                 this.NbRequest = new ArrayList<>();
                 this.NbRequest.add(25);
                 this.NbRequest.add(1);
-                this.NbRequest.add(50);
-                this.NbRequest.add(100);
+                this.NbRequest.add(200);
+                this.NbRequest.add(500);
                 break;
             /*Metropolis Quest*/
             case 10 :
@@ -153,9 +157,9 @@ public class Quest {
                 this.earthObjectRequest.add(new EarthObject(3, "Street"));
                 this.earthObjectRequest.add(new EarthObject(1, "Floor Lamp"));
                 this.NbRequest = new ArrayList<>();
+                this.NbRequest.add(35);
                 this.NbRequest.add(50);
-                this.NbRequest.add(50);
-                this.NbRequest.add(100);
+                this.NbRequest.add(300);
                 break;
             /*Continent Quest*/
             case 11 :
@@ -169,9 +173,9 @@ public class Quest {
                 this.earthObjectRequest.add(new EarthObject(10, "Metropolis"));
                 this.NbRequest = new ArrayList<>();
                 this.NbRequest.add(5);
-                this.NbRequest.add(100);
-                this.NbRequest.add(250);
-                this.NbRequest.add(2);
+                this.NbRequest.add(500);
+                this.NbRequest.add(1000);
+                this.NbRequest.add(5);
                 break;
             /*Planet Quest*/
             case 12 :
@@ -181,9 +185,13 @@ public class Quest {
                 this.earthObjectRequest = new ArrayList<>();
                 this.earthObjectRequest.add(new EarthObject(11, "Continent"));
                 this.earthObjectRequest.add(new EarthObject(10, "Metropolis"));
+                this.earthObjectRequest.add(new EarthObject(3, "Street"));
+                this.earthObjectRequest.add(new EarthObject(1, "Floor Lamp"));
                 this.NbRequest = new ArrayList<>();
                 this.NbRequest.add(8);
                 this.NbRequest.add(10);
+                this.NbRequest.add(1000);
+                this.NbRequest.add(1500);
                 break;
             default:
                 this.IdQuest = 00;

@@ -18,7 +18,6 @@
     <dimen name="size_object_adapter">100dp</dimen>
     <dimen name="size_object_adapter_image">30dp</dimen>
 
-
     <!-- Factory Adapter -->
     <dimen name="size_factory_adapter">100dp</dimen>
     <dimen name="size_factory_adapter_image">50dp</dimen>

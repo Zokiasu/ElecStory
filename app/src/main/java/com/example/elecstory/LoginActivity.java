@@ -27,7 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     protected Button Confirm;
     private Database db;
 
-    private static final String TAG = "LoginActivity";
+    private static final String TAG = "Elecstory.LoginActivity";
 
     public String generateUniqueId(String Pseudo, int Age) {
         db = new Database(this);

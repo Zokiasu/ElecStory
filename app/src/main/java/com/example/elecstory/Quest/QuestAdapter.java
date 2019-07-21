@@ -23,6 +23,8 @@ public class QuestAdapter extends BaseAdapter {
     private LayoutInflater layoutInflater;
     View view;
 
+    protected static final String TAG = "Elecstory.QuestAdapter";
+
 
     public QuestAdapter(Context o, ArrayList<EarthObject> listEarthObjectObject, ArrayList<Integer> listNbObject){
         this.Context = o;

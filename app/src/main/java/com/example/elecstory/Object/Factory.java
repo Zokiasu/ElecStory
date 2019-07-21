@@ -34,7 +34,6 @@ public class Factory {
                 this.Name = "Machine of Gramme";
                 this.FactoryLevel = 1;
                 this.PriceFactory = 500;
-                this.UpgradeCost = 100;
                 this.EnergyProd = 2;
                 this.OperatingCost = 4;
                 this.PollutionTax = 2;
@@ -45,8 +44,7 @@ public class Factory {
                 this.Name = "Solar Factory";
                 this.FactoryLevel = 1;
                 this.PriceFactory = 1000000;
-                this.UpgradeCost = 5000;
-                this.EnergyProd = 50;
+                this.EnergyProd = 100;
                 this.OperatingCost = 40;
                 this.PollutionTax = 5;
                 this.Skin = R.drawable.eclair;
@@ -56,8 +54,7 @@ public class Factory {
                 this.Name = "Geothermal Factory";
                 this.FactoryLevel = 1;
                 this.PriceFactory = 2500000;
-                this.UpgradeCost = 7500;
-                this.EnergyProd = 100;
+                this.EnergyProd = 150;
                 this.OperatingCost = 100;
                 this.PollutionTax = 5;
                 this.Skin = R.drawable.eclair;
@@ -67,8 +64,7 @@ public class Factory {
                 this.Name = "Wind Factory";
                 this.FactoryLevel = 1;
                 this.PriceFactory = 3000000;
-                this.UpgradeCost = 10000;
-                this.EnergyProd = 150;
+                this.EnergyProd = 200;
                 this.OperatingCost = 150;
                 this.PollutionTax = 5;
                 this.Skin = R.drawable.eclair;
@@ -78,8 +74,7 @@ public class Factory {
                 this.Name = "Hydroelectric Factory";
                 this.FactoryLevel = 1;
                 this.PriceFactory = 7500000;
-                this.UpgradeCost = 50000;
-                this.EnergyProd = 200;
+                this.EnergyProd = 500;
                 this.OperatingCost = 200;
                 this.PollutionTax = 20;
                 this.Skin = R.drawable.eclair;
@@ -89,8 +84,7 @@ public class Factory {
                 this.Name = "Thermic Factory";
                 this.FactoryLevel = 1;
                 this.PriceFactory = 10000000;
-                this.UpgradeCost = 75000;
-                this.EnergyProd = 250;
+                this.EnergyProd = 900;
                 this.OperatingCost = 300;
                 this.PollutionTax = 50;
                 this.Skin = R.drawable.eclair;
@@ -100,13 +94,13 @@ public class Factory {
                 this.Name = "Nuclear Factory";
                 this.FactoryLevel = 1;
                 this.PriceFactory = 100000000;
-                this.UpgradeCost = 100000;
-                this.EnergyProd = 500;
+                this.EnergyProd = 1200;
                 this.OperatingCost = 500;
                 this.PollutionTax = 100;
                 this.Skin = R.drawable.eclair;
                 break;
         }
+        this.UpgradeCost = this.PriceFactory/5;
     }
 
     public Factory(int NbObjects, String name, int factoryLevel, int priceFactory, int upgradeCost, int energyProd, int operatingCost, int pollutionTax, int skin) {

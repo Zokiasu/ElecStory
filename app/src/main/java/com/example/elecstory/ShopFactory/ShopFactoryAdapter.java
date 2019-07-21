@@ -23,6 +23,8 @@ public class ShopFactoryAdapter extends BaseAdapter {
     public View views;
     public NumberFormat numberFormat = NumberFormat.getInstance(java.util.Locale.FRENCH);
 
+    protected static final String TAG = "Elecstory.ShopFactoryAdapter";
+
     public ShopFactoryAdapter(Context Contexts, ArrayList<Factory> ListCO) {
         this.Context = Contexts;
         this.ListObject = ListCO;

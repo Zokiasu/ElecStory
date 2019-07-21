@@ -19,7 +19,7 @@
     <dimen name="size_object_adapter_image">50dp</dimen>
 
     <!-- Factory Adapter -->
-    <dimen name="size_factory_adapter">120dp</dimen>
+    <dimen name="size_factory_adapter">100dp</dimen>
     <dimen name="size_factory_adapter_image">70dp</dimen>
     <dimen name="size_factory_adapter_text">15sp</dimen>
     <dimen name="size_factory_adapter_space">10dp</dimen>

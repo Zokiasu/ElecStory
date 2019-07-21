@@ -62,7 +62,7 @@ public class EarthObject {
             this.CoinWin = 8000;
             this.EnergyCost = this.CoinWin*7;
             this.PriceObject = 5000000;
-            this.Skin = R.drawable.lamp;
+            this.Skin = R.drawable.municipality;
         } else if(N == 7 || M.equals("Region")){
             this.Name = "Region";
             this.CoinWin = 12500;

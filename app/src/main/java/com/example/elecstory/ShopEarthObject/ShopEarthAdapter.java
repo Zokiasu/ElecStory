@@ -23,6 +23,8 @@ public class ShopEarthAdapter extends BaseAdapter {
     public View views;
     public NumberFormat numberFormat = NumberFormat.getInstance(java.util.Locale.FRENCH);
 
+    protected static final String TAG = "Elecstory.ShopEarthAdapter";
+
     public ShopEarthAdapter(Context Contexts, ArrayList<EarthObject> ListCO) {
         this.Context = Contexts;
         this.ListObject = ListCO;

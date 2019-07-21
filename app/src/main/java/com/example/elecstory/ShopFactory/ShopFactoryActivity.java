@@ -16,6 +16,7 @@ import com.example.elecstory.MainActivity;
 import com.example.elecstory.Object.Factory;
 import com.example.elecstory.R;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 
 public class ShopFactoryActivity extends AppCompatActivity {
@@ -23,8 +24,11 @@ public class ShopFactoryActivity extends AppCompatActivity {
     private final Database db = new Database(this);
     private static final String PREFS = "PREFS";
     private static final String PREFS_COIN = "PREFS_COIN";
-    private static final String PREFS_ENERGY = "PREFS_ENERGY";
     SharedPreferences sharedPreferences;
+
+    protected NumberFormat numberFormat = NumberFormat.getInstance(java.util.Locale.FRENCH);
+
+    protected static final String TAG = "Elecstory.ShopFactoryActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

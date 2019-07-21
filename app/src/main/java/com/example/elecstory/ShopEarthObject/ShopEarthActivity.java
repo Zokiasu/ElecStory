@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -27,8 +28,9 @@ public class ShopEarthActivity extends AppCompatActivity {
 
     private static final String PREFS = "PREFS";
     private static final String PREFS_COIN = "PREFS_COIN";
-    private static final String PREFS_ENERGY = "PREFS_ENERGY";
     SharedPreferences sharedPreferences;
+
+    protected static final String TAG = "Elecstory.ShopEarthActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,8 +77,8 @@ public class ShopEarthActivity extends AppCompatActivity {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                final PlayerData ActualPlayer = db.infoFirstPlayer();
                 final EarthObject N = finalListEarthObject.get(position);
+                Log.i("Shop","sharedPreferences.getInt(PREFS_COIN, 0) : " + sharedPreferences.getInt(PREFS_COIN, 0));
                 if((sharedPreferences.getInt(PREFS_COIN, 0) >= N.getPriceObject()) && ((sharedPreferences.getInt(PREFS_COIN, 0) - N.getPriceObject()) >= 0)) {
                     final ShopPopup shopPopup = new ShopPopup(ShopEarthActivity.this);
 
