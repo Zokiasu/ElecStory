@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -33,7 +32,7 @@ public class ShopEarthActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_earthobject);
+        setContentView(R.layout.activity_items_shop);
         sharedPreferences = getApplicationContext().getSharedPreferences(PREFS, MODE_PRIVATE);
 
         final Database db = new Database(this);

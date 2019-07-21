@@ -17,8 +17,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.elecstory.Database.Database;
-import com.example.elecstory.Database.PlayerData;
-import com.example.elecstory.MainActivity;
 import com.example.elecstory.Object.Factory;
 import com.example.elecstory.R;
 
@@ -37,8 +35,7 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
 
     private static final String PREFS = "PREFS";
     private static final String PREFS_COIN = "PREFS_COIN";
-    private static final String PREFS_ENERGY = "PREFS_ENERGY";
-    SharedPreferences sharedPreferences;
+    private SharedPreferences sharedPreferences;
 
     public RecyclerViewAdapterFactory(Context context, ArrayList<Factory> mFactorys, Activity activitys) {
         mFactory = mFactorys;
@@ -55,15 +52,10 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        Log.i(TAG, "Call onBindViewHolder");
 
         final Database db = new Database(mContext);
-        final PlayerData ActualPlayer = db.infoFirstPlayer();
 
-        Glide.with(mContext)
-                .asBitmap()
-                .load(BitmapFactory.decodeResource(mContext.getResources(), mFactory.get(position).getSkin()))
-                .into(holder.image);
+        holder.image.setImageResource(mFactory.get(position).getSkin());
 
         holder.name.setText(mFactory.get(position).getName());
 
@@ -96,7 +88,7 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
                 salepopups.getButton1().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        saleFactory(position, db, ActualPlayer);
+                        saleFactory(position, db);
                         salepopups.dismiss();
                     }
                 });
@@ -104,7 +96,7 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
                 salepopups.getButton2().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        upgradeFactory(db, position, ActualPlayer);
+                        upgradeFactory(db, position);
                         salepopups.dismiss();
                     }
                 });
@@ -132,7 +124,7 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
                 salepopups.getButton1().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        saleFactory(position, db, ActualPlayer);
+                        saleFactory(position, db);
                         salepopups.dismiss();
                     }
                 });
@@ -152,7 +144,7 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                upgradeFactory(db, position, ActualPlayer);
+                upgradeFactory(db, position);
             }
         });
 
@@ -180,7 +172,7 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    public void saleFactory(int position, Database db, PlayerData ActualPlayer){
+    public void saleFactory(int position, Database db){
         //Vendre une usine pour la moitié de son prix
         if(mFactory.get(position).getNbObject() > 0) {
             db.deleteFactory(mFactory.get(position).getName());
@@ -194,7 +186,7 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    public void upgradeFactory(Database db, int position, PlayerData ActualPlayer){
+    public void upgradeFactory(Database db, int position){
         if(sharedPreferences.getInt(PREFS_COIN, 0) >= mFactory.get(position).getUpgradeCost()) {
             if(mFactory.get(position).getFactoryLevel() == 3){
                 Toast.makeText(activity, "You can' t improve this type of factory.", Toast.LENGTH_LONG).show();

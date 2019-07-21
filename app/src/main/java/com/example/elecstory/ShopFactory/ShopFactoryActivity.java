@@ -12,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.elecstory.Database.Database;
-import com.example.elecstory.Database.PlayerData;
 import com.example.elecstory.MainActivity;
 import com.example.elecstory.Object.Factory;
 import com.example.elecstory.R;
@@ -30,7 +29,7 @@ public class ShopFactoryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_shop);
+        setContentView(R.layout.activity_factory_shop);
         sharedPreferences = getApplicationContext().getSharedPreferences(PREFS, MODE_PRIVATE);
 
         final Database db = new Database(this);

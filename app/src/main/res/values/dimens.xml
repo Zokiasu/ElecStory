@@ -4,6 +4,9 @@
     <dimen name="size_text_plus">25sp</dimen>
     <dimen name="size_frame_text">120dp</dimen>
 
+    <!-- Ad Pop -->
+    <dimen name="size_text_ad_title">30sp</dimen>
+
     <!-- Info Player -->
     <dimen name="size_player_image_main">50dp</dimen>
 

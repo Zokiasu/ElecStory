@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +15,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.elecstory.Database.Database;
-import com.example.elecstory.Database.PlayerData;
-import com.example.elecstory.MainActivity;
 import com.example.elecstory.Object.EarthObject;
 import com.example.elecstory.R;
 
@@ -25,6 +22,7 @@ import java.util.ArrayList;
 
 import static android.content.Context.MODE_PRIVATE;
 
+@SuppressLint("LongLogTag")
 public class RecyclerViewAdapterEarth extends RecyclerView.Adapter<RecyclerViewAdapterEarth.ViewHolder> {
 
     private static final String TAG = "RecyclerViewAdapterEarth";
@@ -35,8 +33,7 @@ public class RecyclerViewAdapterEarth extends RecyclerView.Adapter<RecyclerViewA
 
     private static final String PREFS = "PREFS";
     private static final String PREFS_COIN = "PREFS_COIN";
-    private static final String PREFS_ENERGY = "PREFS_ENERGY";
-    SharedPreferences sharedPreferences;
+    private SharedPreferences sharedPreferences;
 
     public RecyclerViewAdapterEarth(Context context, ArrayList<EarthObject> mEarthObjects, Activity activitys) {
         mEarthObject = mEarthObjects;
@@ -52,14 +49,11 @@ public class RecyclerViewAdapterEarth extends RecyclerView.Adapter<RecyclerViewA
         return new ViewHolder(view);
     }
 
-    @SuppressLint("LongLogTag")
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         final Database db = new Database(mContext);
-        Glide.with(mContext)
-                .asBitmap()
-                .load(BitmapFactory.decodeResource(mContext.getResources(), mEarthObject.get(position).getSkin()))
-                .into(holder.image);
+
+        holder.image.setImageResource(mEarthObject.get(position).getSkin());
 
         holder.name.setText(mEarthObject.get(position).getName());
 

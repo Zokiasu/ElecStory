@@ -28,7 +28,7 @@ public class Quest {
             /*Floor Lamp Quest*/
             case 1 :
                 this.IdQuest = 1;
-                this.SkinReward = R.drawable.ampoule;
+                this.SkinReward = R.drawable.floor_lamp;
                 this.NameReward = "Floor Lamp";
                 this.earthObjectRequest = new ArrayList<>();
                 this.earthObjectRequest.add(new EarthObject(0,"Lamp"));
@@ -38,7 +38,7 @@ public class Quest {
             /*House Quest*/
             case 2 :
                 this.IdQuest = 2;
-                this.SkinReward = R.drawable.ampoule;
+                this.SkinReward = R.drawable.house;
                 this.NameReward = "House";
                 this.earthObjectRequest = new ArrayList<>();
                 this.earthObjectRequest.add(new EarthObject(0, "Lamp"));
@@ -50,7 +50,7 @@ public class Quest {
             /*Street Quest*/
             case 3 :
                 this.IdQuest = 3;
-                this.SkinReward = R.drawable.ampoule;
+                this.SkinReward = R.drawable.street;
                 this.NameReward = "Street";
                 this.earthObjectRequest = new ArrayList<>();
                 this.earthObjectRequest.add(new EarthObject(2, "House"));
@@ -62,7 +62,7 @@ public class Quest {
             /*District Quest*/
             case 4 :
                 this.IdQuest = 4;
-                this.SkinReward = R.drawable.ampoule;
+                this.SkinReward = R.drawable.lamp;
                 this.NameReward = "District";
                 this.earthObjectRequest = new ArrayList<>();
                 this.earthObjectRequest.add(new EarthObject(3, "Street"));
@@ -74,7 +74,7 @@ public class Quest {
             /*City Quest*/
             case 5 :
                 this.IdQuest = 5;
-                this.SkinReward = R.drawable.ampoule;
+                this.SkinReward = R.drawable.lamp;
                 this.NameReward = "City";
                 this.earthObjectRequest = new ArrayList<>();
                 this.earthObjectRequest.add(new EarthObject(4, "District"));
@@ -88,7 +88,7 @@ public class Quest {
             /*Municipality Quest*/
             case 6 :
                 this.IdQuest = 6;
-                this.SkinReward = R.drawable.ampoule;
+                this.SkinReward = R.drawable.lamp;
                 this.NameReward = "Municipality";
                 this.earthObjectRequest = new ArrayList<>();
                 this.earthObjectRequest.add(new EarthObject(5, "City"));
@@ -102,7 +102,7 @@ public class Quest {
             /*Region Quest*/
             case 7 :
                 this.IdQuest = 7;
-                this.SkinReward = R.drawable.ampoule;
+                this.SkinReward = R.drawable.lamp;
                 this.NameReward = "Region";
                 this.earthObjectRequest = new ArrayList<>();
                 this.earthObjectRequest.add(new EarthObject(6, "Municipality"));
@@ -116,7 +116,7 @@ public class Quest {
             /*Capital Quest*/
             case 8 :
                 this.IdQuest = 8;
-                this.SkinReward = R.drawable.ampoule;
+                this.SkinReward = R.drawable.lamp;
                 this.NameReward = "Capital";
                 this.earthObjectRequest = new ArrayList<>();
                 this.earthObjectRequest.add(new EarthObject(4, "District"));
@@ -130,7 +130,7 @@ public class Quest {
             /*Country Quest*/
             case 9 :
                 this.IdQuest = 9;
-                this.SkinReward = R.drawable.ampoule;
+                this.SkinReward = R.drawable.lamp;
                 this.NameReward = "Country";
                 this.earthObjectRequest = new ArrayList<>();
                 this.earthObjectRequest.add(new EarthObject(7, "Region"));
@@ -146,7 +146,7 @@ public class Quest {
             /*Metropolis Quest*/
             case 10 :
                 this.IdQuest = 10;
-                this.SkinReward = R.drawable.ampoule;
+                this.SkinReward = R.drawable.lamp;
                 this.NameReward = "Metropolis";
                 this.earthObjectRequest = new ArrayList<>();
                 this.earthObjectRequest.add(new EarthObject(4, "District"));
@@ -160,7 +160,7 @@ public class Quest {
             /*Continent Quest*/
             case 11 :
                 this.IdQuest = 11;
-                this.SkinReward = R.drawable.ampoule;
+                this.SkinReward = R.drawable.lamp;
                 this.NameReward = "Continent";
                 this.earthObjectRequest = new ArrayList<>();
                 this.earthObjectRequest.add(new EarthObject(9, "Country"));
@@ -176,7 +176,7 @@ public class Quest {
             /*Planet Quest*/
             case 12 :
                 this.IdQuest = 12;
-                this.SkinReward = R.drawable.ampoule;
+                this.SkinReward = R.drawable.lamp;
                 this.NameReward = "Planet";
                 this.earthObjectRequest = new ArrayList<>();
                 this.earthObjectRequest.add(new EarthObject(11, "Continent"));
@@ -187,7 +187,7 @@ public class Quest {
                 break;
             default:
                 this.IdQuest = 00;
-                this.SkinReward = R.drawable.ampoule;
+                this.SkinReward = R.drawable.lamp;
                 this.NameReward = "Nothing";
                 this.earthObjectRequest = new ArrayList<>();
                 this.NbRequest = new ArrayList<>();

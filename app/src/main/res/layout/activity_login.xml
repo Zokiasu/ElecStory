@@ -30,7 +30,6 @@
         android:id="@+id/Pseudo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:padding="10dp"
         android:background="@drawable/custom_menu"
         android:ems="10"
@@ -47,7 +46,6 @@
         android:id="@+id/Age"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:padding="10dp"
         android:background="@drawable/custom_menu"
         android:ems="10"
@@ -65,7 +63,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/button1"
-        android:background="@drawable/custom_button"
+        android:background="@drawable/custom_button_login"
         android:textAllCaps="false"/>
 
     <Space

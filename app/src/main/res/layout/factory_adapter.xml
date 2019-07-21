@@ -33,7 +33,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"/>
+                android:layout_centerVertical="true"
+                tools:ignore="ContentDescription" />
 
             <TextView
                 android:id="@+id/imagename"
@@ -55,7 +56,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_margin="7dp"
-        android:background="@drawable/custom_info_button"
+        android:background="@drawable/custom_button_infobulle"
         android:text="i"
         android:textAllCaps="false"
         android:textSize="@dimen/size_text"

@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:text="Back"
             android:textAllCaps="false"
-            android:background="@drawable/custom_unlock_button"/>
+            android:background="@drawable/custom_button_unlock"/>
 
         <Space
             android:layout_width="wrap_content"

@@ -14,7 +14,6 @@
         android:layout_width="100dp"
         android:layout_height="120dp"
         android:background="#FFFFFF"
-        app:srcCompat="@drawable/ampoule"
         android:contentDescription="TODO" />
 
     <LinearLayout

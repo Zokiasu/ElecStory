@@ -23,7 +23,6 @@ public class Factory {
 
     private static final String PREFS = "PREFS";
     private static final String PREFS_COIN = "PREFS_COIN";
-    private static final String PREFS_ENERGY = "PREFS_ENERGY";
     SharedPreferences sharedPreferences;
 
 

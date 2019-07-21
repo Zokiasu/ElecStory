@@ -3,6 +3,8 @@ package com.example.elecstory;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
@@ -24,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.elecstory.OtherClass.AdPopup;
 import com.example.elecstory.OtherClass.ItemOffsetDecoration;
 import com.example.elecstory.OtherClass.RecyclerViewAdapterEarth;
 import com.example.elecstory.OtherClass.RecyclerViewAdapterFactory;
@@ -48,10 +51,6 @@ public class MainActivity extends AppCompatActivity {
 
     protected TextView ActualElecPoint;
     protected TextView ActualCoin;
-    protected TextView ElecGenerate;
-    protected TextView ActualFactoryCost;
-    protected TextView ElecCost;
-    protected TextView CoinWins;
     protected TextView DisplayQuestName;
 
     protected Button UpPoint;
@@ -62,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
 
     protected RecyclerView recyclerViewCity;
     protected RecyclerView recyclerViewFactory;
+
+    protected CardView RecyclerViewFactoryBack;
 
     protected RecyclerViewAdapterEarth adapterE;
     protected RecyclerViewAdapterFactory adapterF;
@@ -96,8 +97,6 @@ public class MainActivity extends AppCompatActivity {
     protected long EarthObjectEnergyCost = 0;
     protected int EarthObjectCoinWin = 0;
 
-    protected int AfkCoinWin = 0;
-
     protected ConstraintLayout currentLayout;
 
     protected GridView gv;
@@ -111,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
     protected Database db = new Database(this);
 
     protected Boolean Start = true;
+    protected Boolean FreeCoinAd = false;
 
     protected NumberFormat numberFormat = NumberFormat.getInstance(java.util.Locale.FRENCH);
 
@@ -197,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
         mEarthObject = db.infoEarthObject(mEarthObject);
 
         if(mFactory.size() < 1) {
-            recyclerViewFactory.setVisibility(View.INVISIBLE);
+            RecyclerViewFactoryBack.setVisibility(View.INVISIBLE);
         }
 
         if(sharedPreferences.contains(PREFS_COIN) && sharedPreferences.contains(PREFS_COIN)) {
@@ -263,12 +263,13 @@ public class MainActivity extends AppCompatActivity {
         //Affichage liste
         recyclerViewCity = findViewById(R.id.recyclerViewCity);
         recyclerViewFactory = findViewById(R.id.recyclerViewFactory);
+        RecyclerViewFactoryBack = findViewById(R.id.recyclerViewFactoryBack);
         gv = findViewById(R.id.requestObject);
     }
 
-    protected void recursionUpDownPoint(int N){
+    protected void recursionUpDownPoint(int N) {
 
-        if(Start) {
+        if (Start) {
             //Augmente l'énergie en fonction de des usines actuelles
             if (mFactory.size() > 0) {
                 if (FactoryEnergyWin != 0) {
@@ -278,7 +279,7 @@ public class MainActivity extends AppCompatActivity {
                             .apply();
                 }
 
-                if (N%60 == 1) {
+                if (N % 60 == 1) {
                     sharedPreferences
                             .edit()
                             .putInt(PREFS_COIN, (sharedPreferences.getInt(PREFS_COIN, 0) - (FactoryCost + FactoryPollution)))
@@ -289,28 +290,38 @@ public class MainActivity extends AppCompatActivity {
             //Réduit l'énergie & donne des coins en fonction des bâtiments possédé
             if (mEarthObject.size() > 0) {
                 if (sharedPreferences.getLong(PREFS_ENERGY, 0) >= EarthObjectEnergyCost &&
-                   (sharedPreferences.getLong(PREFS_ENERGY, 0) - EarthObjectEnergyCost) >= 0 && N%2 == 1)
-                {
+                        (sharedPreferences.getLong(PREFS_ENERGY, 0) - EarthObjectEnergyCost) >= 0 && N % 2 == 1) {
                     sharedPreferences
                             .edit()
-                            .putInt(PREFS_COIN, (sharedPreferences.getInt(PREFS_COIN, 0) + EarthObjectCoinWin*Multiple))
-                            .putLong(PREFS_ENERGY,(sharedPreferences.getLong(PREFS_ENERGY, 0) - EarthObjectEnergyCost))
+                            .putInt(PREFS_COIN, (sharedPreferences.getInt(PREFS_COIN, 0) + EarthObjectCoinWin * Multiple))
+                            .putLong(PREFS_ENERGY, (sharedPreferences.getLong(PREFS_ENERGY, 0) - EarthObjectEnergyCost))
                             .apply();
                 }
             }
 
-            if(ActualQuest.getIdQuest() >= 3) {
+            if (ActualQuest.getIdQuest() >= 3) {
                 MultiAd.setVisibility(View.VISIBLE);
-                if(ActualQuest.getIdQuest() >= 4) {
+                if (ActualQuest.getIdQuest() >= 4) {
                     SpeedAd.setVisibility(View.VISIBLE);
                 }
             }
 
-            if(N%90 == 1 && N > 1){
-                CoinFreeAnimation();
-            }
+            if (N % 60 == 1 && N > 1) {
+                Random X = new Random();
+                int nombreAleatoire = X.nextInt(2 - 1 + 1) + 1;
 
-            if(N%60 == 1 && N > 1){
+                switch (nombreAleatoire) {
+                    case 1:
+                        FreeCoinAd = true;
+                        CoinFree.getBackground().setColorFilter(Color.parseColor("#0bab08"), PorterDuff.Mode.DARKEN);
+                        break;
+                    case 2:
+                        FreeCoinAd = false;
+                        CoinFree.getBackground().setColorFilter(Color.parseColor("#FFFFFF"), PorterDuff.Mode.DARKEN);
+                        break;
+                }
+
+                CoinFreeAnimation();
                 AnimationBallon();
                 updateByDb();
             }
@@ -320,7 +331,7 @@ public class MainActivity extends AppCompatActivity {
             ActualElecPoint.setText(numberFormat.format(sharedPreferences.getLong(PREFS_ENERGY, 0)));
             ActualCoin.setText(numberFormat.format(sharedPreferences.getInt(PREFS_COIN, 0)));
 
-            refreshRecursion(1000/Speed, N);
+            refreshRecursion(1000 / Speed, N);
         }
 
     }
@@ -359,7 +370,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
 
-        test.setStartOffset(100);
         test.setDuration(35000);
         test.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -381,8 +391,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void CoinFreeAnimation(){
-        AlphaAnimation alphaAnim = new AlphaAnimation(0.7f,1.0f);
-        alphaAnim.setDuration(15000);
+        AlphaAnimation alphaAnim = new AlphaAnimation(1.0f,1.0f);
+        alphaAnim.setDuration(10000);
         alphaAnim.setAnimationListener(new Animation.AnimationListener()
         {
             @Override
@@ -462,7 +472,7 @@ public class MainActivity extends AppCompatActivity {
             initFactoryVar();
             initEarthObjectVar();
             initRecyclerViewFactory();
-            recyclerViewFactory.setVisibility(View.VISIBLE);
+            RecyclerViewFactoryBack.setVisibility(View.VISIBLE);
             Toast.makeText(MainActivity.this, "You have win a "+ MyFact.getName() +"!", Toast.LENGTH_SHORT).show();
         }
     }
@@ -520,14 +530,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i(TAG,"Call CoinFree");
-                coinFree();
+                if(FreeCoinAd) {
+                    coinFreeAd();
+                } else {
+                    coinFree();
+                }
             }
         });
 
         SpeedAd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(TAG,"Call SpeedAd");
                 speedAds();
             }
         });
@@ -535,7 +548,6 @@ public class MainActivity extends AppCompatActivity {
         MultiAd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(TAG,"Call MultiAd");
                 multiAds();
             }
         });
@@ -600,63 +612,153 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /////Fonction Ads/////
-    protected void coinFree(){
+    protected void coinFree() {
         Calendar ActualDate = Calendar.getInstance();
+        Random X = new Random();
+
         if(ActualDate.after(CoinFreeEnd)) {
             CoinFreeEnd = Calendar.getInstance();
-            CoinFreeEnd.add(Calendar.MINUTE, 2);
-
-            Random X = new Random();
+            CoinFreeEnd.add(Calendar.SECOND, 30);
             int nombreAleatoire = X.nextInt(100 - 1 + 1) + 1, A = 0;
             initEarthObjectVar();
             if (nombreAleatoire > 1 && nombreAleatoire < 20) {
                 A = EarthObjectCoinWin*(15);
-                Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
             } else if (nombreAleatoire > 20 && nombreAleatoire < 50) {
                 A = EarthObjectCoinWin*(30);
-                Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
             } else if (nombreAleatoire > 50 && nombreAleatoire < 80) {
                 A = EarthObjectCoinWin*(60);
-                Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
             } else if (nombreAleatoire > 80 && nombreAleatoire < 100) {
                 A = EarthObjectCoinWin*(90);
-                Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
             } else {
                 A = EarthObjectCoinWin*(120);
-                Toast.makeText(MainActivity.this,"You have won "+A+" coins",Toast.LENGTH_LONG).show();
             }
 
+            Toast.makeText(MainActivity.this,"You have won "+numberFormat.format(A)+" coins",Toast.LENGTH_LONG).show();
             sharedPreferences
                     .edit()
                     .putInt(PREFS_COIN, (sharedPreferences.getInt(PREFS_COIN, 0) + A))
                     .apply();
         }
+        CoinFree.setVisibility(View.INVISIBLE);
         ActualCoin.setText(numberFormat.format(sharedPreferences.getInt(PREFS_COIN, 0)));
+    }
+
+    protected void coinFreeAd() {
+        Calendar ActualDate = Calendar.getInstance();
+        final Random X = new Random();
+
+        if(ActualDate.after(CoinFreeEnd)) {
+            CoinFreeEnd = Calendar.getInstance();
+            int nombreAleatoire = X.nextInt(100 - 1 + 1) + 1, A = 0;
+            initEarthObjectVar();
+
+            if (nombreAleatoire > 1 && nombreAleatoire < 20) {
+                A = EarthObjectCoinWin*(60);
+            } else if (nombreAleatoire > 20 && nombreAleatoire < 50) {
+                A = EarthObjectCoinWin*(120);
+            } else if (nombreAleatoire > 50 && nombreAleatoire < 80) {
+                A = EarthObjectCoinWin*(180);
+            } else if (nombreAleatoire > 80 && nombreAleatoire < 100) {
+                A = EarthObjectCoinWin*(240);
+            } else {
+                A = EarthObjectCoinWin*(300);
+            }
+
+            final AdPopup adPopups = new AdPopup(this);
+            final int finalA = A;
+
+            adPopups.setTitleAd("More Coins!");
+            adPopups.getTimeAfkAdPopup().setVisibility(View.INVISIBLE);
+            adPopups.setNumberWinAd(numberFormat.format(A) + " Coins");
+            adPopups.getImageAd().setImageResource(R.drawable.morecoins);
+            adPopups.getButton1().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    CoinFreeEnd.add(Calendar.SECOND, 30);
+                    Toast.makeText(MainActivity.this,"You have won "+numberFormat.format(finalA)+" coins",Toast.LENGTH_LONG).show();
+                    sharedPreferences
+                            .edit()
+                            .putInt(PREFS_COIN, (sharedPreferences.getInt(PREFS_COIN, 0) + finalA))
+                            .apply();
+                    CoinFree.setVisibility(View.INVISIBLE);
+                    ActualCoin.setText(numberFormat.format(sharedPreferences.getInt(PREFS_COIN, 0)));
+                    adPopups.dismiss();
+                }
+            });
+
+            adPopups.getButton2().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    adPopups.dismiss();
+                }
+            });
+            adPopups.build();
+        }
     }
 
     protected void speedAds(){
         Calendar ActualDate = Calendar.getInstance();
         if(ActualDate.after(SpeedAdEnd)) {
+            final AdPopup adPopups = new AdPopup(this);
 
-            SpeedAdEnd = Calendar.getInstance();
-            SpeedAdEnd.add(Calendar.HOUR, 4);
-            db.insertSpeedAds(dateFormat.format(SpeedAdEnd.getTime()));
+            adPopups.setTitleAd("Speed Up");
+            adPopups.getTimeAfkAdPopup().setVisibility(View.INVISIBLE);
+            adPopups.setNumberWinAd("Speed x2 for 4 hours");
+            adPopups.getImageAd().setImageResource(R.drawable.morecoins);
 
-            Speed = 2;
-            Toast.makeText(MainActivity.this,"The speed has been multiplied by 2!",Toast.LENGTH_LONG).show();
+            adPopups.getButton1().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SpeedAdEnd = Calendar.getInstance();
+                    SpeedAdEnd.add(Calendar.HOUR, 4);
+                    db.insertSpeedAds(dateFormat.format(SpeedAdEnd.getTime()));
+
+                    Speed = 2;
+                    adPopups.dismiss();
+                    Toast.makeText(MainActivity.this,"The speed has been multiplied by 2!",Toast.LENGTH_LONG).show();
+                }
+            });
+
+            adPopups.getButton2().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    adPopups.dismiss();
+                }
+            });
+            adPopups.build();
         }
     }
 
     protected void multiAds(){
         Calendar ActualDate = Calendar.getInstance();
         if(ActualDate.after(MultiAdEnd)) {
+            final AdPopup adPopups = new AdPopup(this);
 
-            MultiAdEnd = Calendar.getInstance();
-            MultiAdEnd.add(Calendar.HOUR, 4);
-            db.insertMultiAds(dateFormat.format(MultiAdEnd.getTime()));
+            adPopups.setTitleAd("Double Coin!");
+            adPopups.getTimeAfkAdPopup().setVisibility(View.INVISIBLE);
+            adPopups.setNumberWinAd("Profit 2x during 4 hours");
+            adPopups.getImageAd().setImageResource(R.drawable.morecoins);
 
-            Multiple = 2;
-            Toast.makeText(MainActivity.this,"You earn " + Multiple + " times more coins",Toast.LENGTH_LONG).show();
+            adPopups.getButton1().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MultiAdEnd = Calendar.getInstance();
+                    MultiAdEnd.add(Calendar.HOUR, 4);
+                    db.insertMultiAds(dateFormat.format(MultiAdEnd.getTime()));
+
+                    Multiple = 2;
+                    adPopups.dismiss();
+                    Toast.makeText(MainActivity.this,"You earn " + Multiple + " times more coins",Toast.LENGTH_LONG).show();
+                }
+            });
+
+            adPopups.getButton2().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    adPopups.dismiss();
+                }
+            });
+            adPopups.build();
         }
     }
 
@@ -723,7 +825,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if(ActualDate.after(CoinFreeEnd)) {
-            CoinFreeText.setText("Free Coin");
+            CoinFreeText.setText("Coin");
         } else {
             CoinFreeText.setText(displayHMS(ActualDate, CoinFreeEnd));
         }

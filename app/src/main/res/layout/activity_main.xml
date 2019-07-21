@@ -95,18 +95,18 @@
                         android:id="@+id/energy"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/minieclair"/>
+                        android:background="@drawable/minieclair" />
 
                     <TextView
                         android:id="@+id/ElecStockage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_toRightOf="@+id/energy"
-                        android:layout_centerVertical="true"
                         android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/energy"
                         android:text="E"
-                        android:textSize="@dimen/size_text"
-                        android:textColor="#fff"/>
+                        android:textColor="#fff"
+                        android:textSize="@dimen/size_text" />
 
                 </RelativeLayout>
 
@@ -175,10 +175,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@+id/coinFreeImage"
-                    android:layout_alignRight="@+id/coinFreeImage"
-                    android:layout_alignLeft="@+id/coinFreeImage"
+                    android:layout_centerHorizontal="true"
                     android:gravity="center"
-                    android:text="Free Coin"/>
+                    android:text="Coins"/>
 
             </RelativeLayout>
 
@@ -305,7 +304,8 @@
                             android:layout_width="@dimen/size_frame_text"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            app:cardCornerRadius="10dp">
+                            app:cardCornerRadius="10dp"
+                            app:cardBackgroundColor="#fe6e0c">
 
                             <TextView
                                 android:id="@+id/requestName"
@@ -313,8 +313,7 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
                                 android:text="Request Name"
-                                android:textSize="@dimen/size_text"
-                                android:autoSizeTextType="uniform" />
+                                android:textSize="@dimen/size_text"/>
 
                         </android.support.v7.widget.CardView>
 
@@ -329,7 +328,6 @@
                                 android:layout_width="@dimen/size_unlock_image"
                                 android:layout_height="@dimen/size_unlock_image"
                                 android:background="#01A0FF"
-                                app:srcCompat="@drawable/ampoule"
                                 tools:ignore="MissingConstraints" />
 
                             <Button
@@ -342,7 +340,7 @@
                                 android:text="Unlock"
                                 android:textAllCaps="false"
                                 android:textSize="@dimen/size_text"
-                                android:background="@drawable/custom_unlock_button"/>
+                                android:background="@drawable/custom_button_unlock"/>
 
                         </RelativeLayout>
 
@@ -358,7 +356,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            app:cardCornerRadius="10dp">
+                            app:cardCornerRadius="10dp"
+                            app:cardBackgroundColor="#fe6e0c">
 
                             <TextView
                                 android:id="@+id/textView"
@@ -453,6 +452,7 @@
             </LinearLayout>
 
             <android.support.v7.widget.CardView
+                android:id="@+id/recyclerViewFactoryBack"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
