@@ -144,7 +144,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         Log.i(TAG, "onRestart");
-        Start = true;
         recursionUpDownPoint(0);
     }
 
@@ -165,7 +164,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         Log.i(TAG, "onPause");
-        Start = false;
         updateByDb();
     }
 
@@ -279,6 +277,7 @@ public class MainActivity extends AppCompatActivity {
             //Augmente l'énergie en fonction de des usines actuelles
             if (mFactory.size() > 0) {
                 if (FactoryEnergyWin != 0) {
+                    Log.i(TAG, "FactoryEnergyWin : " + FactoryEnergyWin);
                     sharedPreferences
                             .edit()
                             .putLong(PREFS_ENERGY, (sharedPreferences.getLong(PREFS_ENERGY, 0) + FactoryEnergyWin))
@@ -312,22 +311,25 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            if (N % 60 == 1 && N > 1) {
+            if (N%120 == 1 && N > 1) {
                 Random X = new Random();
-                int nombreAleatoire = X.nextInt(2 - 1 + 1) + 1;
+                int nombreAleatoire = X.nextInt(3 - 1 + 1) + 1;
 
                 switch (nombreAleatoire) {
                     case 1:
-                        FreeCoinAd = true;
-                        CoinFree.getBackground().setColorFilter(Color.parseColor("#0bab08"), PorterDuff.Mode.DARKEN);
-                        break;
-                    case 2:
                         FreeCoinAd = false;
                         CoinFree.getBackground().setColorFilter(Color.parseColor("#FFFFFF"), PorterDuff.Mode.DARKEN);
+                        break;
+                    default:
+                        FreeCoinAd = true;
+                        CoinFree.getBackground().setColorFilter(Color.parseColor("#0bab08"), PorterDuff.Mode.DARKEN);
                         break;
                 }
 
                 CoinFreeAnimation();
+            }
+
+            if (N % 60 == 1 && N > 1) {
                 AnimationBallon();
                 updateByDb();
             }
@@ -656,7 +658,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(ActualDate.after(CoinFreeEnd)) {
             CoinFreeEnd = Calendar.getInstance();
-            CoinFreeEnd.add(Calendar.SECOND, 30);
+            CoinFreeEnd.add(Calendar.SECOND, 90);
             int nombreAleatoire = X.nextInt(100 - 1 + 1) + 1, A = 0;
             initEarthObjectVar();
             if (nombreAleatoire > 1 && nombreAleatoire < 20) {
@@ -712,7 +714,7 @@ public class MainActivity extends AppCompatActivity {
             adPopups.getButton1().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    CoinFreeEnd.add(Calendar.SECOND, 30);
+                    CoinFreeEnd.add(Calendar.SECOND, 90);
                     Toast.makeText(MainActivity.this,"You have won "+numberFormat.format(finalA)+" coins",Toast.LENGTH_LONG).show();
                     sharedPreferences
                             .edit()

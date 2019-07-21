@@ -276,8 +276,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="#FFFFFF"
-            android:layout_marginHorizontal="10dp"
-            app:cardCornerRadius="20dp">
+            android:layout_marginHorizontal="10dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -413,7 +412,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginHorizontal="10dp"
-                app:cardCornerRadius="20dp">
+                app:cardCornerRadius="5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -458,7 +457,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginHorizontal="10dp"
-                app:cardCornerRadius="20dp">
+                app:cardCornerRadius="5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"

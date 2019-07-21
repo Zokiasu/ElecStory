@@ -50,13 +50,13 @@ public class EarthObject {
             this.CoinWin = 1500;
             this.EnergyCost = this.CoinWin*7;
             this.PriceObject = 100000;
-            this.Skin = R.drawable.lamp;
+            this.Skin = R.drawable.district;
         } else if(N == 5 || M.equals("City")){
             this.Name = "City";
             this.CoinWin = 5000;
             this.EnergyCost = this.CoinWin*7;
             this.PriceObject = 1000000;
-            this.Skin = R.drawable.lamp;
+            this.Skin = R.drawable.city;
         } else if(N == 6 || M.equals("Municipality")){
             this.Name = "Municipality";
             this.CoinWin = 8000;
