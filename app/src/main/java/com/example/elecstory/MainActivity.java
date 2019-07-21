@@ -27,9 +27,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.elecstory.OtherClass.AdPopup;
+import com.example.elecstory.OtherClass.InformationPopup;
 import com.example.elecstory.OtherClass.ItemOffsetDecoration;
 import com.example.elecstory.OtherClass.RecyclerViewAdapterEarth;
 import com.example.elecstory.OtherClass.RecyclerViewAdapterFactory;
+import com.example.elecstory.OtherClass.SalePopup;
 import com.example.elecstory.ShopEarthObject.ShopEarthActivity;
 import com.example.elecstory.Database.*;
 import com.example.elecstory.Object.*;
@@ -52,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
     protected TextView ActualElecPoint;
     protected TextView ActualCoin;
     protected TextView DisplayQuestName;
+    protected TextView MyFactory;
+    protected TextView MyItem;
 
     protected Button UpPoint;
     protected Button Unlock;
@@ -248,6 +252,8 @@ public class MainActivity extends AppCompatActivity {
         //Information Player
         ActualCoin = findViewById(R.id.ElecCoins);
         ActualElecPoint = findViewById(R.id.ElecStockage);
+        MyFactory = findViewById(R.id.MyFactorys);
+        MyItem = findViewById(R.id.MyItems);
 
         //Quest
         DisplayQuestImage = findViewById(R.id.requestImage);
@@ -525,6 +531,38 @@ public class MainActivity extends AppCompatActivity {
 
     //Initialise les différentes actions des boutons
     protected void initButtonAction(){
+
+        MyFactory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final InformationPopup infoPopUp = new InformationPopup(MainActivity.this);
+                infoPopUp.setNameObjectSale("Your Factory's Info :");
+                infoPopUp.setMessageSale("Energy Generated : " + numberFormat.format(FactoryEnergyWin) + "/s" + "\nOperating Cost : " + numberFormat.format(FactoryCost) + "/m");
+                infoPopUp.getClose().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        infoPopUp.dismiss();
+                    }
+                });
+                infoPopUp.build();
+            }
+        });
+
+        MyItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final InformationPopup infoPopUp = new InformationPopup(MainActivity.this);
+                infoPopUp.setNameObjectSale("Your Item's Info :");
+                infoPopUp.setMessageSale("Energy Used : " + numberFormat.format(EarthObjectEnergyCost) + "\nCoin Generated : " + numberFormat.format(EarthObjectCoinWin));
+                infoPopUp.getClose().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        infoPopUp.dismiss();
+                    }
+                });
+                infoPopUp.build();
+            }
+        });
 
         CoinFree.setOnClickListener(new View.OnClickListener() {
             @Override

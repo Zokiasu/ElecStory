@@ -43,43 +43,4 @@
         android:text="Hello\nHello\nHello"
         android:textSize="@dimen/size_text"/>
 
-    <LinearLayout
-        android:id="@+id/ButtonSalePopup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <Button
-            android:id="@+id/confirmSale"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Confirm"
-            android:textSize="@dimen/size_text"
-            android:textAllCaps="false"/>
-
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <Button
-            android:id="@+id/cancelSale"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cancel"
-            android:textSize="@dimen/size_text"
-            android:textAllCaps="false"/>
-
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-    </LinearLayout>
-
 </LinearLayout>

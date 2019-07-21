@@ -8,26 +8,22 @@ import android.widget.TextView;
 
 import com.example.elecstory.R;
 
-public class SalePopup extends Dialog {
+public class InformationPopup extends Dialog {
 
     private Activity activity;
-    private Button button1, button2, Close;
+    private Button Close;
     private TextView MessageSaleView, NameObjectSaleView;
     private String MessageSale, NameObjectSale;
-    private LinearLayout ButtonSalePopups;
 
-    public SalePopup(Activity activity){
+    public InformationPopup(Activity activity){
         super(activity, R.style.Theme_AppCompat_DayNight_Dialog);
-        setContentView(R.layout.sale_object_popup);
+        setContentView(R.layout.information_popup);
 
         this.activity = activity;
         this.MessageSaleView = findViewById(R.id.messageSale);
         this.NameObjectSaleView = findViewById(R.id.nameObjectSale);
-        this.button1 = findViewById(R.id.confirmSale);
-        this.button2 = findViewById(R.id.cancelSale);
         this.Close = findViewById(R.id.closeWindows);
-        this.ButtonSalePopups = findViewById(R.id.ButtonSalePopup);
-        this.MessageSale = "Hello\nHello\nHello\nHello\nHello\nHello\nHello\nHello";
+        this.MessageSale = "Hello World";
         this.NameObjectSale = "NameObject";
     }
 
@@ -35,14 +31,6 @@ public class SalePopup extends Dialog {
         show();
         MessageSaleView.setText(MessageSale);
         NameObjectSaleView.setText(NameObjectSale);
-    }
-
-    public LinearLayout getButtonSalePopups() {
-        return ButtonSalePopups;
-    }
-
-    public void setButtonSalePopups(LinearLayout buttonSalePopups) {
-        ButtonSalePopups = buttonSalePopups;
     }
 
     public Button getClose() {
@@ -75,22 +63,6 @@ public class SalePopup extends Dialog {
 
     public void setActivity(Activity activity) {
         this.activity = activity;
-    }
-
-    public Button getButton1() {
-        return button1;
-    }
-
-    public void setButton1(Button button1) {
-        this.button1 = button1;
-    }
-
-    public Button getButton2() {
-        return button2;
-    }
-
-    public void setButton2(Button button2) {
-        this.button2 = button2;
     }
 
     public TextView getMessageSaleView() {

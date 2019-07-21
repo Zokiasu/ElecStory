@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 public class ShopFactoryActivity extends AppCompatActivity {
 
-
+    private final Database db = new Database(this);
     private static final String PREFS = "PREFS";
     private static final String PREFS_COIN = "PREFS_COIN";
     private static final String PREFS_ENERGY = "PREFS_ENERGY";
@@ -31,8 +31,6 @@ public class ShopFactoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_factory_shop);
         sharedPreferences = getApplicationContext().getSharedPreferences(PREFS, MODE_PRIVATE);
-
-        final Database db = new Database(this);
 
         TextView Title = findViewById(R.id.ShopTitle);
         Title.setText("Factory's Shop");
@@ -50,12 +48,7 @@ public class ShopFactoryActivity extends AppCompatActivity {
 
         ArrayList<Factory> ListFactoryShop = new ArrayList<>();
         ListFactoryShop = db.infoFactoryShop(ListFactoryShop);
-
-        ArrayList<Factory> ListFactoryPlayer = new ArrayList<>();
-        ListFactoryPlayer = db.infoFactory(ListFactoryPlayer);
-
         final ArrayList<Factory> finalListShopObject = ListFactoryShop;
-        final ArrayList<Factory> finalListFactoryPlayer = ListFactoryPlayer;
 
         GridView GV = findViewById(R.id.GridShop);
         GV.setAdapter(new ShopFactoryAdapter(this, ListFactoryShop));
@@ -65,7 +58,7 @@ public class ShopFactoryActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 Factory N = finalListShopObject.get(position);
-                if(checkNumberItemPlayer(N.getName(), finalListFactoryPlayer)) {
+                if(checkNumberItemPlayer(N.getName())) {
                     if ((sharedPreferences.getInt(PREFS_COIN, 0) >= N.getPriceFactory()) && ((sharedPreferences.getInt(PREFS_COIN, 0) - N.getPriceFactory()) >= 0)) {
                         db.insertFactory(N.getNbObject(), N.getName(), N.getFactoryLevel(), N.getPriceFactory(), N.getUpgradeCost(), N.getEnergyProd(), N.getOperatingCost(), N.getPollutionTax(), N.getSkin());
                         sharedPreferences
@@ -85,7 +78,9 @@ public class ShopFactoryActivity extends AppCompatActivity {
         db.close();
     }
 
-    public boolean checkNumberItemPlayer(String NameFactory, ArrayList<Factory> ListPlayer){
+    public boolean checkNumberItemPlayer(String NameFactory){
+        ArrayList<Factory> ListPlayer = new ArrayList<>();
+        ListPlayer = db.infoFactory(ListPlayer);
         for (int i = 0; i < ListPlayer.size(); i++){
             if(ListPlayer.get(i).getName().equals(NameFactory)){
                 if(ListPlayer.get(i).getNbObject() < 5){
