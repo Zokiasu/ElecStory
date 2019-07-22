@@ -1,20 +1,16 @@
 package com.example.elecstory;
 
 import android.content.Intent;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.elecstory.Database.Database;
 import com.example.elecstory.Object.EarthObject;
+import com.example.elecstory.Object.Factory;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -80,12 +76,21 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(!Pseudo.getText().toString().matches("") && !Age.getText().toString().matches("")) {
+
                     db.insertPlayer(Pseudo.getText().toString(), Integer.parseInt(Age.getText().toString()), 0, 0, generateUniqueId(Pseudo.getText().toString(), Integer.parseInt(Age.getText().toString())));
+
                     EarthObject Test = new EarthObject(0, "");
                     db.insertEarthObject(Test.getNbObject(), Test.getName(), Test.getCoinWin(), Test.getPriceObject(), Test.getEnergyCost(), Test.getSkin());
-                    db.insertFirstCraft();
-                    db.insertAllAds();
+
+                    for (int i = -1; i < 6; i++) {
+                        Factory MyFact = new Factory(i);
+                        db.insertFactory(MyFact.getNbObject(), MyFact.getName(), MyFact.getFactoryLevel(), MyFact.getPriceFactory(), MyFact.getUpgradeCost(), MyFact.getEnergyProd(), MyFact.getOperatingCost(), MyFact.getPollutionTax(), MyFact.getSkin());
+                    }
+
+                    db.insertFirstItem();
+                    db.insertAllTimerAds();
                     db.fillShopFactory();
+
                     db.close();
                     Intent myIntent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(myIntent);

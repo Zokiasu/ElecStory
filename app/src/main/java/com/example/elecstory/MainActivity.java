@@ -34,7 +34,6 @@ import com.example.elecstory.ShopEarthObject.ShopEarthActivity;
 import com.example.elecstory.Database.*;
 import com.example.elecstory.Object.*;
 import com.example.elecstory.Quest.*;
-import com.example.elecstory.ShopFactory.ShopFactoryActivity;
 
 import java.text.DateFormat;
 import java.text.NumberFormat;
@@ -58,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
     protected Button UpPoint;
     protected Button Unlock;
     protected ImageButton AnimationBallon;
-    protected Button ShopFactory;
     protected Button ShopEarthObject;
 
     protected RecyclerView recyclerViewCity;
@@ -127,60 +125,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedPreferences = getApplicationContext().getSharedPreferences(PREFS, MODE_PRIVATE);
-        Log.i(TAG, "onCreate");
-        createOrRestart();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.i(TAG, "onStart");
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.i(TAG, "onRestart");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.i(TAG, "onStop");
-        Start = false;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.i(TAG, "onResume");
-        updateByDb();
-        initFactoryVar();
-        initEarthObjectVar();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.i(TAG, "onPause");
-        updateByDb();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        sharedPreferences.edit().clear().apply();
-        Log.i(TAG, "onDestroy");
-    }
-
-    @Override
-    public void onBackPressed() {
-        // do nothing.
-    }
-
-    protected void createOrRestart(){
         setContentView(R.layout.activity_main);
+        Log.i(TAG, "onCreate");
+
+        sharedPreferences = getApplicationContext().getSharedPreferences(PREFS, MODE_PRIVATE);
 
         initFindViewById();
 
@@ -197,10 +145,6 @@ public class MainActivity extends AppCompatActivity {
         mFactory = db.infoFactory(mFactory);
         mEarthObject.clear();
         mEarthObject = db.infoEarthObject(mEarthObject);
-
-        if(mFactory.size() < 1) {
-            RecyclerViewFactoryBack.setVisibility(View.INVISIBLE);
-        }
 
         if(sharedPreferences.contains(PREFS_COIN) && sharedPreferences.contains(PREFS_COIN)) {
             ActualEnergyPoint.setText(numberFormat.format(sharedPreferences.getLong(PREFS_ENERGY, 0)));
@@ -228,8 +172,51 @@ public class MainActivity extends AppCompatActivity {
         initRecyclerViewEarthObject();
         initAdEnd();
 
-        recursionUpDownPoint(0);
         db.close();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.i(TAG, "onStart");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i(TAG, "onStop");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i(TAG, "onResume");
+        updateByDb();
+        initFactoryVar();
+        initEarthObjectVar();
+        Start = true;
+        recursionUpDownPoint(0);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i(TAG, "onPause");
+        updateByDb();
+        Start = false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        sharedPreferences.edit().clear().apply();
+        Log.i(TAG, "onDestroy");
+    }
+
+    @Override
+    public void onBackPressed() {
+        Log.i(TAG, "onBackPressed");
+        // do nothing.
     }
 
     //Initialise tout les findViewById
@@ -258,7 +245,6 @@ public class MainActivity extends AppCompatActivity {
         DisplayQuestName = findViewById(R.id.requestName);
 
         //Button
-        ShopFactory = findViewById(R.id.ShopButton);
         Unlock = findViewById(R.id.ActionCraft);
         ShopEarthObject = findViewById(R.id.ListCraft);
         UpPoint = findViewById(R.id.ElecUp);
@@ -283,10 +269,10 @@ public class MainActivity extends AppCompatActivity {
                             .apply();
                 }
 
-                if (N % 60 == 1) {
+                if (N % 60 == 1 && N > 1) {
                     sharedPreferences
                             .edit()
-                            .putInt(PREFS_COIN, (sharedPreferences.getInt(PREFS_COIN, 0) - (FactoryCost + FactoryPollution)))
+                            .putInt(PREFS_COIN, (sharedPreferences.getInt(PREFS_COIN, 0) - FactoryCost))
                             .apply();
                 }
             }
@@ -398,7 +384,7 @@ public class MainActivity extends AppCompatActivity {
 
     protected void CoinFreeAnimation(){
         AlphaAnimation alphaAnim = new AlphaAnimation(1.0f,1.0f);
-        alphaAnim.setDuration(15000);
+        alphaAnim.setDuration(10000);
         alphaAnim.setAnimationListener(new Animation.AnimationListener()
         {
             @Override
@@ -434,7 +420,15 @@ public class MainActivity extends AppCompatActivity {
             EarthObject TmpObject = new EarthObject(ActualQuest.getIdQuest(), ActualQuest.getNameReward());
             db.insertCraft(TmpObject.getNbObject(), TmpObject.getName(), TmpObject.getCoinWin(), TmpObject.getPriceObject(), TmpObject.getEnergyCost(), TmpObject.getSkin());
 
-            ActualQuest = new Quest(ActualQuest.getIdQuest() + 1);
+            sharedPreferences
+                    .edit()
+                    .putInt(PREFS_COIN, (sharedPreferences.getInt(PREFS_COIN, 0) + (TmpObject.getEnergyCost())))
+                    .apply();
+            if(ActualQuest.getIdQuest() != 12) {
+                ActualQuest = new Quest(ActualQuest.getIdQuest() + 1);
+            } else {
+                ActualQuest = new Quest(1);
+            }
 
             db.updateQuest(ActualQuest.getIdQuest());
             ActualPlayer.setQuestId(ActualQuest.getIdQuest());
@@ -471,15 +465,17 @@ public class MainActivity extends AppCompatActivity {
         ActualEnergyPoint.setText(numberFormat.format(sharedPreferences.getLong(PREFS_ENERGY, 0)));
         ActualCoin.setText(numberFormat.format(sharedPreferences.getInt(PREFS_COIN, 0)));
 
-        if(sharedPreferences.getInt(PREFS_COIN, 0) >= 10 && mFactory.size() == 0){
-            Factory MyFact = new Factory(-1);
-            db.insertFactory(MyFact.getNbObject(), MyFact.getName(), MyFact.getFactoryLevel(), MyFact.getPriceFactory(), MyFact.getUpgradeCost(), MyFact.getEnergyProd(), MyFact.getOperatingCost(), MyFact.getPollutionTax(), MyFact.getSkin());
-            mFactory = db.infoFactory(mFactory);
+        if(sharedPreferences.getInt(PREFS_COIN, 0) >= 10 && mFactory.get(0).getNbObject() < 1 ){
+            mFactory.get(0).Upgrade(mFactory.get(0), db, this);
+            sharedPreferences
+                    .edit()
+                    .putInt(PREFS_COIN, (sharedPreferences.getInt(PREFS_COIN, 0) + mFactory.get(0).getPriceFactory()))
+                    .apply();
             initFactoryVar();
             initEarthObjectVar();
             initRecyclerViewFactory();
             RecyclerViewFactoryBack.setVisibility(View.VISIBLE);
-            Toast.makeText(MainActivity.this, "You have win a "+ MyFact.getName() +"!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "You have win a "+ mFactory.get(0).getName() +"!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -606,14 +602,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ShopFactory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent myIntent = new Intent(MainActivity.this, ShopFactoryActivity.class);
-                startActivity(myIntent);
-            }
-        });
-
         UpPoint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -688,14 +676,12 @@ public class MainActivity extends AppCompatActivity {
 
         if(ActualDate.after(CoinFreeEnd)) {
             CoinFreeEnd = Calendar.getInstance();
-            int nombreAleatoire = X.nextInt(100 - 1 + 1) + 1, A;
+            int nbalea = X.nextInt(100 - 1 + 1) + 1, A;
             initEarthObjectVar();
 
-            if (nombreAleatoire > 1 && nombreAleatoire < 50) {
-                A = EarthObjectCoinWin*(120);
-            } else if (nombreAleatoire > 50 && nombreAleatoire < 80) {
+            if (nbalea > 1 && nbalea < 50) {
                 A = EarthObjectCoinWin*(180);
-            } else if (nombreAleatoire > 80 && nombreAleatoire < 100) {
+            } else if (nbalea > 50 && nbalea < 100) {
                 A = EarthObjectCoinWin*(240);
             } else {
                 A = EarthObjectCoinWin*(300);

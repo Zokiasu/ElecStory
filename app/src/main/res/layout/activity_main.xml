@@ -364,7 +364,7 @@
                                 android:layout_height="wrap_content"
                                 android:autoSizeTextType="uniform"
                                 android:gravity="center"
-                                android:text="Object Request"
+                                android:text="Item Requested"
                                 android:textSize="@dimen/size_text" />
 
                         </android.support.v7.widget.CardView>
@@ -425,7 +425,7 @@
                         android:layout_height="wrap_content"
                         android:background="#fe6e0c"
                         android:gravity="center"
-                        android:text="My Items"
+                        android:text="Your Items"
                         android:textColor="#000"/>
 
                     <android.support.v7.widget.RecyclerView
@@ -455,9 +455,7 @@
                 android:id="@+id/recyclerViewFactoryBack"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginHorizontal="10dp"
-                app:cardCornerRadius="5dp">
+                android:layout_gravity="center">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -470,7 +468,7 @@
                         android:layout_height="wrap_content"
                         android:background="#fe6e0c"
                         android:gravity="center"
-                        android:text="My Factorys"
+                        android:text="Your Factorys"
                         android:textColor="#000"/>
 
                     <android.support.v7.widget.RecyclerView
@@ -502,21 +500,6 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/body">
-
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <Button
-            android:id="@+id/ShopButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Factory's Shop"
-            android:textAllCaps="false"
-            android:textSize="@dimen/size_text"
-            android:textColor="#fff"
-            android:background="@drawable/custom_button" />
 
         <Space
             android:layout_width="wrap_content"

@@ -88,8 +88,14 @@ public class ShopEarthActivity extends AppCompatActivity {
                     shopPopup.getButton1().setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            String Recup = shopPopup.getShopSpinner().getSelectedItem().toString();
-                            int RecupNb = Integer.valueOf(Recup);
+                            String Recup;
+                            int RecupNb;
+                            if(!shopPopup.getNbObjectBuys().getText().toString().matches("")){
+                                Recup = shopPopup.getNbObjectBuys().getText().toString();
+                                RecupNb = Integer.valueOf(Recup);
+                            } else {
+                                RecupNb = 1;
+                            }
                             if((sharedPreferences.getInt(PREFS_COIN, 0) >= (N.getPriceObject() * RecupNb)) && ((sharedPreferences.getInt(PREFS_COIN, 0) - (N.getPriceObject() * RecupNb)) >= 0)) {
                                 db.insertEarthObject(N.getNbObject() * RecupNb, N.getName(), N.getCoinWin(), N.getPriceObject(), N.getEnergyCost(), N.getSkin());
 

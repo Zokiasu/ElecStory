@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.example.elecstory.Database.Database;
 import com.example.elecstory.Object.EarthObject;
 import com.example.elecstory.R;
@@ -113,9 +111,9 @@ public class RecyclerViewAdapterEarth extends RecyclerView.Adapter<RecyclerViewA
 
         public ViewHolder(View itemView) {
             super(itemView);
-            image = itemView.findViewById(R.id.image);
-            name = itemView.findViewById(R.id.imagename);
-            nbObject = itemView.findViewById(R.id.NumberObject);
+            image = itemView.findViewById(R.id.imageFactorys);
+            name = itemView.findViewById(R.id.FactorysName);
+            nbObject = itemView.findViewById(R.id.LevelFactorys);
         }
     }
 }

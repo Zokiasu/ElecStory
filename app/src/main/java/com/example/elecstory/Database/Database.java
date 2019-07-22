@@ -295,24 +295,11 @@ public class Database extends SQLiteOpenHelper {
 
     ////// Factory Player function //////
     public void insertFactory (int NbObject, String name, int level, int cost, int upgadecost, int pointgenerate, int operatingcost, int pollutiontax, int skin) {
-        ArrayList<Factory> Test = new ArrayList<>();
-        int i = 0;
-        Test = this.infoFactory(Test);
-        if(Test.size() > 0){
-            for(i = 0; i < Test.size(); i++){
-                if(Test.get(i).getName().equals(name)){
-                    this.updateNbFactory(name, 1);
-                    i = Test.size()+1;
-                }
-            }
-        }
-        if(Test.size() == 0 || i == Test.size()){
-            name = name.replace("'", "''");
-            String strSql =
-                    "INSERT INTO " + TABLE_FACTORY + "(number_object, name, level, cost, upgadecost, pointgenerate, operatingcost, pollutiontax, skin) " +
-                    "VALUES ('" + NbObject + "','" + name + "', '" + level + "', '" + cost + "', '" + upgadecost + "', '" + pointgenerate +  "', '" + operatingcost + "', '" + pollutiontax + "', '" + skin + "')";
-            this.getWritableDatabase().execSQL(strSql);
-        }
+        name = name.replace("'", "''");
+        String strSql =
+                "INSERT INTO " + TABLE_FACTORY + "(number_object, name, level, cost, upgadecost, pointgenerate, operatingcost, pollutiontax, skin) " +
+                "VALUES ('" + NbObject + "','" + name + "', '" + level + "', '" + cost + "', '" + upgadecost + "', '" + pointgenerate +  "', '" + operatingcost + "', '" + pollutiontax + "', '" + skin + "')";
+        this.getWritableDatabase().execSQL(strSql);
     }
 
     public void updateNbFactory (String name, int X) {
@@ -409,7 +396,7 @@ public class Database extends SQLiteOpenHelper {
     }
 
     ////// Unlock function //////
-    public void insertFirstCraft() {
+    public void insertFirstItem() {
         this.getWritableDatabase().execSQL("DROP TABLE IF EXISTS " + TABLE_CRAFT);
         this.getWritableDatabase().execSQL(CREATE_TABLE_CRAFT);
         EarthObject Test = new EarthObject(0,"");
@@ -453,7 +440,7 @@ public class Database extends SQLiteOpenHelper {
     }
 
     ////// Ads function //////
-    public void insertAllAds(){
+    public void insertAllTimerAds(){
         String strSql = "INSERT INTO " +  TABLE_ADS + "(end_speed, end_coin, end_multi) " + "VALUES ('0000/00/00 00:00:00', '0000/00/00 00:00:00', '0000/00/00 00:00:00')";
         this.getWritableDatabase().execSQL(strSql);
     }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -15,7 +16,7 @@ import java.util.List;
 public class ShopPopup extends Dialog {
 
     protected Activity activity;
-    protected Spinner ShopSpinner;
+    protected EditText NbObjectBuys;
     protected Button button1, button2;
     protected List<Integer> number = new ArrayList<Integer>();
     protected TextView ObjectBuy;
@@ -27,7 +28,7 @@ public class ShopPopup extends Dialog {
         setContentView(R.layout.shop_select_number_popup);
 
         this.activity = activity;
-        this.ShopSpinner = findViewById(R.id.ShopSpinner);
+        this.NbObjectBuys = findViewById(R.id.NbObjectBuy);
         this.button1 = findViewById(R.id.confirmBuy);
         this.button2 = findViewById(R.id.cancelBuy);
         this.ObjectBuy = findViewById(R.id.ObjectBuy);
@@ -37,20 +38,15 @@ public class ShopPopup extends Dialog {
 
     public void build(){
         ObjectBuy.setText(ObjectsBuy);
-        ArrayAdapter<Integer> adapter = new ArrayAdapter<Integer>(activity, android.R.layout.simple_spinner_item, number);
-        ShopSpinner.setAdapter(adapter);
         show();
     }
 
-    public int getTest() {
-        if(ShopSpinner.getSelectedItem() != null){
-            Test = (int)ShopSpinner.getSelectedItem();
-        }
-        return Test;
+    public EditText getNbObjectBuys() {
+        return NbObjectBuys;
     }
 
-    public void setTest(int test) {
-        Test = test;
+    public void setNbObjectBuys(EditText nbObjectBuys) {
+        NbObjectBuys = nbObjectBuys;
     }
 
     public Button getButton1() {
@@ -91,14 +87,6 @@ public class ShopPopup extends Dialog {
 
     public void setActivity(Activity activity) {
         this.activity = activity;
-    }
-
-    public Spinner getShopSpinner() {
-        return ShopSpinner;
-    }
-
-    public void setShopSpinner(Spinner shopSpinner) {
-        ShopSpinner = shopSpinner;
     }
 
     public List<Integer> getNumber() {

@@ -8,23 +8,22 @@ import android.widget.TextView;
 
 import com.example.elecstory.R;
 
-public class SalePopup extends Dialog {
+public class UpgradeFactoryPopup extends Dialog {
 
     private Activity activity;
-    private Button button1, button2, Close;
+    private Button upgradeButton, Close;
     private TextView MessageSaleView, NameObjectSaleView;
     private String MessageSale, NameObjectSale;
     private LinearLayout ButtonSalePopups;
 
-    public SalePopup(Activity activity){
+    public UpgradeFactoryPopup(Activity activity){
         super(activity, R.style.Theme_AppCompat_DayNight_Dialog);
-        setContentView(R.layout.sale_object_popup);
+        setContentView(R.layout.upgrade_factory_popup);
 
         this.activity = activity;
         this.MessageSaleView = findViewById(R.id.messageSale);
         this.NameObjectSaleView = findViewById(R.id.nameObjectSale);
-        this.button1 = findViewById(R.id.confirmSale);
-        this.button2 = findViewById(R.id.upgradeFactorysButton);
+        this.upgradeButton = findViewById(R.id.upgradeFactorysButton);
         this.Close = findViewById(R.id.closeWindows);
         this.ButtonSalePopups = findViewById(R.id.ButtonSalePopup);
         this.MessageSale = "Hello\nHello\nHello\nHello\nHello\nHello\nHello\nHello";
@@ -77,20 +76,12 @@ public class SalePopup extends Dialog {
         this.activity = activity;
     }
 
-    public Button getButton1() {
-        return button1;
+    public Button getUpgradeButton() {
+        return upgradeButton;
     }
 
-    public void setButton1(Button button1) {
-        this.button1 = button1;
-    }
-
-    public Button getButton2() {
-        return button2;
-    }
-
-    public void setButton2(Button button2) {
-        this.button2 = button2;
+    public void setUpgradeButton(Button upgradeButton) {
+        this.upgradeButton = upgradeButton;
     }
 
     public TextView getMessageSaleView() {
