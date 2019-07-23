@@ -62,7 +62,7 @@ public class QuestAdapter extends BaseAdapter {
 
         imageView.setImageResource(listEarthObjectObjects.get(position).getSkin());
         nameTitle.setText(listEarthObjectObjects.get(position).getName());
-        nbObject.setText(listNbObjects.get(position) + " Unités");
+        nbObject.setText(listNbObjects.get(position) + " Units");
 
         return view;
     }

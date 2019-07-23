@@ -1,4 +1,4 @@
-package com.example.elecstory.ShopEarthObject;
+package com.example.elecstory.Shop;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,17 +16,18 @@ import com.example.elecstory.R;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
-public class ShopEarthAdapter extends BaseAdapter {
+public class ShopAdapter extends BaseAdapter {
 
     public android.content.Context Context;
     public ArrayList<EarthObject> ListObject;
     public LayoutInflater layoutInflater;
     public View views;
+    public Button test;
     public NumberFormat numberFormat = NumberFormat.getInstance(java.util.Locale.FRENCH);
 
-    protected static final String TAG = "Elecstory.ShopEarthAdapter";
+    protected static final String TAG = "Elecstory.ShopAdapter";
 
-    public ShopEarthAdapter(Context Contexts, ArrayList<EarthObject> ListCO) {
+    public ShopAdapter(Context Contexts, ArrayList<EarthObject> ListCO) {
         this.Context = Contexts;
         this.ListObject = ListCO;
         this.layoutInflater = LayoutInflater.from(Context);
@@ -53,19 +55,15 @@ public class ShopEarthAdapter extends BaseAdapter {
         layoutInflater = (LayoutInflater) Context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         views = new View(Context);
-        views = layoutInflater.inflate(R.layout.shop_object_adapter, null);
+        views = layoutInflater.inflate(R.layout.shop_adapter, null);
 
         ImageView imageView = views.findViewById(R.id.objectView);
         TextView objectName = views.findViewById(R.id.objectName);
         TextView objectPrice = views.findViewById(R.id.objectCost);
-        TextView coinProduc = views.findViewById(R.id.CoinProduc);
-        TextView costProduc = views.findViewById(R.id.CostProduction);
 
         imageView.setImageResource(ListObject.get(position).getSkin());
         objectName.setText(String.valueOf(ListObject.get(position).getName()));
         objectPrice.setText("Price : " + numberFormat.format(ListObject.get(position).getPriceObject()));
-        coinProduc.setText("Coin win : " + numberFormat.format(ListObject.get(position).getCoinWin()));
-        costProduc.setText("Energy Cost : " + numberFormat.format(ListObject.get(position).getEnergyCost()));
 
         return views;
     }

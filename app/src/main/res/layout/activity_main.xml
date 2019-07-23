@@ -34,40 +34,15 @@
             android:id="@+id/cardPlayer"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/size_player_image_main"
+            android:layout_gravity="center"
             app:cardCornerRadius="10dp">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/imagePlayer"
-                        android:layout_width="@dimen/size_player_image_main"
-                        android:layout_height="@dimen/size_player_image_main"
-                        app:srcCompat="@drawable/jokericon"
-                        tools:ignore="MissingConstraints" />
-
-                    <TextView
-                        android:id="@+id/pseudoPlayer"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBottom="@+id/imagePlayer"
-                        android:layout_alignRight="@+id/imagePlayer"
-                        android:layout_alignLeft="@+id/imagePlayer"
-                        android:gravity="center"
-                        android:text="Pseudo"/>
-
-                </RelativeLayout>
-
-            </LinearLayout>
+            <ImageView
+                android:id="@+id/imagePlayer"
+                android:layout_width="@dimen/size_player_image_main"
+                android:layout_height="@dimen/size_player_image_main"
+                app:srcCompat="@drawable/jokericon"
+                tools:ignore="MissingConstraints" />
 
         </android.support.v7.widget.CardView>
 
@@ -151,43 +126,6 @@
             android:layout_height="wrap_content"/>
 
         <android.support.v7.widget.CardView
-            android:id="@+id/coinFree"
-            android:layout_width="@dimen/size_player_image_main"
-            android:layout_height="@dimen/size_player_image_main"
-            android:padding="10dp"
-            app:cardCornerRadius="10dp">
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/coinFreeImage"
-                    android:layout_width="@dimen/size_player_image_main"
-                    android:layout_height="@dimen/size_player_image_main"
-                    app:srcCompat="@drawable/coin"
-                    tools:ignore="MissingConstraints" />
-
-                <TextView
-                    android:id="@+id/coinFreeText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/coinFreeImage"
-                    android:layout_centerHorizontal="true"
-                    android:gravity="center"
-                    android:text="Coins"/>
-
-            </RelativeLayout>
-
-        </android.support.v7.widget.CardView>
-
-        <Space
-            android:layout_width="5dp"
-            android:layout_height="wrap_content"/>
-
-        <android.support.v7.widget.CardView
             android:id="@+id/speedAds"
             android:layout_width="@dimen/size_player_image_main"
             android:layout_height="@dimen/size_player_image_main"
@@ -210,7 +148,7 @@
                     android:id="@+id/speedAdsText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/speedAdsImage"
+                    android:layout_alignParentBottom="true"
                     android:layout_alignRight="@+id/speedAdsImage"
                     android:layout_alignLeft="@+id/speedAdsImage"
                     android:gravity="center"
@@ -247,11 +185,48 @@
                     android:id="@+id/multiAdsText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/multiAdsImage"
+                    android:layout_alignParentBottom="true"
                     android:layout_alignRight="@+id/multiAdsImage"
                     android:layout_alignLeft="@+id/multiAdsImage"
                     android:gravity="center"
                     android:text="Coin x2"/>
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <Space
+            android:layout_width="5dp"
+            android:layout_height="wrap_content"/>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/clipboard"
+            android:layout_width="@dimen/size_player_image_main"
+            android:layout_height="@dimen/size_player_image_main"
+            app:cardCornerRadius="10dp">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/clipboardImage"
+                    android:layout_width="@dimen/size_player_image_main"
+                    android:layout_height="@dimen/size_player_image_main"
+                    app:srcCompat="@drawable/clipboard"
+                    tools:ignore="MissingConstraints" />
+
+                <TextView
+                    android:id="@+id/clipboardText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignRight="@+id/clipboardImage"
+                    android:layout_alignLeft="@+id/clipboardImage"
+                    android:gravity="center"
+                    android:text="Chall"/>
 
             </RelativeLayout>
 
@@ -275,114 +250,105 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="#FFFFFF"
-            android:layout_marginHorizontal="10dp">
+            android:layout_marginHorizontal="10dp"
+            app:cardBackgroundColor="#01A0FF">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 android:gravity="center"
-                android:background="#01A0FF">
+                android:padding="5dp"
+                tools:ignore="InvalidId">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="@dimen/size_frame_text"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        app:cardCornerRadius="10dp"
+                        app:cardBackgroundColor="#fe6e0c">
+
+                        <TextView
+                            android:id="@+id/requestName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="UnlockItem Name"
+                            android:textSize="@dimen/size_text"/>
+
+                    </android.support.v7.widget.CardView>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:id="@+id/requestImage"
+                            android:layout_width="@dimen/size_unlock_image"
+                            android:layout_height="@dimen/size_unlock_image"
+                            android:background="#01A0FF"
+                            tools:ignore="MissingConstraints" />
+
+                        <Button
+                            android:id="@+id/ActionCraft"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBottom="@+id/requestImage"
+                            android:layout_marginBottom="10dp"
+                            android:layout_centerHorizontal="true"
+                            android:text="Unlock"
+                            android:textAllCaps="false"
+                            android:textSize="@dimen/size_text"
+                            android:background="@drawable/custom_button_unlock"/>
+
+                    </RelativeLayout>
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    android:padding="10dp"
-                    tools:ignore="InvalidId">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center">
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
+                    <android.support.v7.widget.CardView
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:orientation="vertical">
+                        app:cardCornerRadius="10dp"
+                        app:cardBackgroundColor="#fe6e0c">
 
-                        <android.support.v7.widget.CardView
-                            android:layout_width="@dimen/size_frame_text"
+                        <TextView
+                            android:id="@+id/textView"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:autoSizeTextType="uniform"
                             android:gravity="center"
-                            app:cardCornerRadius="10dp"
-                            app:cardBackgroundColor="#fe6e0c">
+                            android:text="Item Requested"
+                            android:textSize="@dimen/size_text" />
 
-                            <TextView
-                                android:id="@+id/requestName"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="Request Name"
-                                android:textSize="@dimen/size_text"/>
+                    </android.support.v7.widget.CardView>
 
-                        </android.support.v7.widget.CardView>
-
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center">
-
-                            <ImageView
-                                android:id="@+id/requestImage"
-                                android:layout_width="@dimen/size_unlock_image"
-                                android:layout_height="@dimen/size_unlock_image"
-                                android:background="#01A0FF"
-                                tools:ignore="MissingConstraints" />
-
-                            <Button
-                                android:id="@+id/ActionCraft"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignBottom="@+id/requestImage"
-                                android:layout_marginBottom="10dp"
-                                android:layout_centerHorizontal="true"
-                                android:text="Unlock"
-                                android:textAllCaps="false"
-                                android:textSize="@dimen/size_text"
-                                android:background="@drawable/custom_button_unlock"/>
-
-                        </RelativeLayout>
-
-                    </LinearLayout>
-
-                    <LinearLayout
+                    <GridView
+                        android:id="@+id/requestObject"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:gravity="center">
-
-                        <android.support.v7.widget.CardView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            app:cardCornerRadius="10dp"
-                            app:cardBackgroundColor="#fe6e0c">
-
-                            <TextView
-                                android:id="@+id/textView"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:autoSizeTextType="uniform"
-                                android:gravity="center"
-                                android:text="Item Requested"
-                                android:textSize="@dimen/size_text" />
-
-                        </android.support.v7.widget.CardView>
-
-                        <GridView
-                            android:id="@+id/requestObject"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="#01A0FF"
-                            android:columnWidth="80dp"
-                            android:fastScrollEnabled="true"
-                            android:horizontalSpacing="10dp"
-                            android:numColumns="auto_fit"
-                            android:padding="15dp"
-                            android:verticalSpacing="10dp">
-                        </GridView>
-
-                    </LinearLayout>
+                        android:background="#01A0FF"
+                        android:columnWidth="100dp"
+                        android:fastScrollEnabled="true"
+                        android:horizontalSpacing="10dp"
+                        android:numColumns="auto_fit"
+                        android:padding="15dp"
+                        android:verticalSpacing="10dp">
+                    </GridView>
 
                 </LinearLayout>
 
@@ -455,7 +421,9 @@
                 android:id="@+id/recyclerViewFactoryBack"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center">
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="10dp"
+                app:cardCornerRadius="5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -507,10 +475,10 @@
             android:layout_weight="1" />
 
         <Button
-            android:id="@+id/ListCraft"
+            android:id="@+id/Menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Item's Shop"
+            android:text="Menu"
             android:textAllCaps="false"
             android:textSize="@dimen/size_text"
             android:textColor="#fff"
@@ -522,14 +490,57 @@
             android:layout_weight="1" />
 
         <Button
-            android:id="@+id/ElecUp"
+            android:id="@+id/ShopItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="+1"
+            android:text="Shop"
             android:textAllCaps="false"
             android:textSize="@dimen/size_text"
             android:textColor="#fff"
-            android:background="@drawable/custom_button"/>
+            android:background="@drawable/custom_button" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/ContentElecUp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/ElecUp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Up"
+                    android:textAllCaps="false"
+                    android:textSize="@dimen/size_text"
+                    android:textColor="#fff"
+                    android:background="@drawable/custom_button"/>
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/ContentElecUp"
+                android:layout_marginLeft="5dp"
+                android:layout_centerVertical="true"
+                android:background="@drawable/minieclair"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/ContentElecUp"
+                android:layout_marginRight="5dp"
+                android:layout_centerVertical="true"
+                android:background="@drawable/minicoin"/>
+
+        </RelativeLayout>
 
         <Space
             android:layout_width="wrap_content"
@@ -537,5 +548,42 @@
             android:layout_weight="1" />
 
     </LinearLayout>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/coinFree"
+        android:layout_width="@dimen/size_player_image_main"
+        android:layout_height="@dimen/size_player_image_main"
+        android:layout_margin="10dp"
+        android:padding="10dp"
+        app:cardCornerRadius="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/body"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="MissingConstraints">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/coinFreeImage"
+                android:layout_width="@dimen/size_player_image_main"
+                android:layout_height="@dimen/size_player_image_main"
+                app:srcCompat="@drawable/coin"
+                tools:ignore="MissingConstraints" />
+
+            <TextView
+                android:id="@+id/coinFreeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/coinFreeImage"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:text="Coins"/>
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
 
 </android.support.constraint.ConstraintLayout>

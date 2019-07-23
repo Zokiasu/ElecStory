@@ -1,9 +1,10 @@
-package com.example.elecstory.ShopEarthObject;
+package com.example.elecstory.Shop;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,42 +14,48 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.elecstory.Database.Database;
-import com.example.elecstory.Database.PlayerData;
 import com.example.elecstory.MainActivity;
 import com.example.elecstory.Object.EarthObject;
 import com.example.elecstory.OtherClass.ShopPopup;
 import com.example.elecstory.Quest.Quest;
 import com.example.elecstory.R;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShopEarthActivity extends AppCompatActivity {
+public class ShopActivity extends AppCompatActivity {
 
 
     private static final String PREFS = "PREFS";
     private static final String PREFS_COIN = "PREFS_COIN";
+    private static final String PREFS_ENERGY = "PREFS_ENERGY";
     SharedPreferences sharedPreferences;
 
-    protected static final String TAG = "Elecstory.ShopEarthActivity";
+    protected NumberFormat numberFormat = NumberFormat.getInstance(java.util.Locale.FRENCH);
+
+    protected static final String TAG = "Elecstory.ShopActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_items_shop);
+        setContentView(R.layout.activity_shop);
         sharedPreferences = getApplicationContext().getSharedPreferences(PREFS, MODE_PRIVATE);
 
         final Database db = new Database(this);
 
-        TextView Title = findViewById(R.id.CraftTitle);
-        Title.setText("Object's Shop");
-
         Button BackCraft = findViewById(R.id.back);
+        CardView CardPlayer = findViewById(R.id.cardPlayer);
+        TextView ActualCoin = findViewById(R.id.ElecCoins);
+        TextView ActualEnergyPoint = findViewById(R.id.ElecStockage);
+
+        ActualEnergyPoint.setText(numberFormat.format(sharedPreferences.getLong(PREFS_ENERGY, 0)));
+        ActualCoin.setText(numberFormat.format(sharedPreferences.getInt(PREFS_COIN, 0)));
 
         BackCraft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 db.close();
-                Intent myIntent = new Intent(ShopEarthActivity.this, MainActivity.class);
+                Intent myIntent = new Intent(ShopActivity.this, MainActivity.class);
                 startActivity(myIntent);
                 finish();
             }
@@ -71,16 +78,17 @@ public class ShopEarthActivity extends AppCompatActivity {
         }
 
         GridView GV = findViewById(R.id.GridCraft);
-        GV.setAdapter(new ShopEarthAdapter(this, ListEarthObject));
+        GV.setAdapter(new ShopAdapter(this, ListEarthObject));
 
         GV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+
                 final EarthObject N = finalListEarthObject.get(position);
                 Log.i("Shop","sharedPreferences.getInt(PREFS_COIN, 0) : " + sharedPreferences.getInt(PREFS_COIN, 0));
                 if((sharedPreferences.getInt(PREFS_COIN, 0) >= N.getPriceObject()) && ((sharedPreferences.getInt(PREFS_COIN, 0) - N.getPriceObject()) >= 0)) {
-                    final ShopPopup shopPopup = new ShopPopup(ShopEarthActivity.this);
+                    final ShopPopup shopPopup = new ShopPopup(ShopActivity.this);
 
                     shopPopup.setNumber(number);
                     shopPopup.setObjectsBuy(N.getName());
@@ -105,7 +113,7 @@ public class ShopEarthActivity extends AppCompatActivity {
                                         .apply();
 
                             } else {
-                                Toast.makeText(ShopEarthActivity.this, "Vous n'avez pas assez d'argent ! ", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ShopActivity.this, "Vous n'avez pas assez d'argent ! ", Toast.LENGTH_SHORT).show();
                             }
                             shopPopup.dismiss();
                         }
@@ -119,7 +127,7 @@ public class ShopEarthActivity extends AppCompatActivity {
                     });
                     shopPopup.build();
                 } else {
-                    Toast.makeText(ShopEarthActivity.this, "Vous n'avez pas assez d'argent ! ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ShopActivity.this, "Vous n'avez pas assez d'argent ! ", Toast.LENGTH_SHORT).show();
                 }
             }
 

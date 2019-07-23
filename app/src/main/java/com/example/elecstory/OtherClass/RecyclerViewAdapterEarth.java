@@ -48,7 +48,7 @@ public class RecyclerViewAdapterEarth extends RecyclerView.Adapter<RecyclerViewA
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         final Database db = new Database(mContext);
 
         holder.image.setImageResource(mEarthObject.get(position).getSkin());
@@ -69,7 +69,7 @@ public class RecyclerViewAdapterEarth extends RecyclerView.Adapter<RecyclerViewA
                 salepopups.getButton1().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(mEarthObject.size() > 0) {
+                        if(mEarthObject.size() > 0 && mEarthObject.get(position).getNbObject() > 0) {
                             db.deleteEarthObject(mEarthObject.get(position).getName());
                             sharedPreferences
                                     .edit()
@@ -79,6 +79,7 @@ public class RecyclerViewAdapterEarth extends RecyclerView.Adapter<RecyclerViewA
                         } else {
                             Toast.makeText(mContext, "You no longer have this object.", Toast.LENGTH_SHORT).show();
                         }
+                        holder.nbObject.setText(String.valueOf(mEarthObject.get(position).getNbObject()));
                         salepopups.dismiss();
                     }
                 });

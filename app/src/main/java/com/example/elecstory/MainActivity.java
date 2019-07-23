@@ -30,7 +30,7 @@ import com.example.elecstory.OtherClass.InformationPopup;
 import com.example.elecstory.OtherClass.ItemOffsetDecoration;
 import com.example.elecstory.OtherClass.RecyclerViewAdapterEarth;
 import com.example.elecstory.OtherClass.RecyclerViewAdapterFactory;
-import com.example.elecstory.ShopEarthObject.ShopEarthActivity;
+import com.example.elecstory.Shop.ShopActivity;
 import com.example.elecstory.Database.*;
 import com.example.elecstory.Object.*;
 import com.example.elecstory.Quest.*;
@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
     protected Button UpPoint;
     protected Button Unlock;
+    protected Button Menu;
     protected ImageButton AnimationBallon;
     protected Button ShopEarthObject;
 
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
     protected DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
     protected CardView CardPlayer;
-    protected TextView PseudoPlayer;
+    protected CardView ClipBoard;
 
     protected TextView CoinFreeText;
     protected CardView CoinFree;
@@ -133,7 +134,6 @@ public class MainActivity extends AppCompatActivity {
         initFindViewById();
 
         ActualPlayer = db.infoFirstPlayer();
-        PseudoPlayer.setText(ActualPlayer.getName());
 
         ActualQuest = new Quest(ActualPlayer.getQuestId());
 
@@ -223,7 +223,11 @@ public class MainActivity extends AppCompatActivity {
     protected void initFindViewById(){
         currentLayout = findViewById(R.id.activity_main);
         CardPlayer = findViewById(R.id.cardPlayer);
-        PseudoPlayer = findViewById(R.id.pseudoPlayer);
+
+        Menu = findViewById(R.id.Menu);
+        ClipBoard = findViewById(R.id.clipboard);
+        ClipBoard.setVisibility(View.INVISIBLE);
+
 
         //Relative ads
         CoinFree = findViewById(R.id.coinFree);
@@ -246,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Button
         Unlock = findViewById(R.id.ActionCraft);
-        ShopEarthObject = findViewById(R.id.ListCraft);
+        ShopEarthObject = findViewById(R.id.ShopItem);
         UpPoint = findViewById(R.id.ElecUp);
         AnimationBallon = findViewById(R.id.ballon);
 
@@ -295,27 +299,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            if (N % 120 == 1 && N > 1) {
-                Random X = new Random();
-                int nombreAleatoire = X.nextInt(5 - 1 + 1) + 1;
-
-                switch (nombreAleatoire) {
-                    case 1:
-                        FreeCoinAd = false;
-                        CoinFree.getBackground().setColorFilter(Color.parseColor("#FFFFFF"), PorterDuff.Mode.DARKEN);
-                        break;
-                    default:
-                        FreeCoinAd = true;
-                        CoinFree.getBackground().setColorFilter(Color.parseColor("#0bab08"), PorterDuff.Mode.DARKEN);
-                        break;
-                }
-
-                CoinFreeAnimation();
-            }
-
             if (N % (60*Speed) == 1 && N > 1) {
+                choiceCoinFree();
                 AnimationBallon();
                 updateByDb();
+            }
+
+            if (N % (75*Speed) == 1 && N > 1) {
+                CoinFree.setVisibility(View.INVISIBLE);
             }
 
             checkBoostAds();
@@ -380,28 +371,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         AnimationBallon.setAnimation(test);
-    }
-
-    protected void CoinFreeAnimation(){
-        AlphaAnimation alphaAnim = new AlphaAnimation(1.0f,1.0f);
-        alphaAnim.setDuration(10000);
-        alphaAnim.setAnimationListener(new Animation.AnimationListener()
-        {
-            @Override
-            public void onAnimationStart(Animation animation) {
-                CoinFree.setVisibility(View.VISIBLE);
-            }
-
-            public void onAnimationEnd(Animation animation) {
-                CoinFree.setVisibility(View.INVISIBLE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-        CoinFree.setAnimation(alphaAnim);
     }
 
     //Affiche la quête actuel du joueur
@@ -597,7 +566,7 @@ public class MainActivity extends AppCompatActivity {
         ShopEarthObject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent myIntent = new Intent(MainActivity.this, ShopEarthActivity.class);
+                Intent myIntent = new Intent(MainActivity.this, ShopActivity.class);
                 startActivity(myIntent);
             }
         });
@@ -639,6 +608,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /////Fonction Ads/////
+    protected void choiceCoinFree(){
+        Random X = new Random();
+        int nombreAleatoire = X.nextInt(5 - 1 + 1) + 1;
+
+        switch (nombreAleatoire) {
+            case 1:
+                FreeCoinAd = false;
+                CoinFree.getBackground().setColorFilter(Color.parseColor("#FFFFFF"), PorterDuff.Mode.DARKEN);
+                break;
+            default:
+                FreeCoinAd = true;
+                CoinFree.getBackground().setColorFilter(Color.parseColor("#0bab08"), PorterDuff.Mode.DARKEN);
+                break;
+        }
+
+        CoinFree.setVisibility(View.VISIBLE);
+    }
+
     protected void coinFree() {
         Calendar ActualDate = Calendar.getInstance();
         Random X = new Random();
@@ -660,13 +647,13 @@ public class MainActivity extends AppCompatActivity {
                 A = EarthObjectCoinWin*(120);
             }
 
+            CoinFree.setVisibility(View.INVISIBLE);
             Toast.makeText(MainActivity.this,"You have won "+numberFormat.format(A)+" coins",Toast.LENGTH_LONG).show();
             sharedPreferences
                     .edit()
                     .putInt(PREFS_COIN, (sharedPreferences.getInt(PREFS_COIN, 0) + A))
                     .apply();
         }
-        CoinFree.setVisibility(View.INVISIBLE);
         ActualCoin.setText(numberFormat.format(sharedPreferences.getInt(PREFS_COIN, 0)));
     }
 
@@ -717,6 +704,7 @@ public class MainActivity extends AppCompatActivity {
             });
             adPopups.build();
         }
+        ActualCoin.setText(numberFormat.format(sharedPreferences.getInt(PREFS_COIN, 0)));
     }
 
     protected void speedAds(){
@@ -727,7 +715,7 @@ public class MainActivity extends AppCompatActivity {
             adPopups.setTitleAd("Speed Up");
             adPopups.getTimeAfkAdPopup().setVisibility(View.INVISIBLE);
             adPopups.setNumberWinAd("Speed x2 for 4 hours");
-            adPopups.getImageAd().setImageResource(R.drawable.morecoins);
+            adPopups.getImageAd().setImageResource(R.drawable.speedrun);
 
             adPopups.getButton1().setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -759,8 +747,8 @@ public class MainActivity extends AppCompatActivity {
 
             adPopups.setTitleAd("Double Coin!");
             adPopups.getTimeAfkAdPopup().setVisibility(View.INVISIBLE);
-            adPopups.setNumberWinAd("Profit 2x during 4 hours");
-            adPopups.getImageAd().setImageResource(R.drawable.morecoins);
+            adPopups.setNumberWinAd("Profit 2x for 4 hours");
+            adPopups.getImageAd().setImageResource(R.drawable.coinx2);
 
             adPopups.getButton1().setOnClickListener(new View.OnClickListener() {
                 @Override
