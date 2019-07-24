@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:background="@drawable/custom_shop_item"
-    android:gravity="center">
+    android:background="@drawable/custom_shop_item">
 
     <ImageView
         android:id="@+id/objectView"
@@ -20,16 +19,16 @@
         android:layout_marginHorizontal="10dp"
         android:orientation="vertical">
 
-        <TextView
+        <com.example.elecstory.OtherClass.CustomFontTextView
             android:id="@+id/objectName"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="NameObject"
             android:textSize="@dimen/size_text_plus"/>
 
-        <TextView
+        <com.example.elecstory.OtherClass.CustomFontTextView
             android:id="@+id/objectCost"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Price"/>
 

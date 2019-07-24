@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:gravity="center">
 
-            <TextView
+            <com.example.elecstory.OtherClass.CustomFontTextView
                 android:id="@+id/TitleAdPopup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
             android:orientation="vertical"
             tools:ignore="UselessLeaf">
 
-            <TextView
+            <com.example.elecstory.OtherClass.CustomFontTextView
                 android:id="@+id/TimeAfk"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -80,7 +80,7 @@
                     android:background="#fff"
                     android:gravity="center">
 
-                    <TextView
+                    <com.example.elecstory.OtherClass.CustomFontTextView
                         android:id="@+id/Earned"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -88,7 +88,7 @@
                         android:text="You can earned"
                         android:textSize="@dimen/size_text"/>
 
-                    <TextView
+                    <com.example.elecstory.OtherClass.CustomFontTextView
                         android:id="@+id/NumberEarnedAd"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -102,7 +102,7 @@
                         android:layout_margin="10dp"
                         android:gravity="center">
 
-                        <Button
+                        <com.example.elecstory.OtherClass.CustomFontButton
                             android:id="@+id/WatchAds"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

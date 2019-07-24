@@ -64,7 +64,7 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/minieclair" />
 
-                    <TextView
+                    <com.example.elecstory.OtherClass.CustomFontTextView
                         android:id="@+id/ElecStockage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -96,7 +96,7 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/minicoin"/>
 
-                    <TextView
+                    <com.example.elecstory.OtherClass.CustomFontTextView
                         android:id="@+id/ElecCoins"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -118,18 +118,16 @@
             android:layout_height="wrap_content"
             android:layout_weight="5"/>
 
-        <Button
+        <com.example.elecstory.OtherClass.CustomFontButton
             android:id="@+id/back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Back"
             android:textAllCaps="false"
-            android:background="@drawable/custom_button_unlock"/>
-
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:text="X"
+            android:background="@drawable/custom_button"
+            android:textSize="@dimen/size_text"/>
 
     </LinearLayout>
 

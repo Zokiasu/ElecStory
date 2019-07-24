@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <TextView
+        <com.example.elecstory.OtherClass.CustomFontTextView
             android:id="@+id/nameObjectSale"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
 
     </LinearLayout>
 
-    <TextView
+    <com.example.elecstory.OtherClass.CustomFontTextView
         android:id="@+id/messageSale"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

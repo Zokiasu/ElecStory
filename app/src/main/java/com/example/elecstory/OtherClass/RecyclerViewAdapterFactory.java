@@ -58,58 +58,19 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
 
         if(mFactory.get(position).getFactoryLevel() > 0) {
             holder.test.setCardBackgroundColor(Color.WHITE);
+            holder.UpgradePriceFactorys.setText("Next lvl : " + numberFormat.format(mFactory.get(position).getUpgradeCost()));
+        } else {
+            holder.EnergyGenFactorys.setVisibility(View.INVISIBLE);
+            holder.UpgradePriceFactorys.setText("Price : " + numberFormat.format(mFactory.get(position).getPriceFactory()));
         }
 
         holder.imageFactorys.setImageResource(mFactory.get(position).getSkin());
 
         holder.nameFactorys.setText(mFactory.get(position).getName());
 
-        holder.lvlFactorys.setText(String.valueOf(mFactory.get(position).getFactoryLevel()));
+        holder.EnergyGenFactorys.setText("Energy : " + numberFormat.format(mFactory.get(position).getEnergyProd()) + "/s");
 
-        holder.buttonInfoFactorys.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                final UpgradeFactoryPopup upgradeFactorypopups = new UpgradeFactoryPopup(activity);
-                upgradeFactorypopups.setNameObjectSale(mFactory.get(position).getName() + "'s Info");
-                if(mFactory.get(position).getNbObject() < 1) {
-                    upgradeFactorypopups.getUpgradeButton().setText("Buy");
-                    upgradeFactorypopups.setMessageSale(
-                            "Actual Level : " + mFactory.get(position).getFactoryLevel() +
-                            "\nUpdate Cost : " + numberFormat.format(mFactory.get(position).getUpgradeCost()) +
-                            "\nBuy Price : " + numberFormat.format(mFactory.get(position).getPriceFactory()) +
-                            "\nSell Price : " + numberFormat.format(mFactory.get(position).getPriceFactory() / 2) +
-                            "\nEnergy Gen : " + numberFormat.format(mFactory.get(position).getEnergyProd()) + "/s" +
-                            "\nOperating Cost : " + numberFormat.format(mFactory.get(position).getOperatingCost()) + "/m" +
-                            "\nEnvironment Tax : " + numberFormat.format(mFactory.get(position).getPollutionTax()) + "/m");
-                } else {
-                    upgradeFactorypopups.getUpgradeButton().setText("Update");
-                    upgradeFactorypopups.setMessageSale(
-                            "Actual Level : " + mFactory.get(position).getFactoryLevel() +
-                            "\nUpdate Cost : " + numberFormat.format(mFactory.get(position).getUpgradeCost()) +
-                            "\nSell Price : " + numberFormat.format(mFactory.get(position).getPriceFactory() / 2) +
-                            "\nEnergy Gen : " + numberFormat.format(mFactory.get(position).getEnergyProd()) + "/s" +
-                            "\nOperating Cost : " + numberFormat.format(mFactory.get(position).getOperatingCost()) + "/m" +
-                            "\nEnvironment Tax : " + numberFormat.format(mFactory.get(position).getPollutionTax()) + "/m");
-                }
-
-                upgradeFactorypopups.getUpgradeButton().setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        upgradeFactory(db, position);
-                        upgradeFactorypopups.dismiss();
-                    }
-                });
-
-                upgradeFactorypopups.getClose().setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        upgradeFactorypopups.dismiss();
-                    }
-                });
-                upgradeFactorypopups.build();
-            }
-        });
+        holder.lvlFactorys.setText(""+mFactory.get(position).getFactoryLevel());
 
         holder.imageFactorys.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,7 +95,8 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
         ImageView imageFactorys;
         TextView nameFactorys;
         TextView lvlFactorys;
-        Button buttonInfoFactorys;
+        TextView EnergyGenFactorys;
+        TextView UpgradePriceFactorys;
 
         CardView test;
 
@@ -143,7 +105,10 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
             imageFactorys = itemView.findViewById(R.id.imageFactorys);
             nameFactorys = itemView.findViewById(R.id.FactorysName);
             lvlFactorys = itemView.findViewById(R.id.LevelFactorys);
-            buttonInfoFactorys = itemView.findViewById(R.id.infoFactorys);
+
+            EnergyGenFactorys = itemView.findViewById(R.id.EnergyGenFact);
+            UpgradePriceFactorys = itemView.findViewById(R.id.UpdatePriceFact);
+
             test = itemView.findViewById(R.id.CardViewColor);
         }
     }

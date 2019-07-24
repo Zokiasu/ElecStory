@@ -1,28 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="size_text">15sp</dimen>
-    <dimen name="size_text_plus">20sp</dimen>
-    <dimen name="size_title">25sp</dimen>
-    <dimen name="size_frame_text">120dp</dimen>
 
-    <!-- Ad Pop -->
-    <dimen name="size_text_ad_title">30sp</dimen>
+    <!-- General -->
+    <dimen name="size_text">10sp</dimen>
+    <dimen name="size_text_plus">15sp</dimen>
+    <dimen name="size_title">20sp</dimen>
+
+    <!-- MainActivity -->
+    <dimen name="size_frame_text">120dp</dimen>
+    <dimen name="size_text_timer">10sp</dimen>
+    <dimen name="margin_body_horizontal">10dp</dimen>
+
+    <!-- Unlock Object -->
+    <dimen name="size_unlock_image">70dp</dimen>
+    <dimen name="size_unlock_grid_width">70dp</dimen>
+
+    <!-- Ad Popup -->
+    <dimen name="size_text_ad_title">25sp</dimen>
 
     <!-- Info Player -->
     <dimen name="size_player_image_main">50dp</dimen>
     <dimen name="size_player_image_main_width">60dp</dimen>
 
-    <!-- Unlock Object -->
-    <dimen name="size_unlock_image">150dp</dimen>
-    <dimen name="size_unlock_grid_width">80dp</dimen>
-
     <!-- EarthObject Adapter -->
-    <dimen name="size_object_adapter">100dp</dimen>
+    <dimen name="size_object_adapter">80dp</dimen>
     <dimen name="size_object_adapter_image">30dp</dimen>
 
     <!-- Factory Adapter -->
-    <dimen name="size_factory_adapter">100dp</dimen>
-    <dimen name="size_factory_adapter_image">50dp</dimen>
-    <dimen name="size_factory_adapter_text">15sp</dimen>
-    <dimen name="size_factory_adapter_space">10dp</dimen>
+    <dimen name="size_factory_adapter">80dp</dimen>
+    <dimen name="size_factory_adapter_image">30dp</dimen>
+
+    <!-- All Adapter -->
+    <dimen name="size_adapter_text">10sp</dimen>
+    <dimen name="size_adapter_space">10dp</dimen>
 </resources>

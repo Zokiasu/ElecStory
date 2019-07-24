@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.example.elecstory.OtherClass.AdPopup;
 import com.example.elecstory.OtherClass.InformationPopup;
 import com.example.elecstory.OtherClass.ItemOffsetDecoration;
+import com.example.elecstory.OtherClass.ItemOffsetDecorationFactory;
 import com.example.elecstory.OtherClass.RecyclerViewAdapterEarth;
 import com.example.elecstory.OtherClass.RecyclerViewAdapterFactory;
 import com.example.elecstory.Shop.ShopActivity;
@@ -241,7 +242,6 @@ public class MainActivity extends AppCompatActivity {
         //Information Player
         ActualCoin = findViewById(R.id.ElecCoins);
         ActualEnergyPoint = findViewById(R.id.ElecStockage);
-        MyFactory = findViewById(R.id.MyFactorys);
         MyItem = findViewById(R.id.MyItems);
 
         //Quest
@@ -257,7 +257,6 @@ public class MainActivity extends AppCompatActivity {
         //Affichage liste
         recyclerViewCity = findViewById(R.id.recyclerViewCity);
         recyclerViewFactory = findViewById(R.id.recyclerViewFactory);
-        RecyclerViewFactoryBack = findViewById(R.id.recyclerViewFactoryBack);
         gv = findViewById(R.id.requestObject);
     }
 
@@ -300,12 +299,15 @@ public class MainActivity extends AppCompatActivity {
             }
 
             if (N % (60*Speed) == 1 && N > 1) {
-                choiceCoinFree();
                 AnimationBallon();
                 updateByDb();
             }
 
-            if (N % (75*Speed) == 1 && N > 1) {
+            if (N%90 == 1 && N > 1) {
+                choiceCoinFree();
+            }
+
+            if (N%105 == 1 && N > 1) {
                 CoinFree.setVisibility(View.INVISIBLE);
             }
 
@@ -482,38 +484,22 @@ public class MainActivity extends AppCompatActivity {
         recyclerViewCity.setLayoutManager(layoutManager);
         adapterE = new RecyclerViewAdapterEarth(this, mEarthObject, this);
         recyclerViewCity.setAdapter(adapterE);
-        ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(this, R.dimen.size_factory_adapter_space);
+        ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(this, R.dimen.size_adapter_space);
         recyclerViewCity.addItemDecoration(itemDecoration);
     }
 
     //Initialise les RecyclerView des Factory
     protected void initRecyclerViewFactory(){
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerViewFactory.setLayoutManager(layoutManager);
         adapterF = new RecyclerViewAdapterFactory(this, mFactory, this);
         recyclerViewFactory.setAdapter(adapterF);
-        ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(this, R.dimen.size_factory_adapter_space);
+        ItemOffsetDecorationFactory itemDecoration = new ItemOffsetDecorationFactory(this, R.dimen.size_adapter_space);
         recyclerViewFactory.addItemDecoration(itemDecoration);
     }
 
     //Initialise les différentes actions des boutons
     protected void initButtonAction(){
-
-        MyFactory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final InformationPopup infoPopUp = new InformationPopup(MainActivity.this);
-                infoPopUp.setNameObjectSale("Your Factory's Info :");
-                infoPopUp.setMessageSale("Energy Generated : " + numberFormat.format(FactoryEnergyWin) + "/s" + "\nOperating Cost : " + numberFormat.format(FactoryCost) + "/m");
-                infoPopUp.getClose().setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        infoPopUp.dismiss();
-                    }
-                });
-                infoPopUp.build();
-            }
-        });
 
         MyItem.setOnClickListener(new View.OnClickListener() {
             @Override
