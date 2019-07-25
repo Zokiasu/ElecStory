@@ -21,9 +21,9 @@ import java.util.ArrayList;
 import static android.content.Context.MODE_PRIVATE;
 
 @SuppressLint("LongLogTag")
-public class RecyclerViewAdapterEarth extends RecyclerView.Adapter<RecyclerViewAdapterEarth.ViewHolder> {
+public class RecyclerViewAdapterItem extends RecyclerView.Adapter<RecyclerViewAdapterItem.ViewHolder> {
 
-    private static final String TAG = "RecyclerViewAdapterEarth";
+    private static final String TAG = "RecyclerViewAdapterItem";
 
     private ArrayList<EarthObject> mEarthObject;
     private Context mContext;
@@ -33,7 +33,7 @@ public class RecyclerViewAdapterEarth extends RecyclerView.Adapter<RecyclerViewA
     private static final String PREFS_COIN = "PREFS_COIN";
     private SharedPreferences sharedPreferences;
 
-    public RecyclerViewAdapterEarth(Context context, ArrayList<EarthObject> mEarthObjects, Activity activitys) {
+    public RecyclerViewAdapterItem(Context context, ArrayList<EarthObject> mEarthObjects, Activity activitys) {
         mEarthObject = mEarthObjects;
         mContext = context;
         activity = activitys;
@@ -43,7 +43,7 @@ public class RecyclerViewAdapterEarth extends RecyclerView.Adapter<RecyclerViewA
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.city_adapter, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_adapter, parent, false);
         return new ViewHolder(view);
     }
 
@@ -73,7 +73,7 @@ public class RecyclerViewAdapterEarth extends RecyclerView.Adapter<RecyclerViewA
                             db.deleteEarthObject(mEarthObject.get(position).getName());
                             sharedPreferences
                                     .edit()
-                                    .putInt(PREFS_COIN, (sharedPreferences.getInt(PREFS_COIN, 0) + (int)(mEarthObject.get(position).getPriceObject()/2)))
+                                    .putLong(PREFS_COIN, (sharedPreferences.getLong(PREFS_COIN, 0) + (int)(mEarthObject.get(position).getPriceObject()/2)))
                                     .apply();
                             Toast.makeText(mContext, "This object will be deleted !", Toast.LENGTH_SHORT).show();
                         } else {

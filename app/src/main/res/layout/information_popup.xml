@@ -1,45 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
-    android:padding="10dp">
+    android:layout_margin="5dp"
+    app:cardBackgroundColor="#01A0FF">
 
     <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:gravity="center"
+        android:padding="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.example.elecstory.OtherClass.CustomFontTextView
+                android:id="@+id/nameObjectSale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NameSelling"
+                android:textSize="@dimen/size_text"/>
+
+            <android.support.v4.widget.Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="10" />
+
+            <Button
+                android:id="@+id/closeWindows"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:text="x"
+                android:background="@color/colorRed"
+                android:textSize="@dimen/size_text"/>
+
+        </LinearLayout>
 
         <com.example.elecstory.OtherClass.CustomFontTextView
-            android:id="@+id/nameObjectSale"
-            android:layout_width="wrap_content"
+            android:id="@+id/messageSale"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="NameSelling"
+            android:padding="5dp"
+            android:text="Hello\nHello\nHello"
             android:textSize="@dimen/size_text"/>
 
-        <android.support.v4.widget.Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="10" />
-
-        <Button
-            android:id="@+id/closeWindows"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:text="x"
-            android:background="@color/colorRed"
-            android:textSize="@dimen/size_text"/>
 
     </LinearLayout>
 
-    <com.example.elecstory.OtherClass.CustomFontTextView
-        android:id="@+id/messageSale"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:text="Hello\nHello\nHello"
-        android:textSize="@dimen/size_text"/>
-
-</LinearLayout>
+</android.support.v7.widget.CardView>

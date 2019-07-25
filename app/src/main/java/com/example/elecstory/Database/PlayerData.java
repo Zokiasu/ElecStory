@@ -6,11 +6,11 @@ public class PlayerData {
     protected String UniqueId;
     protected String Name;
     protected int Age;
-    protected int Coin;
+    protected long Coin;
     protected long EnergyPoint;
     protected int QuestId;
 
-    public PlayerData(int idPlayer, String uniqueId, String name, int age, int coin, long EnergyPoints, int questId) {
+    public PlayerData(int idPlayer, String uniqueId, String name, int age, long coin, long EnergyPoints, int questId) {
         IdPlayer = idPlayer;
         UniqueId = uniqueId;
         Name = name;
@@ -52,11 +52,11 @@ public class PlayerData {
         Age = age;
     }
 
-    public int getCoin() {
+    public long getCoin() {
         return Coin;
     }
 
-    public void setCoin(int coin) {
+    public void setCoin(long coin) {
         Coin = coin;
     }
 
@@ -64,8 +64,8 @@ public class PlayerData {
         return EnergyPoint;
     }
 
-    public void setEnergyPoint(long EnergyPoints) {
-        EnergyPoint = EnergyPoints;
+    public void setEnergyPoint(long energyPoint) {
+        EnergyPoint = energyPoint;
     }
 
     public int getQuestId() {

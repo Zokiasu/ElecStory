@@ -7,15 +7,15 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-public class ItemOffsetDecoration extends RecyclerView.ItemDecoration {
+public class ItemOffsetDecorationItem extends RecyclerView.ItemDecoration {
 
     private int mItemOffset;
 
-    public ItemOffsetDecoration(int itemOffset) {
+    public ItemOffsetDecorationItem(int itemOffset) {
         mItemOffset = itemOffset;
     }
 
-    public ItemOffsetDecoration(@NonNull Context context, @DimenRes int itemOffsetId) {
+    public ItemOffsetDecorationItem(@NonNull Context context, @DimenRes int itemOffsetId) {
         this(context.getResources().getDimensionPixelSize(itemOffsetId));
     }
 

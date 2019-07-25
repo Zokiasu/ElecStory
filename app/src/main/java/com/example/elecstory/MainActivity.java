@@ -22,14 +22,15 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.elecstory.OtherClass.AdPopup;
 import com.example.elecstory.OtherClass.InformationPopup;
-import com.example.elecstory.OtherClass.ItemOffsetDecoration;
+import com.example.elecstory.OtherClass.ItemOffsetDecorationItem;
 import com.example.elecstory.OtherClass.ItemOffsetDecorationFactory;
-import com.example.elecstory.OtherClass.RecyclerViewAdapterEarth;
+import com.example.elecstory.OtherClass.RecyclerViewAdapterItem;
 import com.example.elecstory.OtherClass.RecyclerViewAdapterFactory;
 import com.example.elecstory.Shop.ShopActivity;
 import com.example.elecstory.Database.*;
@@ -52,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
     protected TextView ActualEnergyPoint;
     protected TextView ActualCoin;
     protected TextView DisplayQuestName;
-    protected TextView MyFactory;
     protected TextView MyItem;
 
     protected Button UpPoint;
@@ -64,9 +64,7 @@ public class MainActivity extends AppCompatActivity {
     protected RecyclerView recyclerViewCity;
     protected RecyclerView recyclerViewFactory;
 
-    protected CardView RecyclerViewFactoryBack;
-
-    protected RecyclerViewAdapterEarth adapterE;
+    protected RecyclerViewAdapterItem adapterE;
     protected RecyclerViewAdapterFactory adapterF;
 
     protected ArrayList<EarthObject> mEarthObject = new ArrayList<>();
@@ -74,6 +72,10 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("SimpleDateFormat")
     protected DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+
+    protected LinearLayout Skip30;
+    protected LinearLayout Skip1D;
+    protected LinearLayout Skip7D;
 
     protected CardView CardPlayer;
     protected CardView ClipBoard;
@@ -83,12 +85,12 @@ public class MainActivity extends AppCompatActivity {
     protected Calendar CoinFreeEnd;
 
     protected TextView SpeedAdText;
-    protected CardView SpeedAd;
+    protected LinearLayout SpeedAd;
     protected Calendar SpeedAdEnd;
     protected int Speed = 1;
 
     protected TextView MultiAdText;
-    protected CardView MultiAd;
+    protected LinearLayout MultiAd;
     protected Calendar MultiAdEnd;
     protected int Multiple = 1;
 
@@ -149,22 +151,25 @@ public class MainActivity extends AppCompatActivity {
 
         if(sharedPreferences.contains(PREFS_COIN) && sharedPreferences.contains(PREFS_COIN)) {
             ActualEnergyPoint.setText(numberFormat.format(sharedPreferences.getLong(PREFS_ENERGY, 0)));
-            ActualCoin.setText(numberFormat.format(sharedPreferences.getInt(PREFS_COIN, 0)));
+            ActualCoin.setText(numberFormat.format(sharedPreferences.getLong(PREFS_COIN, 0)));
         } else {
             sharedPreferences
                     .edit()
-                    .putInt(PREFS_COIN, ActualPlayer.getCoin())
+                    .putLong(PREFS_COIN, ActualPlayer.getCoin())
                     .putLong(PREFS_ENERGY, ActualPlayer.getEnergyPoint())
                     .apply();
 
             ActualEnergyPoint.setText(numberFormat.format(sharedPreferences.getLong(PREFS_ENERGY, 0)));
-            ActualCoin.setText(numberFormat.format(sharedPreferences.getInt(PREFS_COIN, 0)));
+            ActualCoin.setText(numberFormat.format(sharedPreferences.getLong(PREFS_COIN, 0)));
         }
 
         CoinFree.setVisibility(View.INVISIBLE);
         AnimationBallon.setVisibility(View.INVISIBLE);
         SpeedAd.setVisibility(View.INVISIBLE);
         MultiAd.setVisibility(View.INVISIBLE);
+        Skip30.setVisibility(View.INVISIBLE);
+        Skip1D.setVisibility(View.INVISIBLE);
+        Skip7D.setVisibility(View.INVISIBLE);
 
         initButtonAction();
         initFactoryVar();
@@ -192,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.i(TAG, "onResume");
-        updateByDb();
+        updateDatabase();
         initFactoryVar();
         initEarthObjectVar();
         Start = true;
@@ -203,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         Log.i(TAG, "onPause");
-        updateByDb();
+        updateDatabase();
         Start = false;
     }
 
@@ -229,6 +234,9 @@ public class MainActivity extends AppCompatActivity {
         ClipBoard = findViewById(R.id.clipboard);
         ClipBoard.setVisibility(View.INVISIBLE);
 
+        Skip30 = findViewById(R.id.Skip30);
+        Skip1D = findViewById(R.id.Skip1D);
+        Skip7D = findViewById(R.id.Skip7D);
 
         //Relative ads
         CoinFree = findViewById(R.id.coinFree);
@@ -260,231 +268,13 @@ public class MainActivity extends AppCompatActivity {
         gv = findViewById(R.id.requestObject);
     }
 
-    protected void recursionUpDownPoint(int N) {
-
-        if (Start) {
-            //Augmente l'énergie en fonction de des usines actuelles
-            if (mFactory.size() > 0) {
-                if (FactoryEnergyWin != 0) {
-                    sharedPreferences
-                            .edit()
-                            .putLong(PREFS_ENERGY, (sharedPreferences.getLong(PREFS_ENERGY, 0) + FactoryEnergyWin))
-                            .apply();
-                }
-
-                if (N % 60 == 1 && N > 1) {
-                    sharedPreferences
-                            .edit()
-                            .putInt(PREFS_COIN, (sharedPreferences.getInt(PREFS_COIN, 0) - FactoryCost))
-                            .apply();
-                }
-            }
-
-            //Réduit l'énergie & donne des coins en fonction des bâtiments possédé
-            if (mEarthObject.size() > 0) {
-                if (sharedPreferences.getLong(PREFS_ENERGY, 0) >= EarthObjectEnergyCost && (sharedPreferences.getLong(PREFS_ENERGY, 0) - EarthObjectEnergyCost) >= 0 && N % 2 == 1) {
-                    sharedPreferences
-                            .edit()
-                            .putInt(PREFS_COIN, (sharedPreferences.getInt(PREFS_COIN, 0) + EarthObjectCoinWin * Multiple))
-                            .putLong(PREFS_ENERGY, (sharedPreferences.getLong(PREFS_ENERGY, 0) - EarthObjectEnergyCost))
-                            .apply();
-                }
-            }
-
-            if (ActualQuest.getIdQuest() >= 3) {
-                MultiAd.setVisibility(View.VISIBLE);
-                if (ActualQuest.getIdQuest() >= 4) {
-                    SpeedAd.setVisibility(View.VISIBLE);
-                }
-            }
-
-            if (N % (60*Speed) == 1 && N > 1) {
-                AnimationBallon();
-                updateByDb();
-            }
-
-            if (N%90 == 1 && N > 1) {
-                choiceCoinFree();
-            }
-
-            if (N%105 == 1 && N > 1) {
-                CoinFree.setVisibility(View.INVISIBLE);
-            }
-
-            checkBoostAds();
-
-            ActualEnergyPoint.setText(numberFormat.format(sharedPreferences.getLong(PREFS_ENERGY, 0)));
-            ActualCoin.setText(numberFormat.format(sharedPreferences.getInt(PREFS_COIN, 0)));
-
-            refreshRecursion(1000 / Speed, N);
-        }
-
-    }
-
-    protected void refreshRecursion(int milli, final int N){
-        final Handler handler = new Handler();
-
-        final Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                recursionUpDownPoint(N+1);
-            }
-        };
-
-        handler.postDelayed(runnable, milli);
-    }
-
-    //Choisit le bouton bonus à afficher aléatoirement toute les minutes
-    protected void AnimationBallon(){
-
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        TranslateAnimation test = null;
-
-        Random rand = new Random();
-        int nombreAleatoire = rand.nextInt(3 - 1 + 1) + 1;
-        switch (nombreAleatoire){
-            case 1:
-                test = new TranslateAnimation(0, metrics.widthPixels, metrics.heightPixels, -metrics.heightPixels);
-                break;
-            case 2:
-                test = new TranslateAnimation(metrics.widthPixels, -metrics.widthPixels, metrics.heightPixels, -metrics.heightPixels);
-                break;
-            case 3:
-                test = new TranslateAnimation(metrics.widthPixels/2,0,metrics.heightPixels, -metrics.heightPixels);
-                break;
-        }
-
-        test.setDuration(35000);
-        test.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-                AnimationBallon.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                AnimationBallon.setVisibility(View.INVISIBLE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-        AnimationBallon.setAnimation(test);
-    }
-
-    //Affiche la quête actuel du joueur
-    protected void displayQuest(){
-        gv.setAdapter(new QuestAdapter(this, ActualQuest.getEarthObjectRequest(), ActualQuest.getNbRequest()));
-    }
-
-    //Vérifie que la quête actuelle est réalisé et passe à la quête suivante
-    protected void upgradeQuest(){
-        if(ActualQuest.checkQuest(mEarthObject, db)) {
-
-            mEarthObject.clear();
-            mEarthObject = db.infoEarthObject(mEarthObject);
-            initRecyclerViewEarthObject();
-
-            EarthObject TmpObject = new EarthObject(ActualQuest.getIdQuest(), ActualQuest.getNameReward());
-            db.insertCraft(TmpObject.getNbObject(), TmpObject.getName(), TmpObject.getCoinWin(), TmpObject.getPriceObject(), TmpObject.getEnergyCost(), TmpObject.getSkin());
-
-            sharedPreferences
-                    .edit()
-                    .putInt(PREFS_COIN, (sharedPreferences.getInt(PREFS_COIN, 0) + (TmpObject.getEnergyCost())))
-                    .apply();
-            if(ActualQuest.getIdQuest() != 12) {
-                ActualQuest = new Quest(ActualQuest.getIdQuest() + 1);
-            } else {
-                ActualQuest = new Quest(1);
-            }
-
-            db.updateQuest(ActualQuest.getIdQuest());
-            ActualPlayer.setQuestId(ActualQuest.getIdQuest());
-
-            DisplayQuestName.setText(ActualQuest.getNameReward());
-            DisplayQuestImage.setImageResource(ActualQuest.getSkinReward());
-
-            displayQuest();
-            initEarthObjectVar();
-            Toast.makeText(this, "A new object has been added to the ShopCraft", Toast.LENGTH_LONG).show();
-            if(ActualQuest.getIdQuest() == 12){
-                Toast.makeText(this, "You have completed the last quest for now!", Toast.LENGTH_LONG).show();
-                Unlock.setVisibility(View.INVISIBLE);
-            }
-        } else {
-            /*A modifier dès que possible NON PRIORITAIRE*/
-            Toast.makeText(this, "You do not have the necessary objects for this production", Toast.LENGTH_LONG).show();
-        }
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    //Fonction du bouton +1
-    protected void upgradeEnergy() {
-        sharedPreferences
-                .edit()
-                .putInt(PREFS_COIN, (sharedPreferences.getInt(PREFS_COIN, 0) + 1))
-                .putLong(PREFS_ENERGY,(sharedPreferences.getLong(PREFS_ENERGY, 0) + 1))
-                .apply();
-
-        ActualEnergyPoint.setText(numberFormat.format(sharedPreferences.getLong(PREFS_ENERGY, 0)));
-        ActualCoin.setText(numberFormat.format(sharedPreferences.getInt(PREFS_COIN, 0)));
-
-        if(sharedPreferences.getInt(PREFS_COIN, 0) >= 10 && mFactory.get(0).getNbObject() < 1 ){
-            mFactory.get(0).Upgrade(mFactory.get(0), db, this);
-            sharedPreferences
-                    .edit()
-                    .putInt(PREFS_COIN, (sharedPreferences.getInt(PREFS_COIN, 0) + mFactory.get(0).getPriceFactory()))
-                    .apply();
-            initFactoryVar();
-            initEarthObjectVar();
-            initRecyclerViewFactory();
-            RecyclerViewFactoryBack.setVisibility(View.VISIBLE);
-            Toast.makeText(MainActivity.this, "You have win a "+ mFactory.get(0).getName() +"!", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    //Update les listes utiliser par les recyclerview
-    public void updateByDb(){
-        int X, Y;
-
-        X = mFactory.size();
-        Y = mEarthObject.size();
-
-        mFactory.clear();
-        mFactory = db.infoFactory(mFactory);
-        mEarthObject.clear();
-        mEarthObject = db.infoEarthObject(mEarthObject);
-
-        db.updateEnergyPoint(ActualPlayer.getName(), sharedPreferences.getLong(PREFS_ENERGY, 0));
-        db.updateCoin(ActualPlayer.getName(), sharedPreferences.getInt(PREFS_COIN, 0));
-
-        ActualPlayer = db.infoFirstPlayer();
-
-        if(Y != mEarthObject.size()) {
-            adapterE.notifyDataSetChanged();
-        }
-
-        if(X != mFactory.size()) {
-            adapterF.notifyDataSetChanged();
-        }
-
-        db.close();
-    }
-
     //Initialise les RecyclerView des EarthObject
     protected void initRecyclerViewEarthObject(){
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerViewCity.setLayoutManager(layoutManager);
-        adapterE = new RecyclerViewAdapterEarth(this, mEarthObject, this);
+        adapterE = new RecyclerViewAdapterItem(this, mEarthObject, this);
         recyclerViewCity.setAdapter(adapterE);
-        ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(this, R.dimen.size_adapter_space);
+        ItemOffsetDecorationItem itemDecoration = new ItemOffsetDecorationItem(this, R.dimen.size_adapter_space);
         recyclerViewCity.addItemDecoration(itemDecoration);
     }
 
@@ -501,6 +291,38 @@ public class MainActivity extends AppCompatActivity {
     //Initialise les différentes actions des boutons
     protected void initButtonAction(){
 
+
+        Skip30.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG,"Call Skip30");
+                SkipFor30();
+            }
+        });
+
+        Skip1D.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG,"Call Skip1D");
+                SkipFor1D();
+            }
+        });
+
+        Skip7D.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG,"Call Skip7D");
+                SkipFor7D();
+            }
+        });
+
+        Menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         MyItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -516,7 +338,6 @@ public class MainActivity extends AppCompatActivity {
                 infoPopUp.build();
             }
         });
-
         CoinFree.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -593,7 +414,229 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /////Fonction Ads/////
+    protected void recursionUpDownPoint(int N) {
+
+        if (Start) {
+            //Augmente l'énergie en fonction de des usines actuelles
+            if (mFactory.size() > 0) {
+                if (FactoryEnergyWin != 0) {
+                    sharedPreferences
+                            .edit()
+                            .putLong(PREFS_ENERGY, (sharedPreferences.getLong(PREFS_ENERGY, 0) + FactoryEnergyWin))
+                            .apply();
+                }
+
+                if (N % 60 == 1 && N > 1) {
+                    sharedPreferences
+                            .edit()
+                            .putLong(PREFS_COIN, (sharedPreferences.getLong(PREFS_COIN, 0) - FactoryCost))
+                            .apply();
+                }
+            }
+
+            //Réduit l'énergie & donne des coins en fonction des bâtiments possédé
+            if (mEarthObject.size() > 0) {
+                if (sharedPreferences.getLong(PREFS_ENERGY, 0) >= EarthObjectEnergyCost && (sharedPreferences.getLong(PREFS_ENERGY, 0) - EarthObjectEnergyCost) >= 0 && N % 2 == 1) {
+                    sharedPreferences
+                            .edit()
+                            .putLong(PREFS_COIN, (sharedPreferences.getLong(PREFS_COIN, 0) + EarthObjectCoinWin * Multiple))
+                            .putLong(PREFS_ENERGY, (sharedPreferences.getLong(PREFS_ENERGY, 0) - EarthObjectEnergyCost))
+                            .apply();
+                }
+            }
+
+            if (ActualQuest.getIdQuest() >= 3) {
+                MultiAd.setVisibility(View.VISIBLE);
+                if (ActualQuest.getIdQuest() >= 4) {
+                    SpeedAd.setVisibility(View.VISIBLE);
+                    if (ActualQuest.getIdQuest() >= 5) {
+                        Skip30.setVisibility(View.VISIBLE);
+                        Skip1D.setVisibility(View.VISIBLE);
+                        Skip7D.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+
+            if (N % (60*Speed) == 1 && N > 1) {
+                AnimationBalloon();
+                updateDatabase();
+            }
+
+            if (N%120 == 1 && N > 1) {
+                choiceCoinFree();
+            }
+
+            if (N%150 == 1 && N > 1) {
+                CoinFree.setVisibility(View.INVISIBLE);
+            }
+
+            checkBoostAds();
+
+            ActualEnergyPoint.setText(numberFormat.format(sharedPreferences.getLong(PREFS_ENERGY, 0)));
+            ActualCoin.setText(numberFormat.format(sharedPreferences.getLong(PREFS_COIN, 0)));
+
+            refreshRecursion(1000 / Speed, N);
+        }
+
+    }
+
+    protected void refreshRecursion(int milli, final int N){
+        final Handler handler = new Handler();
+
+        final Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                recursionUpDownPoint(N+1);
+            }
+        };
+
+        handler.postDelayed(runnable, milli);
+    }
+
+    //Choisit le bouton bonus à afficher aléatoirement toute les minutes
+    protected void AnimationBalloon(){
+
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        TranslateAnimation test = null;
+
+        Random rand = new Random();
+        int nombreAleatoire = rand.nextInt(3 - 1 + 1) + 1;
+        switch (nombreAleatoire){
+            case 1:
+                test = new TranslateAnimation(0, metrics.widthPixels, metrics.heightPixels, -metrics.heightPixels);
+                break;
+            case 2:
+                test = new TranslateAnimation(metrics.widthPixels, -metrics.widthPixels, metrics.heightPixels, -metrics.heightPixels);
+                break;
+            case 3:
+                test = new TranslateAnimation(metrics.widthPixels/2,0,metrics.heightPixels, -metrics.heightPixels);
+                break;
+        }
+
+        test.setDuration(35000);
+        test.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                AnimationBallon.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                AnimationBallon.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        AnimationBallon.setAnimation(test);
+    }
+
+    //Affiche la quête actuel du joueur
+    protected void displayQuest(){
+        gv.setAdapter(new QuestAdapter(this, ActualQuest.getEarthObjectRequest(), ActualQuest.getNbRequest()));
+    }
+
+    //Vérifie que la quête actuelle est réalisé et passe à la quête suivante
+    protected void upgradeQuest(){
+        if(ActualQuest.checkQuest(mEarthObject, db)) {
+
+            mEarthObject.clear();
+            mEarthObject = db.infoEarthObject(mEarthObject);
+            initRecyclerViewEarthObject();
+
+            EarthObject TmpObject = new EarthObject(ActualQuest.getIdQuest(), ActualQuest.getNameReward());
+            db.insertCraft(TmpObject.getNbObject(), TmpObject.getName(), TmpObject.getCoinWin(), TmpObject.getPriceObject(), TmpObject.getEnergyCost(), TmpObject.getSkin());
+
+            sharedPreferences
+                    .edit()
+                    .putLong(PREFS_COIN, (sharedPreferences.getLong(PREFS_COIN, 0) + (TmpObject.getEnergyCost())))
+                    .apply();
+            if(ActualQuest.getIdQuest() != 12) {
+                ActualQuest = new Quest(ActualQuest.getIdQuest() + 1);
+            } else {
+                ActualQuest = new Quest(1);
+            }
+
+            db.updateQuest(ActualQuest.getIdQuest());
+            ActualPlayer.setQuestId(ActualQuest.getIdQuest());
+
+            DisplayQuestName.setText(ActualQuest.getNameReward());
+            DisplayQuestImage.setImageResource(ActualQuest.getSkinReward());
+
+            displayQuest();
+            initEarthObjectVar();
+            Toast.makeText(this, "A new object has been added to the ShopCraft", Toast.LENGTH_LONG).show();
+            if(ActualQuest.getIdQuest() == 12){
+                Toast.makeText(this, "You have completed the last quest for now!", Toast.LENGTH_LONG).show();
+                Unlock.setVisibility(View.INVISIBLE);
+            }
+        } else {
+            /*A modifier dès que possible NON PRIORITAIRE*/
+            Toast.makeText(this, "You do not have the necessary objects for this production", Toast.LENGTH_LONG).show();
+        }
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //Fonction du bouton +1
+    protected void upgradeEnergy() {
+        sharedPreferences
+                .edit()
+                .putLong(PREFS_COIN, (sharedPreferences.getLong(PREFS_COIN, 0) + 1))
+                .putLong(PREFS_ENERGY,(sharedPreferences.getLong(PREFS_ENERGY, 0) + 1))
+                .apply();
+
+        ActualEnergyPoint.setText(numberFormat.format(sharedPreferences.getLong(PREFS_ENERGY, 0)));
+        ActualCoin.setText(numberFormat.format(sharedPreferences.getLong(PREFS_COIN, 0)));
+
+        if(sharedPreferences.getLong(PREFS_COIN, 0) >= 10 && mFactory.get(0).getNbObject() < 1 ){
+            mFactory.get(0).Upgrade(mFactory.get(0), db, this);
+            sharedPreferences
+                    .edit()
+                    .putLong(PREFS_COIN, (sharedPreferences.getLong(PREFS_COIN, 0) + mFactory.get(0).getPriceFactory()))
+                    .apply();
+            initFactoryVar();
+            initEarthObjectVar();
+            initRecyclerViewFactory();
+            Toast.makeText(MainActivity.this, "You have win a "+ mFactory.get(0).getName() +"!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    //Update les listes utiliser par les recyclerview
+    public void updateDatabase(){
+        int X, Y;
+
+        X = mFactory.size();
+        Y = mEarthObject.size();
+
+        mFactory.clear();
+        mFactory = db.infoFactory(mFactory);
+        mEarthObject.clear();
+        mEarthObject = db.infoEarthObject(mEarthObject);
+
+        db.updateEnergyPoint(ActualPlayer.getName(), sharedPreferences.getLong(PREFS_ENERGY, 0));
+        db.updateCoin(ActualPlayer.getName(), sharedPreferences.getLong(PREFS_COIN, 0));
+
+        ActualPlayer = db.infoFirstPlayer();
+
+        if(Y != mEarthObject.size()) {
+            adapterE.notifyDataSetChanged();
+        }
+
+        if(X != mFactory.size()) {
+            adapterF.notifyDataSetChanged();
+        }
+
+        db.close();
+    }
+
+    /////Fonction Option/////
     protected void choiceCoinFree(){
         Random X = new Random();
         int nombreAleatoire = X.nextInt(5 - 1 + 1) + 1;
@@ -637,10 +680,10 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this,"You have won "+numberFormat.format(A)+" coins",Toast.LENGTH_LONG).show();
             sharedPreferences
                     .edit()
-                    .putInt(PREFS_COIN, (sharedPreferences.getInt(PREFS_COIN, 0) + A))
+                    .putLong(PREFS_COIN, (sharedPreferences.getLong(PREFS_COIN, 0) + A))
                     .apply();
         }
-        ActualCoin.setText(numberFormat.format(sharedPreferences.getInt(PREFS_COIN, 0)));
+        ActualCoin.setText(numberFormat.format(sharedPreferences.getLong(PREFS_COIN, 0)));
     }
 
     protected void coinFreeAd() {
@@ -674,10 +717,10 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this,"You have won "+numberFormat.format(finalA)+" coins",Toast.LENGTH_LONG).show();
                     sharedPreferences
                             .edit()
-                            .putInt(PREFS_COIN, (sharedPreferences.getInt(PREFS_COIN, 0) + finalA))
+                            .putLong(PREFS_COIN, (sharedPreferences.getLong(PREFS_COIN, 0) + finalA))
                             .apply();
                     CoinFree.setVisibility(View.INVISIBLE);
-                    ActualCoin.setText(numberFormat.format(sharedPreferences.getInt(PREFS_COIN, 0)));
+                    ActualCoin.setText(numberFormat.format(sharedPreferences.getLong(PREFS_COIN, 0)));
                     adPopups.dismiss();
                 }
             });
@@ -690,7 +733,7 @@ public class MainActivity extends AppCompatActivity {
             });
             adPopups.build();
         }
-        ActualCoin.setText(numberFormat.format(sharedPreferences.getInt(PREFS_COIN, 0)));
+        ActualCoin.setText(numberFormat.format(sharedPreferences.getLong(PREFS_COIN, 0)));
     }
 
     protected void speedAds(){
@@ -757,6 +800,96 @@ public class MainActivity extends AppCompatActivity {
             });
             adPopups.build();
         }
+    }
+
+    protected void SkipFor30(){
+        Calendar ActualDate = Calendar.getInstance();
+        final AdPopup adPopups = new AdPopup(this);
+
+        adPopups.setTitleAd("Skip Time");
+        adPopups.getTimeAfkAdPopup().setVisibility(View.INVISIBLE);
+        adPopups.setNumberWinAd("30 min worth of coins\nGet " + numberFormat.format(EarthObjectCoinWin*(1800)) + " Coins");
+        adPopups.getImageAd().setImageResource(R.drawable.speedrun);
+
+        adPopups.getButton1().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sharedPreferences
+                        .edit()
+                        .putLong(PREFS_COIN, (sharedPreferences.getLong(PREFS_COIN, 0) + EarthObjectCoinWin*(1800)))
+                        .apply();
+                adPopups.dismiss();
+                Toast.makeText(MainActivity.this,"You have earned 30 min of coins",Toast.LENGTH_LONG).show();
+            }
+        });
+
+        adPopups.getButton2().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                adPopups.dismiss();
+            }
+        });
+        adPopups.build();
+    }
+
+    protected void SkipFor1D(){
+        Calendar ActualDate = Calendar.getInstance();
+            final AdPopup adPopups = new AdPopup(this);
+
+            adPopups.setTitleAd("Skip Time");
+            adPopups.getTimeAfkAdPopup().setVisibility(View.INVISIBLE);
+            adPopups.setNumberWinAd("1 day worth of coins\nGet " + numberFormat.format(EarthObjectCoinWin*(86400)) + " Coins");
+            adPopups.getImageAd().setImageResource(R.drawable.speedrun);
+
+            adPopups.getButton1().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    sharedPreferences
+                            .edit()
+                            .putLong(PREFS_COIN, (sharedPreferences.getLong(PREFS_COIN, 0) + EarthObjectCoinWin*(86400)))
+                            .apply();
+                    adPopups.dismiss();
+                    Toast.makeText(MainActivity.this,"You have earned 1 day of coins",Toast.LENGTH_LONG).show();
+                }
+            });
+
+            adPopups.getButton2().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    adPopups.dismiss();
+                }
+            });
+            adPopups.build();
+    }
+
+    protected void SkipFor7D(){
+        Calendar ActualDate = Calendar.getInstance();
+            final AdPopup adPopups = new AdPopup(this);
+
+            adPopups.setTitleAd("Skip Time");
+            adPopups.getTimeAfkAdPopup().setVisibility(View.INVISIBLE);
+            adPopups.setNumberWinAd("7 day worth of coins\nGet " + numberFormat.format(EarthObjectCoinWin*(604800)) + " Coins");
+            adPopups.getImageAd().setImageResource(R.drawable.speedrun);
+
+            adPopups.getButton1().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    sharedPreferences
+                            .edit()
+                            .putLong(PREFS_COIN, (sharedPreferences.getLong(PREFS_COIN, 0) + EarthObjectCoinWin*(604800)))
+                            .apply();
+                    adPopups.dismiss();
+                    Toast.makeText(MainActivity.this,"You have earned 7 day of coins",Toast.LENGTH_LONG).show();
+                }
+            });
+
+            adPopups.getButton2().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    adPopups.dismiss();
+                }
+            });
+            adPopups.build();
     }
 
     @SuppressLint("SimpleDateFormat")

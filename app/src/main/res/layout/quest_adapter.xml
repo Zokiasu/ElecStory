@@ -6,7 +6,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    app:cardCornerRadius="15dp">
+    app:cardCornerRadius="10dp">
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -16,8 +16,8 @@
 
         <ImageView
             android:id="@+id/ImageObject"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="@dimen/size_image_quest"
+            android:layout_height="@dimen/size_image_quest"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:contentDescription="TODO" />
@@ -29,6 +29,7 @@
             android:layout_centerHorizontal="true"
             android:layout_alignTop="@+id/ImageObject"
             android:text="NameObject"
+            android:textSize="@dimen/size_adapter_text"
             tools:ignore="HardcodedText" />
 
         <com.example.elecstory.OtherClass.CustomFontTextView
@@ -37,7 +38,8 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_alignBottom="@+id/ImageObject"
-            android:text="X Unités"/>
+            android:text="X Unités"
+            android:textSize="@dimen/size_text"/>
 
     </RelativeLayout>
 

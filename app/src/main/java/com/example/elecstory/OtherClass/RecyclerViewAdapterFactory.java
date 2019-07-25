@@ -27,7 +27,7 @@ import static android.content.Context.MODE_PRIVATE;
 @SuppressLint("LongLogTag")
 public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerViewAdapterFactory.ViewHolder> {
 
-    private static final String TAG = "RecyclerViewAdapterEarth";
+    private static final String TAG = "RecyclerViewAdapterItem";
 
     private ArrayList<Factory> mFactory;
     private Context mContext;
@@ -57,7 +57,7 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
         final Database db = new Database(mContext);
 
         if(mFactory.get(position).getFactoryLevel() > 0) {
-            holder.test.setCardBackgroundColor(Color.WHITE);
+            holder.test.setCardBackgroundColor(Color.parseColor("#56d6e1"));
             holder.UpgradePriceFactorys.setText("Next lvl : " + numberFormat.format(mFactory.get(position).getUpgradeCost()));
         } else {
             holder.EnergyGenFactorys.setVisibility(View.INVISIBLE);
@@ -77,7 +77,9 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
             public void onClick(View view) {
                 if(upgradeFactory(db, position)) {
                     holder.lvlFactorys.setText(String.valueOf(mFactory.get(position).getFactoryLevel()));
-                    holder.test.setCardBackgroundColor(Color.WHITE);
+                    holder.test.setCardBackgroundColor(Color.parseColor("#56d6e1"));
+                    holder.UpgradePriceFactorys.setText("Next lvl : " + numberFormat.format(mFactory.get(position).getUpgradeCost()));
+                    holder.EnergyGenFactorys.setText("Energy : " + numberFormat.format(mFactory.get(position).getEnergyProd()) + "/s");
                 }
             }
         });
@@ -115,7 +117,8 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
 
     public boolean upgradeFactory(Database db, int position){
         if(mFactory.get(position).getFactoryLevel() > 0) {
-            if (sharedPreferences.getInt(PREFS_COIN, 0) >= mFactory.get(position).getUpgradeCost()) {
+            
+            if (sharedPreferences.getLong(PREFS_COIN, 0) >= mFactory.get(position).getUpgradeCost()) {
                 mFactory.get(position).Upgrade(mFactory.get(position), db, activity);
                 Toast.makeText(mContext, mFactory.get(position).getName() + " has been upgrade!", Toast.LENGTH_SHORT).show();
                 return true;
@@ -124,7 +127,7 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
                 return false;
             }
         } else {
-            if (sharedPreferences.getInt(PREFS_COIN, 0) >= mFactory.get(position).getPriceFactory()) {
+            if (sharedPreferences.getLong(PREFS_COIN, 0) >= mFactory.get(position).getPriceFactory()) {
                 mFactory.get(position).Upgrade(mFactory.get(position), db, activity);
                 Toast.makeText(mContext, mFactory.get(position).getName() + " has been buying!", Toast.LENGTH_SHORT).show();
                 return true;

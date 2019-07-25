@@ -170,7 +170,7 @@ public class Database extends SQLiteOpenHelper {
 
     ////// Player function //////
     /* Add a new player to the internal database * Ajoute un nouveau joueur à la base de donnée interne */
-    public void insertPlayer (String name, int age, int coin, int elecpoint, String uniqueid) {
+    public void insertPlayer (String name, int age, long coin, long elecpoint, String uniqueid) {
         name = name.replace("'", "''");
         String strSql =
                 "INSERT INTO " +  TABLE_PLAYER + "(uniqueid, username, age, coin, elecpoint) " +
@@ -187,8 +187,8 @@ public class Database extends SQLiteOpenHelper {
                 cursor.getString(1), //UniqueId
                 cursor.getString(2), //Pseudo
                 cursor.getInt(3), //Age
-                cursor.getInt(4), //Coin
-                cursor.getInt(5), //ElecPoint
+                cursor.getLong(4), //Coin
+                cursor.getLong(5), //ElecPoint
                 cursor.getInt(6)); //QuestId
 
         return player;
@@ -294,11 +294,11 @@ public class Database extends SQLiteOpenHelper {
     }
 
     ////// Factory Player function //////
-    public void insertFactory (int NbObject, String name, int level, int cost, int upgadecost, int pointgenerate, int operatingcost, int pollutiontax, int skin) {
+    public void insertFactory (int NbObject, String name, int level, int cost, long upgradecost, int pointgenerate, int operatingcost, int pollutiontax, int skin) {
         name = name.replace("'", "''");
         String strSql =
                 "INSERT INTO " + TABLE_FACTORY + "(number_object, name, level, cost, upgadecost, pointgenerate, operatingcost, pollutiontax, skin) " +
-                "VALUES ('" + NbObject + "','" + name + "', '" + level + "', '" + cost + "', '" + upgadecost + "', '" + pointgenerate +  "', '" + operatingcost + "', '" + pollutiontax + "', '" + skin + "')";
+                "VALUES ('" + NbObject + "','" + name + "', '" + level + "', '" + cost + "', '" + upgradecost + "', '" + pointgenerate +  "', '" + operatingcost + "', '" + pollutiontax + "', '" + skin + "')";
         this.getWritableDatabase().execSQL(strSql);
     }
 
@@ -320,7 +320,7 @@ public class Database extends SQLiteOpenHelper {
         this.getWritableDatabase().execSQL(strSql);
     }
 
-    public void updateUpgradeCostFactory (String name, int X) {
+    public void updateUpgradeCostFactory (String name, long X) {
         name = name.replace("'", "''");
         String strSql = "UPDATE " + TABLE_FACTORY + " SET " + UPGRADE_FACTORY + " = "+ UPGRADE_FACTORY + "*" + X +" WHERE " + NAME_FACTORY + " = '" + name + "'";
         this.getWritableDatabase().execSQL(strSql);
@@ -383,7 +383,7 @@ public class Database extends SQLiteOpenHelper {
                     cursor.getString(1), //Name
                     cursor.getInt(2), //Level
                     cursor.getInt(3), //Cost
-                    cursor.getInt(4), //UpgradeCost
+                    cursor.getLong(4), //UpgradeCost
                     cursor.getInt(5), //PointGenerate
                     cursor.getInt(6), //ActualFactoryCost
                     cursor.getInt(7), //ActualFactoryTax
@@ -482,11 +482,11 @@ public class Database extends SQLiteOpenHelper {
     }
 
     ////// Factory Shop function //////
-    public void insertFactoryShop (int NbObject, String name, int level, int cost, int upgadecost, int pointgenerate, int operatingcost, int pollutiontax, int skin) {
+    public void insertFactoryShop (int NbObject, String name, int level, int cost, long upgradecost, int pointgenerate, int operatingcost, int pollutiontax, int skin) {
         name = name.replace("'", "''");
         String strSql =
         "INSERT INTO " + TABLE_FACTORY_SHOP + "(number_object, name, level, cost, upgadecost, pointgenerate, operatingcost, pollutiontax, skin) " +
-        "VALUES ('" + NbObject + "','" + name + "', '" + level + "', '" + cost + "', '" + upgadecost + "', '" + pointgenerate +  "', '" + operatingcost + "', '" + pollutiontax + "', '" + skin + "')";
+        "VALUES ('" + NbObject + "','" + name + "', '" + level + "', '" + cost + "', '" + upgradecost + "', '" + pointgenerate +  "', '" + operatingcost + "', '" + pollutiontax + "', '" + skin + "')";
         this.getWritableDatabase().execSQL(strSql);
     }
 
@@ -502,7 +502,7 @@ public class Database extends SQLiteOpenHelper {
                     cursor.getString(1), //Name
                     cursor.getInt(2), //Level
                     cursor.getInt(3), //Cost
-                    cursor.getInt(4), //UpgradeCost
+                    cursor.getLong(4), //UpgradeCost
                     cursor.getInt(5), //PointGenerate
                     cursor.getInt(6), //ActualFactoryCost
                     cursor.getInt(7), //ActualFactoryTax

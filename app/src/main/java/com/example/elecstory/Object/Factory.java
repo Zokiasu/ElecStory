@@ -15,7 +15,7 @@ public class Factory {
     protected String Name; /*Nom de l'usine*/
     protected int FactoryLevel; /*Niveau à laquelle elle est acheter*/
     protected int PriceFactory; /*Coût de son achat*/
-    protected int UpgradeCost; /*Coût de l'update de l'usine*/
+    protected long UpgradeCost; /*Coût de l'update de l'usine*/
     protected int EnergyProd; /*Point générer par l'usine*/
     protected int OperatingCost; /*Coût d'utilisation hebdomadaire*/
     protected int PollutionTax; /*Taxe de pollution*/
@@ -103,7 +103,7 @@ public class Factory {
         this.UpgradeCost = this.PriceFactory/5;
     }
 
-    public Factory(int NbObjects, String name, int factoryLevel, int priceFactory, int upgradeCost, int energyProd, int operatingCost, int pollutionTax, int skin) {
+    public Factory(int NbObjects, String name, int factoryLevel, int priceFactory, long upgradeCost, int energyProd, int operatingCost, int pollutionTax, int skin) {
         NbObject = NbObjects;
         Name = name;
         FactoryLevel = factoryLevel;
@@ -127,13 +127,13 @@ public class Factory {
 
             sharedPreferences
                     .edit()
-                    .putInt(PREFS_COIN, (sharedPreferences.getInt(PREFS_COIN, 0) - Fact.getPriceFactory()))
+                    .putLong(PREFS_COIN, (sharedPreferences.getLong(PREFS_COIN, 0) - Fact.getPriceFactory()))
                     .apply();
             
         } else {
             sharedPreferences
                     .edit()
-                    .putInt(PREFS_COIN, (sharedPreferences.getInt(PREFS_COIN, 0) - Fact.getUpgradeCost()))
+                    .putLong(PREFS_COIN, (sharedPreferences.getLong(PREFS_COIN, 0) - Fact.getUpgradeCost()))
                     .apply();
 
             Fact.setFactoryLevel(Fact.getFactoryLevel() + 1);
@@ -163,67 +163,67 @@ public class Factory {
         NbObject = nbObject;
     }
 
-    public int getSkin() {
-        return Skin;
-    }
-
-    public void setSkin(int skin) {
-        Skin = skin;
-    }
-
     public String getName() {
         return Name;
-    }
-
-    public int getPriceFactory() {
-        return PriceFactory;
-    }
-
-    public int getFactoryLevel() {
-        return FactoryLevel;
-    }
-
-    public int getUpgradeCost() {
-        return UpgradeCost;
-    }
-
-    public int getEnergyProd() {
-        return EnergyProd;
-    }
-
-    public int getOperatingCost() {
-        return OperatingCost;
-    }
-
-    public int getPollutionTax() {
-        return PollutionTax;
     }
 
     public void setName(String name) {
         Name = name;
     }
 
-    public void setPriceFactory(int priceFactory) {
-        PriceFactory = priceFactory;
+    public int getFactoryLevel() {
+        return FactoryLevel;
     }
 
     public void setFactoryLevel(int factoryLevel) {
         FactoryLevel = factoryLevel;
     }
 
-    public void setUpgradeCost(int upgradeCost) {
+    public int getPriceFactory() {
+        return PriceFactory;
+    }
+
+    public void setPriceFactory(int priceFactory) {
+        PriceFactory = priceFactory;
+    }
+
+    public long getUpgradeCost() {
+        return UpgradeCost;
+    }
+
+    public void setUpgradeCost(long upgradeCost) {
         UpgradeCost = upgradeCost;
+    }
+
+    public int getEnergyProd() {
+        return EnergyProd;
     }
 
     public void setEnergyProd(int energyProd) {
         EnergyProd = energyProd;
     }
 
+    public int getOperatingCost() {
+        return OperatingCost;
+    }
+
     public void setOperatingCost(int operatingCost) {
         OperatingCost = operatingCost;
     }
 
+    public int getPollutionTax() {
+        return PollutionTax;
+    }
+
     public void setPollutionTax(int pollutionTax) {
         PollutionTax = pollutionTax;
+    }
+
+    public int getSkin() {
+        return Skin;
+    }
+
+    public void setSkin(int skin) {
+        Skin = skin;
     }
 }

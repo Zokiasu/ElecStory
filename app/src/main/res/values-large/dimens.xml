@@ -6,7 +6,7 @@
     <dimen name="size_title">25sp</dimen>
 
     <!-- MainActivity -->
-    <dimen name="size_frame_text">140dp</dimen>
+    <dimen name="size_frame_text">190dp</dimen>
     <dimen name="size_text_timer">10sp</dimen>
     <dimen name="margin_body_horizontal">20dp</dimen>
 
@@ -32,4 +32,7 @@
     <!-- All Adapter -->
     <dimen name="size_adapter_text">13sp</dimen>
     <dimen name="size_adapter_space">10dp</dimen>
+
+    <!-- Quest Adapter -->
+    <dimen name="size_image_quest">70dp</dimen>
 </resources>

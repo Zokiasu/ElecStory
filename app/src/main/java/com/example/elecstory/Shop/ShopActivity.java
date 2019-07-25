@@ -45,11 +45,11 @@ public class ShopActivity extends AppCompatActivity {
 
         Button BackCraft = findViewById(R.id.back);
         CardView CardPlayer = findViewById(R.id.cardPlayer);
-        TextView ActualCoin = findViewById(R.id.ElecCoins);
-        TextView ActualEnergyPoint = findViewById(R.id.ElecStockage);
+        final TextView ActualCoin = findViewById(R.id.ElecCoins);
+        final TextView ActualEnergyPoint = findViewById(R.id.ElecStockage);
 
         ActualEnergyPoint.setText(numberFormat.format(sharedPreferences.getLong(PREFS_ENERGY, 0)));
-        ActualCoin.setText(numberFormat.format(sharedPreferences.getInt(PREFS_COIN, 0)));
+        ActualCoin.setText(numberFormat.format(sharedPreferences.getLong(PREFS_COIN, 0)));
 
         BackCraft.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,8 +86,8 @@ public class ShopActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 
                 final EarthObject N = finalListEarthObject.get(position);
-                Log.i("Shop","sharedPreferences.getInt(PREFS_COIN, 0) : " + sharedPreferences.getInt(PREFS_COIN, 0));
-                if((sharedPreferences.getInt(PREFS_COIN, 0) >= N.getPriceObject()) && ((sharedPreferences.getInt(PREFS_COIN, 0) - N.getPriceObject()) >= 0)) {
+
+                if((sharedPreferences.getLong(PREFS_COIN, 0) >= N.getPriceObject()) && ((sharedPreferences.getLong(PREFS_COIN, 0) - N.getPriceObject()) >= 0)) {
                     final ShopPopup shopPopup = new ShopPopup(ShopActivity.this);
 
                     shopPopup.setNumber(number);
@@ -104,13 +104,14 @@ public class ShopActivity extends AppCompatActivity {
                             } else {
                                 RecupNb = 1;
                             }
-                            if((sharedPreferences.getInt(PREFS_COIN, 0) >= (N.getPriceObject() * RecupNb)) && ((sharedPreferences.getInt(PREFS_COIN, 0) - (N.getPriceObject() * RecupNb)) >= 0)) {
+                            if((sharedPreferences.getLong(PREFS_COIN, 0) >= (N.getPriceObject() * RecupNb)) && ((sharedPreferences.getLong(PREFS_COIN, 0) - (N.getPriceObject() * RecupNb)) >= 0)) {
                                 db.insertEarthObject(N.getNbObject() * RecupNb, N.getName(), N.getCoinWin(), N.getPriceObject(), N.getEnergyCost(), N.getSkin());
 
                                 sharedPreferences
                                         .edit()
-                                        .putInt(PREFS_COIN, (sharedPreferences.getInt(PREFS_COIN, 0) - (int)(N.getPriceObject() * RecupNb)))
+                                        .putLong(PREFS_COIN, (sharedPreferences.getLong(PREFS_COIN, 0) - (int)(N.getPriceObject() * RecupNb)))
                                         .apply();
+                                ActualCoin.setText(numberFormat.format(sharedPreferences.getLong(PREFS_COIN, 0)));
 
                             } else {
                                 Toast.makeText(ShopActivity.this, "Vous n'avez pas assez d'argent ! ", Toast.LENGTH_SHORT).show();
@@ -136,11 +137,6 @@ public class ShopActivity extends AppCompatActivity {
     }
 
     ////!!!Faire une vrai fonction qui vérifie chaque craft!!!////
-
-    public boolean checkObject(ArrayList<EarthObject> ListObject, int position, Database db){
-        Quest TestTmp = new Quest(position);
-        return TestTmp.checkQuest(ListObject, db);
-    }
 
     @Override
     public void onBackPressed() {
