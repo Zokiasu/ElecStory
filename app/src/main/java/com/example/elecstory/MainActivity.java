@@ -15,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
@@ -26,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.elecstory.OtherClass.AdPopup;
+import com.example.elecstory.OtherClass.CongratsPopup;
 import com.example.elecstory.OtherClass.DiamondPopup;
 import com.example.elecstory.OtherClass.InformationPopup;
 import com.example.elecstory.OtherClass.ItemOffsetDecorationItem;
@@ -309,6 +311,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                final CongratsPopup Congrats = new CongratsPopup(MainActivity.this);
+                Congrats.setGratz("Congratulation\nYou win "+numberFormat.format(10000)+" coins");
+                Congrats.build();
+
+                final Handler handler = new Handler();
+                final Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        Congrats.dismiss();
+                    }
+                };
+
+                handler.postDelayed(runnable, 3000);
             }
         });
 
@@ -437,11 +452,11 @@ public class MainActivity extends AppCompatActivity {
                 updateDatabase();
             }
 
-            if (N%180 == 1 && N > 1) {
+            if (N%120 == 1 && N > 1) {
                 choiceCoinFree();
             }
 
-            if (N%195 == 1 && N > 1) {
+            if (N%135 == 1 && N > 1) {
                 CoinFree.setVisibility(View.INVISIBLE);
             }
 
@@ -458,7 +473,6 @@ public class MainActivity extends AppCompatActivity {
 
     protected void refreshRecursion(int milli, final int N){
         final Handler handler = new Handler();
-
         final Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -689,6 +703,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             final AdPopup adPopups = new AdPopup(this);
+            final CongratsPopup Congrats = new CongratsPopup(this);
             final long finalA = A;
 
             adPopups.setTitleAd("More Coins!");
@@ -697,13 +712,26 @@ public class MainActivity extends AppCompatActivity {
             adPopups.getButton1().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     CoinFreeEnd.add(Calendar.SECOND, 30);
-                    Toast.makeText(MainActivity.this,"You have won "+numberFormat.format(finalA)+" coins",Toast.LENGTH_LONG).show();
+                    //Toast.makeText(MainActivity.this,"You have won "+numberFormat.format(finalA)+" coins",Toast.LENGTH_LONG).show();
                     sharedPreferences
                             .edit()
                             .putLong(PREFS_COIN, (sharedPreferences.getLong(PREFS_COIN, 0) + finalA))
                             .apply();
                     CoinFree.setVisibility(View.INVISIBLE);
+
+                    Congrats.setGratz("Congratulation\nYou win "+numberFormat.format(finalA)+" coins");
+                    Congrats.build();
+                    final Handler handler = new Handler();
+                    final Runnable runnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            Congrats.dismiss();
+                        }
+                    };
+                    handler.postDelayed(runnable, 3000);
+
                     ActualCoin.setText(numberFormat.format(sharedPreferences.getLong(PREFS_COIN, 0)));
                     adPopups.dismiss();
                 }
@@ -826,7 +854,7 @@ public class MainActivity extends AppCompatActivity {
             DiamondPopups.setTitleAd("Skip Time");
             DiamondPopups.setNumberWinAd("Get 1 day worth of coins\n" + numberFormat.format(EarthObjectCoinWin*(86400)) + " coins");
             DiamondPopups.getImageAd().setImageResource(R.drawable.skip1d);
-            DiamondPopups.getButton1().setText(String.valueOf(PriceSkip7D));
+            DiamondPopups.getButton1().setText(String.valueOf(PriceSkip1D));
 
             DiamondPopups.getButton1().setOnClickListener(new View.OnClickListener() {
                 @Override

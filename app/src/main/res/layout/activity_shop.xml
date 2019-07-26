@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
-    android:layout_gravity="center"
+    android:layout_gravity="center_horizontal"
+    android:gravity="center_horizontal"
     android:background="@drawable/test"
     tools:context=".Shop.ShopActivity">
 
@@ -19,115 +19,62 @@
         android:orientation="horizontal">
 
         <Space
-            android:layout_width="5dp"
-            android:layout_height="wrap_content"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
 
         <android.support.v7.widget.CardView
-            android:id="@+id/cardPlayer"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/size_player_image_main"
-            android:layout_gravity="center"
-            app:cardCornerRadius="10dp">
+            android:layout_width="@dimen/size_frame_text"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="15dp"
+            app:cardBackgroundColor="#01A0FF">
 
-            <ImageView
-                android:id="@+id/imagePlayer"
-                android:layout_width="@dimen/size_player_image_main"
-                android:layout_height="@dimen/size_player_image_main"
-                app:srcCompat="@drawable/jokericon"
-                tools:ignore="MissingConstraints" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/minicoins"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/minicoin"/>
+
+                <com.example.elecstory.OtherClass.CustomFontTextView
+                    android:id="@+id/ElecCoins"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/minicoins"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:text="C"
+                    android:textSize="@dimen/size_text"
+                    android:textColor="#fff"/>
+
+            </RelativeLayout>
 
         </android.support.v7.widget.CardView>
 
         <Space
-            android:layout_width="5dp"
-            android:layout_height="wrap_content"/>
-
-        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_weight="10"/>
 
-            <android.support.v7.widget.CardView
-                android:layout_width="@dimen/size_frame_text"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="15dp"
-                app:cardBackgroundColor="#01A0FF">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:id="@+id/energy"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/minieclair" />
-
-                    <com.example.elecstory.OtherClass.CustomFontTextView
-                        android:id="@+id/ElecStockage"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:layout_toRightOf="@+id/energy"
-                        android:text="E"
-                        android:textColor="#fff"
-                        android:textSize="@dimen/size_text" />
-
-                </RelativeLayout>
-
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                android:layout_width="@dimen/size_frame_text"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="15dp"
-                app:cardBackgroundColor="#01A0FF">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:id="@+id/minicoins"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/minicoin"/>
-
-                    <com.example.elecstory.OtherClass.CustomFontTextView
-                        android:id="@+id/ElecCoins"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_toRightOf="@+id/minicoins"
-                        android:layout_centerVertical="true"
-                        android:layout_centerHorizontal="true"
-                        android:text="C"
-                        android:textSize="@dimen/size_text"
-                        android:textColor="#fff"/>
-
-                </RelativeLayout>
-
-            </android.support.v7.widget.CardView>
-
-        </LinearLayout>
+        <TextView
+            android:id="@+id/back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="end"
+            android:gravity="center"
+            android:text="X"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:background="@drawable/cerclebackground"/>
 
         <Space
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="5"/>
-
-        <com.example.elecstory.OtherClass.CustomFontButton
-            android:id="@+id/back"
-            android:textAllCaps="false"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginRight="10dp"
-            android:gravity="center"
-            android:text="X"
-            android:background="@drawable/custom_button"
-            android:textSize="@dimen/size_text"/>
+            android:layout_weight="1"/>
 
     </LinearLayout>
 
@@ -142,10 +89,5 @@
         android:horizontalSpacing="10dp"
         android:fastScrollEnabled="true"
         android:numColumns="auto_fit"/>
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"/>
 
 </LinearLayout>

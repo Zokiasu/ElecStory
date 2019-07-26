@@ -20,6 +20,8 @@ import com.example.elecstory.OtherClass.ShopPopup;
 import com.example.elecstory.Quest.Quest;
 import com.example.elecstory.R;
 
+import org.w3c.dom.Text;
+
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +31,6 @@ public class ShopActivity extends AppCompatActivity {
 
     private static final String PREFS = "PREFS";
     private static final String PREFS_COIN = "PREFS_COIN";
-    private static final String PREFS_ENERGY = "PREFS_ENERGY";
     SharedPreferences sharedPreferences;
 
     protected NumberFormat numberFormat = NumberFormat.getInstance(java.util.Locale.FRENCH);
@@ -43,12 +44,10 @@ public class ShopActivity extends AppCompatActivity {
 
         final Database db = new Database(this);
 
-        Button BackCraft = findViewById(R.id.back);
+        TextView BackCraft = findViewById(R.id.back);
         CardView CardPlayer = findViewById(R.id.cardPlayer);
         final TextView ActualCoin = findViewById(R.id.ElecCoins);
-        final TextView ActualEnergyPoint = findViewById(R.id.ElecStockage);
 
-        ActualEnergyPoint.setText(numberFormat.format(sharedPreferences.getLong(PREFS_ENERGY, 0)));
         ActualCoin.setText(numberFormat.format(sharedPreferences.getLong(PREFS_COIN, 0)));
 
         BackCraft.setOnClickListener(new View.OnClickListener() {
