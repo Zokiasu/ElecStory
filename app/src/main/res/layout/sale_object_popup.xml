@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:padding="10dp"
-    android:background="#FFFFFF">
+    android:background="#01A0FF">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,14 +24,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="10" />
-
-        <Button
-            android:id="@+id/closeWindows"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:text="x"
-            android:background="@color/colorRed"
-            android:textSize="@dimen/size_text"/>
 
     </LinearLayout>
 

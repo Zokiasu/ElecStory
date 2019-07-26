@@ -35,6 +35,8 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
 
     private static final String PREFS = "PREFS";
     private static final String PREFS_COIN = "PREFS_COIN";
+    protected static final String PREFS_ENERGY = "PREFS_ENERGY";
+    protected static final String PREFS_DIAMOND = "PREFS_DIAMOND";
     private SharedPreferences sharedPreferences;
     protected NumberFormat numberFormat = NumberFormat.getInstance(java.util.Locale.FRENCH);
 
@@ -72,7 +74,7 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
 
         holder.lvlFactorys.setText(""+mFactory.get(position).getFactoryLevel());
 
-        holder.imageFactorys.setOnClickListener(new View.OnClickListener() {
+        holder.test.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(upgradeFactory(db, position)) {
@@ -80,6 +82,8 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
                     holder.test.setCardBackgroundColor(Color.parseColor("#56d6e1"));
                     holder.UpgradePriceFactorys.setText("Next lvl : " + numberFormat.format(mFactory.get(position).getUpgradeCost()));
                     holder.EnergyGenFactorys.setText("Energy : " + numberFormat.format(mFactory.get(position).getEnergyProd()) + "/s");
+                    holder.EnergyGenFactorys.setVisibility(View.VISIBLE);
+                    addDiamond(position);
                 }
             }
         });
@@ -135,6 +139,15 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
                 Toast.makeText(mContext, "Not enough money!", Toast.LENGTH_LONG).show();
                 return false;
             }
+        }
+    }
+
+    public void addDiamond(int position){
+        if(mFactory.get(position).getFactoryLevel()%5 == 0){
+            sharedPreferences
+                    .edit()
+                    .putInt(PREFS_DIAMOND, (sharedPreferences.getInt(PREFS_DIAMOND, 0) + 2))
+                    .apply();
         }
     }
 }

@@ -56,6 +56,22 @@
     <Space
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <EditText
+        android:id="@+id/Email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:background="@drawable/custom_menu"
+        android:ems="10"
+        android:hint="@string/email"
+        android:inputType="number"
+        tools:ignore="MissingConstraints" />
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_weight="5" />
 
     <com.example.elecstory.OtherClass.CustomFontButton

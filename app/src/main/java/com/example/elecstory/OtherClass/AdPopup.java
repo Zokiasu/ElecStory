@@ -17,9 +17,8 @@ public class AdPopup extends Dialog {
 
     protected Activity activity;
     protected Button button1;
-    protected Button button2;
+    protected TextView button2;
     protected TextView TitleAdPopup;
-    protected TextView TimeAfkAdPopup;
     protected TextView NumberWinAdPopup;
     protected ImageView ImageAd;
     protected String TitleAd;
@@ -36,28 +35,25 @@ public class AdPopup extends Dialog {
         this.button2 = findViewById(R.id.CloseAdsWindows);
 
         this.TitleAdPopup = findViewById(R.id.TitleAdPopup);
-        this.TimeAfkAdPopup = findViewById(R.id.TimeAfk);
         this.NumberWinAdPopup = findViewById(R.id.NumberEarnedAd);
 
         this.ImageAd = findViewById(R.id.ImageAds);
 
         this.TitleAd = "Text";
-        this.TimeAfkAd = "Text";
         this.NumberWinAd = "Text";
     }
 
     public void build(){
         show();
         TitleAdPopup.setText(TitleAd);
-        TimeAfkAdPopup.setText(TimeAfkAd);
         NumberWinAdPopup.setText(NumberWinAd);
     }
 
-    public Button getButton2() {
+    public TextView getButton2() {
         return button2;
     }
 
-    public void setButton2(Button button2) {
+    public void setButton2(TextView button2) {
         this.button2 = button2;
     }
 
@@ -91,14 +87,6 @@ public class AdPopup extends Dialog {
 
     public void setTitleAdPopup(TextView titleAdPopup) {
         TitleAdPopup = titleAdPopup;
-    }
-
-    public TextView getTimeAfkAdPopup() {
-        return TimeAfkAdPopup;
-    }
-
-    public void setTimeAfkAdPopup(TextView timeAfkAdPopup) {
-        TimeAfkAdPopup = timeAfkAdPopup;
     }
 
     public TextView getNumberWinAdPopup() {

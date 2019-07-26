@@ -18,7 +18,7 @@ public class Database extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "Database.db";
 
     //Database Version
-    public static final int DATABASE_VERSION = 6;
+    public static final int DATABASE_VERSION = 8;
 
     //Table Name
     public static final String TABLE_PLAYER = "player_table";
@@ -39,6 +39,8 @@ public class Database extends SQLiteOpenHelper {
     public static final String COIN_PLAYER = "coin";
     public static final String ELECPOINT_PLAYER = "elecpoint";
     public static final String QUEST_PLAYER = "quest";
+    public static final String LASTCONNECTION_PLAYER = "last_connection";
+    public static final String DIAMOND_PLAYER = "diamond";
 
     //EarthObject Table - Column names
     public static final String NAME_BUILDING = "name";
@@ -66,8 +68,8 @@ public class Database extends SQLiteOpenHelper {
 
     //Ads Table - Column names
     public static final String TIMEEND_SPEEDADS = "end_speed";
-    public static final String TIMEEND_COINADS = "end_coin";
     public static final String TIMEEND_MULTIADS = "end_multi";
+    public static final String TIMEEND_SKIP = "end_skip";
 
     //Factory Shop Table - Column names
     public static final String NAME_FACTORY_SHOP = "name";
@@ -88,9 +90,11 @@ public class Database extends SQLiteOpenHelper {
             + AGE_PLAYER + " INTEGER NOT NULL,"
             + COIN_PLAYER + " INTEGER DEFAULT 0,"
             + ELECPOINT_PLAYER + " INTEGER DEFAULT 0,"
-            + QUEST_PLAYER + " INTEGER DEFAULT 1)";
+            + QUEST_PLAYER + " INTEGER DEFAULT 1,"
+            + DIAMOND_PLAYER + " INTEGER DEFAULT 0,"
+            + LASTCONNECTION_PLAYER + " TEXT DEFAULT NULL)";
 
-    //EarthObject Table Create
+    //Item Table Create
     public static final String CREATE_TABLE_EARTH = "CREATE TABLE " + TABLE_EARTH
             + " (" + NUMBER_OBJECT + " INTEGER DEFAULT 1, "
             + NAME_BUILDING + " TEXT NOT NULL,"
@@ -111,7 +115,7 @@ public class Database extends SQLiteOpenHelper {
             + POLLUTIONTAX_FACTORY + " INTEGER DEFAULT 0,"
             + SKIN_FACTORY + " INTEGER DEFAULT NULL)";
 
-    //EarthObject Table Create
+    //Craft Table Create
     public static final String CREATE_TABLE_CRAFT = "CREATE TABLE " + TABLE_CRAFT
             + " (" + NUMBER_OBJECT + " INTEGER DEFAULT 1, "
             + NAME_CRAFT + " TEXT NOT NULL,"
@@ -123,8 +127,8 @@ public class Database extends SQLiteOpenHelper {
     //Ads Table Create
     public static final String CREATE_TABLE_ADS = "CREATE TABLE " + TABLE_ADS + " ("
             + TIMEEND_SPEEDADS + " TEXT NOT NULL,"
-            + TIMEEND_COINADS + " TEXT NOT NULL,"
-            + TIMEEND_MULTIADS + " TEXT NOT NULL)";
+            + TIMEEND_MULTIADS + " TEXT NOT NULL,"
+            + TIMEEND_SKIP + " TEXT NOT NULL)";
 
     //Factory Table Create
     public static final String CREATE_TABLE_FACTORY_SHOP = "CREATE TABLE " + TABLE_FACTORY_SHOP
@@ -170,11 +174,9 @@ public class Database extends SQLiteOpenHelper {
 
     ////// Player function //////
     /* Add a new player to the internal database * Ajoute un nouveau joueur à la base de donnée interne */
-    public void insertPlayer (String name, int age, long coin, long elecpoint, String uniqueid) {
+    public void insertPlayer (String name, int age, String uniqueid, String lastConnection) {
         name = name.replace("'", "''");
-        String strSql =
-                "INSERT INTO " +  TABLE_PLAYER + "(uniqueid, username, age, coin, elecpoint) " +
-                        "VALUES ('" + uniqueid + "', '" + name + "', '" + age + "', '" + coin + "', " + elecpoint + ")";
+        String strSql = "INSERT INTO " +  TABLE_PLAYER + "(uniqueid, username, age, last_connection) " + "VALUES ('" + uniqueid + "', '" + name + "', " + age  + ", '" + lastConnection + "')";
         this.getWritableDatabase().execSQL(strSql);
     }
 
@@ -189,14 +191,21 @@ public class Database extends SQLiteOpenHelper {
                 cursor.getInt(3), //Age
                 cursor.getLong(4), //Coin
                 cursor.getLong(5), //ElecPoint
-                cursor.getInt(6)); //QuestId
-
+                cursor.getInt(6), //QuestId
+                cursor.getInt(7), //Diamond
+                cursor.getString(8)); //LastConnection
         return player;
     }
 
     public void updateCoin (String name, long nbcoin) {
         name = name.replace("'", "''");
         String strSql = "UPDATE " + TABLE_PLAYER + " SET " + COIN_PLAYER + " = " + nbcoin + " WHERE " + USERNAME_PLAYER + " = '" + name + "'";
+        this.getWritableDatabase().execSQL(strSql);
+    }
+
+    public void updateDiamond (String name, int nbdiamond) {
+        name = name.replace("'", "''");
+        String strSql = "UPDATE " + TABLE_PLAYER + " SET " + DIAMOND_PLAYER + " = " + nbdiamond + " WHERE " + USERNAME_PLAYER + " = '" + name + "'";
         this.getWritableDatabase().execSQL(strSql);
     }
 
@@ -441,7 +450,7 @@ public class Database extends SQLiteOpenHelper {
 
     ////// Ads function //////
     public void insertAllTimerAds(){
-        String strSql = "INSERT INTO " +  TABLE_ADS + "(end_speed, end_coin, end_multi) " + "VALUES ('0000/00/00 00:00:00', '0000/00/00 00:00:00', '0000/00/00 00:00:00')";
+        String strSql = "INSERT INTO " +  TABLE_ADS + "(end_speed, end_multi, end_skip) " + "VALUES ('0000/00/00 00:00:00', '0000/00/00 00:00:00', '0000/00/00 00:00:00')";
         this.getWritableDatabase().execSQL(strSql);
     }
 
@@ -450,13 +459,13 @@ public class Database extends SQLiteOpenHelper {
         this.getWritableDatabase().execSQL(strSql);
     }
 
-    public void insertCoinAds(String Coin){
-        String strSql = "UPDATE " +  TABLE_ADS + " SET " + TIMEEND_COINADS + " = '" + Coin + "'";
+    public void insertMultiAds(String Multi){
+        String strSql = "UPDATE " +  TABLE_ADS + " SET " + TIMEEND_MULTIADS + " = '" + Multi + "'";
         this.getWritableDatabase().execSQL(strSql);
     }
 
-    public void insertMultiAds(String Multi){
-        String strSql = "UPDATE " +  TABLE_ADS + " SET " + TIMEEND_MULTIADS + " = '" + Multi + "'";
+    public void insertSkipAds(String Skip){
+        String strSql = "UPDATE " +  TABLE_ADS + " SET " + TIMEEND_SKIP + " = '" + Skip + "'";
         this.getWritableDatabase().execSQL(strSql);
     }
 
@@ -467,14 +476,14 @@ public class Database extends SQLiteOpenHelper {
         return cursor.getString(0);
     }
 
-    public String infoCoinAds(){
+    public String infoMultiAds(){
         String strSql = "select * from " + TABLE_ADS;
         Cursor cursor = this.getReadableDatabase().rawQuery( strSql, null);
         cursor.moveToFirst();
         return cursor.getString(1);
     }
 
-    public String infoMultiAds(){
+    public String infoSkipAds(){
         String strSql = "select * from " + TABLE_ADS;
         Cursor cursor = this.getReadableDatabase().rawQuery( strSql, null);
         cursor.moveToFirst();

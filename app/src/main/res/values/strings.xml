@@ -6,4 +6,5 @@
     <string name="username">Username</string>
     <string name="age">Age</string>
     <string name="button1">Confirm</string>
+    <string name="email">Email</string>
 </resources>

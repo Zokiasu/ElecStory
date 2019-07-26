@@ -33,8 +33,8 @@ public class Factory {
                 this.NbObject = 0;
                 this.Name = "Machine of Gramme";
                 this.FactoryLevel = 0;
-                this.PriceFactory = 1000;
-                this.EnergyProd = 2;
+                this.PriceFactory = 250;
+                this.EnergyProd = 1;
                 this.OperatingCost = 4;
                 this.PollutionTax = 2;
                 this.Skin = R.drawable.eclair;
@@ -139,8 +139,8 @@ public class Factory {
             Fact.setFactoryLevel(Fact.getFactoryLevel() + 1);
             db.updateLvLFactory(Fact.getName());
 
-            Fact.setUpgradeCost(Fact.getUpgradeCost() * 5);
-            db.updateUpgradeCostFactory(Fact.getName(), 5);
+            Fact.setUpgradeCost(Fact.getUpgradeCost() * 3);
+            db.updateUpgradeCostFactory(Fact.getName(), 3);
 
             Fact.setEnergyProd(Fact.getEnergyProd() * 2);
             db.updateEnergyGeneratedFactory(Fact.getName(), 2);

@@ -5,6 +5,8 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorRed">#DD2700</color>
     <color name="colorGray">#D3D3D3</color>
-    <color name="colortrns">#8001A0FF</color>
+    <color name="transparant">#8001A0FF</color>
     <color name="turquoise">#56D6E1</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
 </resources>

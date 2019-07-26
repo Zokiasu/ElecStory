@@ -15,7 +15,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
@@ -27,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.elecstory.OtherClass.AdPopup;
+import com.example.elecstory.OtherClass.DiamondPopup;
 import com.example.elecstory.OtherClass.InformationPopup;
 import com.example.elecstory.OtherClass.ItemOffsetDecorationItem;
 import com.example.elecstory.OtherClass.ItemOffsetDecorationFactory;
@@ -52,54 +52,51 @@ public class MainActivity extends AppCompatActivity {
 
     protected TextView ActualEnergyPoint;
     protected TextView ActualCoin;
+    protected TextView ActualDiamond;
     protected TextView DisplayQuestName;
     protected TextView MyItem;
+    protected TextView CoinFreeText;
+    protected TextView SpeedAdText;
+    protected TextView MultiAdText;
+    protected TextView SkipAdText;
 
     protected Button UpPoint;
     protected Button Unlock;
     protected Button Menu;
-    protected ImageButton AnimationBallon;
     protected Button ShopEarthObject;
+    protected ImageButton AnimationBallon;
+
+    protected LinearLayout SkipAd;
+    protected LinearLayout Skip1D;
+    protected LinearLayout Skip7D;
+    protected LinearLayout SpeedAd;
+    protected LinearLayout MultiAd;
 
     protected RecyclerView recyclerViewCity;
     protected RecyclerView recyclerViewFactory;
 
     protected RecyclerViewAdapterItem adapterE;
     protected RecyclerViewAdapterFactory adapterF;
+    
+    protected CardView CardPlayer;
+    protected CardView CoinFree;
+    protected CardView DiamondStock;
+
+    protected Calendar CoinFreeEnd;
+    protected Calendar SpeedAdEnd;
+    protected Calendar MultiAdEnd;
+    protected Calendar SkipAdEnd;
 
     protected ArrayList<EarthObject> mEarthObject = new ArrayList<>();
     protected ArrayList<Factory> mFactory = new ArrayList<>();
 
-    @SuppressLint("SimpleDateFormat")
-    protected DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-
-    protected LinearLayout Skip30;
-    protected LinearLayout Skip1D;
-    protected LinearLayout Skip7D;
-
-    protected CardView CardPlayer;
-    protected CardView ClipBoard;
-
-    protected TextView CoinFreeText;
-    protected CardView CoinFree;
-    protected Calendar CoinFreeEnd;
-
-    protected TextView SpeedAdText;
-    protected LinearLayout SpeedAd;
-    protected Calendar SpeedAdEnd;
+    protected int PriceSkip1D = 20;
+    protected int PriceSkip7D = 40;
     protected int Speed = 1;
-
-    protected TextView MultiAdText;
-    protected LinearLayout MultiAd;
-    protected Calendar MultiAdEnd;
     protected int Multiple = 1;
-
-    protected int FactoryEnergyWin = 0;
-    protected int FactoryPollution = 0;
-    protected int FactoryCost = 0;
-
+    protected long FactoryEnergyWin = 0;
     protected long EarthObjectEnergyCost = 0;
-    protected int EarthObjectCoinWin = 0;
+    protected long EarthObjectCoinWin = 0;
 
     protected ConstraintLayout currentLayout;
 
@@ -118,12 +115,16 @@ public class MainActivity extends AppCompatActivity {
 
     protected NumberFormat numberFormat = NumberFormat.getInstance(java.util.Locale.FRENCH);
 
-    private static final String PREFS = "PREFS";
-    private static final String PREFS_COIN = "PREFS_COIN";
-    private static final String PREFS_ENERGY = "PREFS_ENERGY";
-    SharedPreferences sharedPreferences;
+    @SuppressLint("SimpleDateFormat")
+    protected DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
+    protected static final String PREFS = "PREFS";
+    protected static final String PREFS_COIN = "PREFS_COIN";
+    protected static final String PREFS_ENERGY = "PREFS_ENERGY";
+    protected static final String PREFS_DIAMOND = "PREFS_DIAMOND";
     protected static final String TAG = "Elecstory.MainActivity";
+    
+    protected SharedPreferences sharedPreferences;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -132,9 +133,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Log.i(TAG, "onCreate");
 
-        sharedPreferences = getApplicationContext().getSharedPreferences(PREFS, MODE_PRIVATE);
-
         initFindViewById();
+
+        sharedPreferences = getApplicationContext().getSharedPreferences(PREFS, MODE_PRIVATE);
 
         ActualPlayer = db.infoFirstPlayer();
 
@@ -149,59 +150,50 @@ public class MainActivity extends AppCompatActivity {
         mEarthObject.clear();
         mEarthObject = db.infoEarthObject(mEarthObject);
 
-        if(sharedPreferences.contains(PREFS_COIN) && sharedPreferences.contains(PREFS_COIN)) {
+        if(sharedPreferences.contains(PREFS_DIAMOND) && sharedPreferences.contains(PREFS_COIN) && sharedPreferences.contains(PREFS_ENERGY)){
             ActualEnergyPoint.setText(numberFormat.format(sharedPreferences.getLong(PREFS_ENERGY, 0)));
             ActualCoin.setText(numberFormat.format(sharedPreferences.getLong(PREFS_COIN, 0)));
+            ActualDiamond.setText(numberFormat.format(sharedPreferences.getInt(PREFS_DIAMOND, 0)));
         } else {
             sharedPreferences
                     .edit()
                     .putLong(PREFS_COIN, ActualPlayer.getCoin())
                     .putLong(PREFS_ENERGY, ActualPlayer.getEnergyPoint())
+                    .putInt(PREFS_DIAMOND, ActualPlayer.getDiamond())
                     .apply();
 
             ActualEnergyPoint.setText(numberFormat.format(sharedPreferences.getLong(PREFS_ENERGY, 0)));
             ActualCoin.setText(numberFormat.format(sharedPreferences.getLong(PREFS_COIN, 0)));
+            ActualDiamond.setText(numberFormat.format(sharedPreferences.getInt(PREFS_DIAMOND, 0)));
         }
 
         CoinFree.setVisibility(View.INVISIBLE);
-        AnimationBallon.setVisibility(View.INVISIBLE);
         SpeedAd.setVisibility(View.INVISIBLE);
         MultiAd.setVisibility(View.INVISIBLE);
-        Skip30.setVisibility(View.INVISIBLE);
+        SkipAd.setVisibility(View.INVISIBLE);
         Skip1D.setVisibility(View.INVISIBLE);
         Skip7D.setVisibility(View.INVISIBLE);
+        DiamondStock.setVisibility(View.INVISIBLE);
+        AnimationBallon.setVisibility(View.INVISIBLE);
 
         initButtonAction();
         initFactoryVar();
-        initEarthObjectVar();
+        initItemVar();
         initRecyclerViewFactory();
-        initRecyclerViewEarthObject();
+        initRecyclerViewItem();
         initAdEnd();
 
         db.close();
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.i(TAG, "onStart");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.i(TAG, "onStop");
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
         Log.i(TAG, "onResume");
         updateDatabase();
         initFactoryVar();
-        initEarthObjectVar();
+        initItemVar();
         Start = true;
-        recursionUpDownPoint(0);
+        recursionVariationPoint(0);
     }
 
     @Override
@@ -228,48 +220,46 @@ public class MainActivity extends AppCompatActivity {
     //Initialise tout les findViewById
     protected void initFindViewById(){
         currentLayout = findViewById(R.id.activity_main);
+
+        AnimationBallon = findViewById(R.id.ballon);
+
         CardPlayer = findViewById(R.id.cardPlayer);
+        ActualCoin = findViewById(R.id.ElecCoins);
+        ActualEnergyPoint = findViewById(R.id.ElecStockage);
 
-        Menu = findViewById(R.id.Menu);
-        ClipBoard = findViewById(R.id.clipboard);
-        ClipBoard.setVisibility(View.INVISIBLE);
+        DiamondStock = findViewById(R.id.diamondStock);
+        ActualDiamond = findViewById(R.id.diamondStockNb);
 
-        Skip30 = findViewById(R.id.Skip30);
-        Skip1D = findViewById(R.id.Skip1D);
-        Skip7D = findViewById(R.id.Skip7D);
-
-        //Relative ads
         CoinFree = findViewById(R.id.coinFree);
         SpeedAd = findViewById(R.id.speedAds);
         MultiAd = findViewById(R.id.multiAds);
+        SkipAd = findViewById(R.id.SkipAd);
+        Skip1D = findViewById(R.id.Skip1D);
+        Skip7D = findViewById(R.id.Skip7D);
 
         CoinFreeText = findViewById(R.id.coinFreeText);
         SpeedAdText = findViewById(R.id.speedAdsText);
         MultiAdText = findViewById(R.id.multiAdsText);
+        SkipAdText = findViewById(R.id.SkipAdText);
 
-        //Information Player
-        ActualCoin = findViewById(R.id.ElecCoins);
-        ActualEnergyPoint = findViewById(R.id.ElecStockage);
         MyItem = findViewById(R.id.MyItems);
 
-        //Quest
         DisplayQuestImage = findViewById(R.id.requestImage);
         DisplayQuestName = findViewById(R.id.requestName);
 
-        //Button
         Unlock = findViewById(R.id.ActionCraft);
         ShopEarthObject = findViewById(R.id.ShopItem);
         UpPoint = findViewById(R.id.ElecUp);
-        AnimationBallon = findViewById(R.id.ballon);
 
-        //Affichage liste
         recyclerViewCity = findViewById(R.id.recyclerViewCity);
         recyclerViewFactory = findViewById(R.id.recyclerViewFactory);
         gv = findViewById(R.id.requestObject);
+
+        Menu = findViewById(R.id.Menu);
     }
 
     //Initialise les RecyclerView des EarthObject
-    protected void initRecyclerViewEarthObject(){
+    protected void initRecyclerViewItem(){
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerViewCity.setLayoutManager(layoutManager);
         adapterE = new RecyclerViewAdapterItem(this, mEarthObject, this);
@@ -291,11 +281,10 @@ public class MainActivity extends AppCompatActivity {
     //Initialise les différentes actions des boutons
     protected void initButtonAction(){
 
-
-        Skip30.setOnClickListener(new View.OnClickListener() {
+        SkipAd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(TAG,"Call Skip30");
+                Log.i(TAG,"Call SkipAd");
                 SkipFor30();
             }
         });
@@ -381,10 +370,6 @@ public class MainActivity extends AppCompatActivity {
         UpPoint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlphaAnimation alpha = new AlphaAnimation(0.5f, 1f);
-                alpha.setDuration(100);
-
-                UpPoint.startAnimation(alpha);
                 upgradeEnergy();
             }
         });
@@ -393,18 +378,14 @@ public class MainActivity extends AppCompatActivity {
     //Initalise ou actualise les variables global qui sont en fonction des Factorys
     protected void initFactoryVar(){
         FactoryEnergyWin = 0;
-        FactoryPollution = 0;
-        FactoryCost = 0;
 
         for (int i = 0; i < mFactory.size(); i++) {
             FactoryEnergyWin = FactoryEnergyWin + (mFactory.get(i).getEnergyProd()*mFactory.get(i).getNbObject());
-            FactoryPollution = FactoryPollution + (mFactory.get(i).getPollutionTax()*mFactory.get(i).getNbObject());
-            FactoryCost = FactoryCost + (mFactory.get(i).getOperatingCost()*mFactory.get(i).getNbObject()) + (mFactory.get(i).getPollutionTax()*mFactory.get(i).getNbObject());
         }
     }
 
-    //Initalise ou actualise les variables global qui sont en fonction des EarthObject
-    protected void initEarthObjectVar(){
+    //Initalise ou actualise les variables global qui sont en fonction des items
+    protected void initItemVar(){
         EarthObjectEnergyCost = 0;
         EarthObjectCoinWin = 0;
 
@@ -414,7 +395,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    protected void recursionUpDownPoint(int N) {
+    protected void recursionVariationPoint(int N) {
 
         if (Start) {
             //Augmente l'énergie en fonction de des usines actuelles
@@ -423,13 +404,6 @@ public class MainActivity extends AppCompatActivity {
                     sharedPreferences
                             .edit()
                             .putLong(PREFS_ENERGY, (sharedPreferences.getLong(PREFS_ENERGY, 0) + FactoryEnergyWin))
-                            .apply();
-                }
-
-                if (N % 60 == 1 && N > 1) {
-                    sharedPreferences
-                            .edit()
-                            .putLong(PREFS_COIN, (sharedPreferences.getLong(PREFS_COIN, 0) - FactoryCost))
                             .apply();
                 }
             }
@@ -450,9 +424,10 @@ public class MainActivity extends AppCompatActivity {
                 if (ActualQuest.getIdQuest() >= 4) {
                     SpeedAd.setVisibility(View.VISIBLE);
                     if (ActualQuest.getIdQuest() >= 5) {
-                        Skip30.setVisibility(View.VISIBLE);
+                        SkipAd.setVisibility(View.VISIBLE);
                         Skip1D.setVisibility(View.VISIBLE);
                         Skip7D.setVisibility(View.VISIBLE);
+                        DiamondStock.setVisibility(View.VISIBLE);
                     }
                 }
             }
@@ -462,11 +437,11 @@ public class MainActivity extends AppCompatActivity {
                 updateDatabase();
             }
 
-            if (N%120 == 1 && N > 1) {
+            if (N%180 == 1 && N > 1) {
                 choiceCoinFree();
             }
 
-            if (N%150 == 1 && N > 1) {
+            if (N%195 == 1 && N > 1) {
                 CoinFree.setVisibility(View.INVISIBLE);
             }
 
@@ -474,6 +449,7 @@ public class MainActivity extends AppCompatActivity {
 
             ActualEnergyPoint.setText(numberFormat.format(sharedPreferences.getLong(PREFS_ENERGY, 0)));
             ActualCoin.setText(numberFormat.format(sharedPreferences.getLong(PREFS_COIN, 0)));
+            ActualDiamond.setText(numberFormat.format(sharedPreferences.getInt(PREFS_DIAMOND, 0)));
 
             refreshRecursion(1000 / Speed, N);
         }
@@ -486,7 +462,7 @@ public class MainActivity extends AppCompatActivity {
         final Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                recursionUpDownPoint(N+1);
+                recursionVariationPoint(N+1);
             }
         };
 
@@ -545,7 +521,7 @@ public class MainActivity extends AppCompatActivity {
 
             mEarthObject.clear();
             mEarthObject = db.infoEarthObject(mEarthObject);
-            initRecyclerViewEarthObject();
+            initRecyclerViewItem();
 
             EarthObject TmpObject = new EarthObject(ActualQuest.getIdQuest(), ActualQuest.getNameReward());
             db.insertCraft(TmpObject.getNbObject(), TmpObject.getName(), TmpObject.getCoinWin(), TmpObject.getPriceObject(), TmpObject.getEnergyCost(), TmpObject.getSkin());
@@ -554,6 +530,14 @@ public class MainActivity extends AppCompatActivity {
                     .edit()
                     .putLong(PREFS_COIN, (sharedPreferences.getLong(PREFS_COIN, 0) + (TmpObject.getEnergyCost())))
                     .apply();
+
+            if(ActualQuest.getIdQuest() == 3 || ActualQuest.getIdQuest() == 7 || ActualQuest.getIdQuest() == 11 ||ActualQuest.getIdQuest() == 12) {
+                sharedPreferences
+                        .edit()
+                        .putInt(PREFS_DIAMOND, (sharedPreferences.getInt(PREFS_DIAMOND, 0) + 5))
+                        .apply();
+            }
+
             if(ActualQuest.getIdQuest() != 12) {
                 ActualQuest = new Quest(ActualQuest.getIdQuest() + 1);
             } else {
@@ -567,7 +551,7 @@ public class MainActivity extends AppCompatActivity {
             DisplayQuestImage.setImageResource(ActualQuest.getSkinReward());
 
             displayQuest();
-            initEarthObjectVar();
+            initItemVar();
             Toast.makeText(this, "A new object has been added to the ShopCraft", Toast.LENGTH_LONG).show();
             if(ActualQuest.getIdQuest() == 12){
                 Toast.makeText(this, "You have completed the last quest for now!", Toast.LENGTH_LONG).show();
@@ -602,7 +586,7 @@ public class MainActivity extends AppCompatActivity {
                     .putLong(PREFS_COIN, (sharedPreferences.getLong(PREFS_COIN, 0) + mFactory.get(0).getPriceFactory()))
                     .apply();
             initFactoryVar();
-            initEarthObjectVar();
+            initItemVar();
             initRecyclerViewFactory();
             Toast.makeText(MainActivity.this, "You have win a "+ mFactory.get(0).getName() +"!", Toast.LENGTH_SHORT).show();
         }
@@ -622,6 +606,7 @@ public class MainActivity extends AppCompatActivity {
 
         db.updateEnergyPoint(ActualPlayer.getName(), sharedPreferences.getLong(PREFS_ENERGY, 0));
         db.updateCoin(ActualPlayer.getName(), sharedPreferences.getLong(PREFS_COIN, 0));
+        db.updateDiamond(ActualPlayer.getName(), sharedPreferences.getInt(PREFS_DIAMOND,0));
 
         ActualPlayer = db.infoFirstPlayer();
 
@@ -636,7 +621,7 @@ public class MainActivity extends AppCompatActivity {
         db.close();
     }
 
-    /////Fonction Option/////
+    ////// Fonction Option //////
     protected void choiceCoinFree(){
         Random X = new Random();
         int nombreAleatoire = X.nextInt(5 - 1 + 1) + 1;
@@ -662,8 +647,8 @@ public class MainActivity extends AppCompatActivity {
         if(ActualDate.after(CoinFreeEnd)) {
             CoinFreeEnd = Calendar.getInstance();
             CoinFreeEnd.add(Calendar.SECOND, 30);
-            int nombreAleatoire = X.nextInt(100 - 1 + 1) + 1, A = 0;
-            initEarthObjectVar();
+            long nombreAleatoire = X.nextInt(100 - 1 + 1) + 1, A = 0;
+            initItemVar();
             if (nombreAleatoire > 1 && nombreAleatoire < 20) {
                 A = EarthObjectCoinWin*(15);
             } else if (nombreAleatoire > 20 && nombreAleatoire < 50) {
@@ -677,7 +662,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             CoinFree.setVisibility(View.INVISIBLE);
-            Toast.makeText(MainActivity.this,"You have won "+numberFormat.format(A)+" coins",Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this,"You earn " + numberFormat.format(A) + " coins",Toast.LENGTH_LONG).show();
             sharedPreferences
                     .edit()
                     .putLong(PREFS_COIN, (sharedPreferences.getLong(PREFS_COIN, 0) + A))
@@ -692,8 +677,8 @@ public class MainActivity extends AppCompatActivity {
 
         if(ActualDate.after(CoinFreeEnd)) {
             CoinFreeEnd = Calendar.getInstance();
-            int nbalea = X.nextInt(100 - 1 + 1) + 1, A;
-            initEarthObjectVar();
+            long nbalea = X.nextInt(100 - 1 + 1) + 1, A;
+            initItemVar();
 
             if (nbalea > 1 && nbalea < 50) {
                 A = EarthObjectCoinWin*(180);
@@ -704,11 +689,10 @@ public class MainActivity extends AppCompatActivity {
             }
 
             final AdPopup adPopups = new AdPopup(this);
-            final int finalA = A;
+            final long finalA = A;
 
             adPopups.setTitleAd("More Coins!");
-            adPopups.getTimeAfkAdPopup().setVisibility(View.INVISIBLE);
-            adPopups.setNumberWinAd(numberFormat.format(A) + " Coins");
+            adPopups.setNumberWinAd("Watch this ad to earn " + numberFormat.format(A) + " coins");
             adPopups.getImageAd().setImageResource(R.drawable.morecoins);
             adPopups.getButton1().setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -742,7 +726,6 @@ public class MainActivity extends AppCompatActivity {
             final AdPopup adPopups = new AdPopup(this);
 
             adPopups.setTitleAd("Speed Up");
-            adPopups.getTimeAfkAdPopup().setVisibility(View.INVISIBLE);
             adPopups.setNumberWinAd("Speed x2 for 4 hours");
             adPopups.getImageAd().setImageResource(R.drawable.speedrun);
 
@@ -775,8 +758,7 @@ public class MainActivity extends AppCompatActivity {
             final AdPopup adPopups = new AdPopup(this);
 
             adPopups.setTitleAd("Double Coin!");
-            adPopups.getTimeAfkAdPopup().setVisibility(View.INVISIBLE);
-            adPopups.setNumberWinAd("Profit 2x for 4 hours");
+            adPopups.setNumberWinAd("Profit x2 for 4 hours");
             adPopups.getImageAd().setImageResource(R.drawable.coinx2);
 
             adPopups.getButton1().setOnClickListener(new View.OnClickListener() {
@@ -804,92 +786,104 @@ public class MainActivity extends AppCompatActivity {
 
     protected void SkipFor30(){
         Calendar ActualDate = Calendar.getInstance();
-        final AdPopup adPopups = new AdPopup(this);
+        if(ActualDate.after(SkipAdEnd)) {
+            final AdPopup adPopups = new AdPopup(this);
 
-        adPopups.setTitleAd("Skip Time");
-        adPopups.getTimeAfkAdPopup().setVisibility(View.INVISIBLE);
-        adPopups.setNumberWinAd("30 min worth of coins\nGet " + numberFormat.format(EarthObjectCoinWin*(1800)) + " Coins");
-        adPopups.getImageAd().setImageResource(R.drawable.speedrun);
+            adPopups.setTitleAd("Skip Time");
+            adPopups.setNumberWinAd("Watch this ad to get 30 mins worth of coins\n" + numberFormat.format(EarthObjectCoinWin*(1800)) + " coins");
+            adPopups.getImageAd().setImageResource(R.drawable.skip30);
 
-        adPopups.getButton1().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sharedPreferences
-                        .edit()
-                        .putLong(PREFS_COIN, (sharedPreferences.getLong(PREFS_COIN, 0) + EarthObjectCoinWin*(1800)))
-                        .apply();
-                adPopups.dismiss();
-                Toast.makeText(MainActivity.this,"You have earned 30 min of coins",Toast.LENGTH_LONG).show();
-            }
-        });
+            adPopups.getButton1().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SkipAdEnd = Calendar.getInstance();
+                    SkipAdEnd.add(Calendar.HOUR, 4);
+                    db.insertSkipAds(dateFormat.format(SkipAdEnd.getTime()));
 
-        adPopups.getButton2().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                adPopups.dismiss();
-            }
-        });
-        adPopups.build();
+                    sharedPreferences
+                            .edit()
+                            .putLong(PREFS_COIN, (sharedPreferences.getLong(PREFS_COIN, 0) + EarthObjectCoinWin*(1800)))
+                            .apply();
+                    adPopups.dismiss();
+                    Toast.makeText(MainActivity.this,"You have earned 30 min of coins",Toast.LENGTH_LONG).show();
+                }
+            });
+
+            adPopups.getButton2().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    adPopups.dismiss();
+                }
+            });
+            adPopups.build();
+        }
     }
 
     protected void SkipFor1D(){
         Calendar ActualDate = Calendar.getInstance();
-            final AdPopup adPopups = new AdPopup(this);
+            final DiamondPopup DiamondPopups = new DiamondPopup(this);
 
-            adPopups.setTitleAd("Skip Time");
-            adPopups.getTimeAfkAdPopup().setVisibility(View.INVISIBLE);
-            adPopups.setNumberWinAd("1 day worth of coins\nGet " + numberFormat.format(EarthObjectCoinWin*(86400)) + " Coins");
-            adPopups.getImageAd().setImageResource(R.drawable.speedrun);
+            DiamondPopups.setTitleAd("Skip Time");
+            DiamondPopups.setNumberWinAd("Get 1 day worth of coins\n" + numberFormat.format(EarthObjectCoinWin*(86400)) + " coins");
+            DiamondPopups.getImageAd().setImageResource(R.drawable.skip1d);
+            DiamondPopups.getButton1().setText(String.valueOf(PriceSkip7D));
 
-            adPopups.getButton1().setOnClickListener(new View.OnClickListener() {
+            DiamondPopups.getButton1().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    sharedPreferences
-                            .edit()
-                            .putLong(PREFS_COIN, (sharedPreferences.getLong(PREFS_COIN, 0) + EarthObjectCoinWin*(86400)))
-                            .apply();
-                    adPopups.dismiss();
-                    Toast.makeText(MainActivity.this,"You have earned 1 day of coins",Toast.LENGTH_LONG).show();
+                    if(sharedPreferences.getInt(PREFS_DIAMOND, 0) >= PriceSkip1D) {
+                        sharedPreferences
+                                .edit()
+                                .putLong(PREFS_COIN, (sharedPreferences.getLong(PREFS_COIN, 0) + EarthObjectCoinWin * (86400)))
+                                .apply();
+                        DiamondPopups.dismiss();
+                        Toast.makeText(MainActivity.this, "You have earned 1 day of coins", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(MainActivity.this, "You don't have enough diamonds", Toast.LENGTH_LONG).show();
+                    }
                 }
             });
 
-            adPopups.getButton2().setOnClickListener(new View.OnClickListener() {
+            DiamondPopups.getButton2().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    adPopups.dismiss();
+                    DiamondPopups.dismiss();
                 }
             });
-            adPopups.build();
+            DiamondPopups.build();
     }
 
     protected void SkipFor7D(){
         Calendar ActualDate = Calendar.getInstance();
-            final AdPopup adPopups = new AdPopup(this);
+            final DiamondPopup DiamondPopups = new DiamondPopup(this);
 
-            adPopups.setTitleAd("Skip Time");
-            adPopups.getTimeAfkAdPopup().setVisibility(View.INVISIBLE);
-            adPopups.setNumberWinAd("7 day worth of coins\nGet " + numberFormat.format(EarthObjectCoinWin*(604800)) + " Coins");
-            adPopups.getImageAd().setImageResource(R.drawable.speedrun);
-
-            adPopups.getButton1().setOnClickListener(new View.OnClickListener() {
+            DiamondPopups.setTitleAd("Skip Time");
+            DiamondPopups.setNumberWinAd("Get 7 day worth of coins\n" + numberFormat.format(EarthObjectCoinWin*(604800)) + " coins");
+            DiamondPopups.getImageAd().setImageResource(R.drawable.skip7d);
+            DiamondPopups.getButton1().setText(String.valueOf(PriceSkip7D));
+            DiamondPopups.getButton1().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    sharedPreferences
-                            .edit()
-                            .putLong(PREFS_COIN, (sharedPreferences.getLong(PREFS_COIN, 0) + EarthObjectCoinWin*(604800)))
-                            .apply();
-                    adPopups.dismiss();
-                    Toast.makeText(MainActivity.this,"You have earned 7 day of coins",Toast.LENGTH_LONG).show();
+                    if(sharedPreferences.getInt(PREFS_DIAMOND, 0) >= PriceSkip7D) {
+                        sharedPreferences
+                                .edit()
+                                .putLong(PREFS_COIN, (sharedPreferences.getLong(PREFS_COIN, 0) + EarthObjectCoinWin * (604800)))
+                                .apply();
+                        DiamondPopups.dismiss();
+                        Toast.makeText(MainActivity.this, "You have earned 7 day of coins", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(MainActivity.this, "You don't have enough diamonds", Toast.LENGTH_LONG).show();
+                    }
                 }
             });
 
-            adPopups.getButton2().setOnClickListener(new View.OnClickListener() {
+            DiamondPopups.getButton2().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    adPopups.dismiss();
+                    DiamondPopups.dismiss();
                 }
             });
-            adPopups.build();
+            DiamondPopups.build();
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -954,16 +948,24 @@ public class MainActivity extends AppCompatActivity {
             SpeedAdText.setText(displayHMS(ActualDate, SpeedAdEnd));
         }
 
-        if(ActualDate.after(CoinFreeEnd)) {
-            CoinFreeText.setText("Coin");
+        if(ActualDate.after(SkipAdEnd)) {
+            SkipAdText.setText("Skip 30m");
         } else {
-            CoinFreeText.setText(displayHMS(ActualDate, CoinFreeEnd));
+            SkipAdText.setText(displayHMS(ActualDate, SkipAdEnd));
         }
     }
 
     protected void initAdEnd(){
 
         Date date = null;
+
+        MultiAdEnd = Calendar.getInstance();
+        try {
+            date = dateFormat.parse(db.infoMultiAds());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        MultiAdEnd.setTime(date);
 
         SpeedAdEnd = Calendar.getInstance();
         try {
@@ -973,6 +975,14 @@ public class MainActivity extends AppCompatActivity {
         }
         SpeedAdEnd.setTime(date);
 
+        SkipAdEnd = Calendar.getInstance();
+        try {
+            date = dateFormat.parse(db.infoSkipAds());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        SkipAdEnd.setTime(date);
+
         CoinFreeEnd = Calendar.getInstance();
         try {
             date = new Date();
@@ -980,13 +990,5 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         CoinFreeEnd.setTime(date);
-
-        MultiAdEnd = Calendar.getInstance();
-        try {
-            date = dateFormat.parse(db.infoMultiAds());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        MultiAdEnd.setTime(date);
     }
 }
