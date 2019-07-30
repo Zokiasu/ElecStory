@@ -2,7 +2,7 @@ package com.example.elecstory.OtherClass;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.widget.Button;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,7 +17,7 @@ public class CongratsPopup extends Dialog {
 
     public CongratsPopup(Activity activity) {
         super(activity, R.style.Theme_AppCompat_DayNight_Dialog);
-        setContentView(R.layout.congrats_popup);
+        setContentView(R.layout.popup_congrats);
 
         this.activity = activity;
 

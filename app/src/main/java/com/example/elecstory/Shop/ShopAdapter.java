@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.elecstory.Object.EarthObject;
+import com.example.elecstory.Object.Item;
 import com.example.elecstory.R;
 
 import java.text.NumberFormat;
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public class ShopAdapter extends BaseAdapter {
 
     public android.content.Context Context;
-    public ArrayList<EarthObject> ListObject;
+    public ArrayList<Item> ListObject;
     public LayoutInflater layoutInflater;
     public View views;
     public Button test;
@@ -27,7 +27,7 @@ public class ShopAdapter extends BaseAdapter {
 
     protected static final String TAG = "Elecstory.ShopAdapter";
 
-    public ShopAdapter(Context Contexts, ArrayList<EarthObject> ListCO) {
+    public ShopAdapter(Context Contexts, ArrayList<Item> ListCO) {
         this.Context = Contexts;
         this.ListObject = ListCO;
         this.layoutInflater = LayoutInflater.from(Context);
@@ -61,7 +61,7 @@ public class ShopAdapter extends BaseAdapter {
         TextView objectName = views.findViewById(R.id.objectName);
         TextView objectPrice = views.findViewById(R.id.objectCost);
 
-        imageView.setImageResource(ListObject.get(position).getSkin());
+        imageView.setImageResource(Integer.parseInt(ListObject.get(position).getSkin()));
         objectName.setText(String.valueOf(ListObject.get(position).getName()));
         objectPrice.setText("Price : " + numberFormat.format(ListObject.get(position).getPriceObject()));
 

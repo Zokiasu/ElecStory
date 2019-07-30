@@ -5,6 +5,7 @@
     <dimen name="size_text">10sp</dimen>
     <dimen name="size_text_plus">15sp</dimen>
     <dimen name="size_title">20sp</dimen>
+    <dimen name="size_up_energy">35dp</dimen>
 
     <!-- MainActivity -->
     <dimen name="size_frame_text">170dp</dimen>
@@ -22,7 +23,7 @@
     <dimen name="size_player_image_main">50dp</dimen>
     <dimen name="size_player_image_main_width">60dp</dimen>
 
-    <!-- EarthObject Adapter -->
+    <!-- Item Adapter -->
     <dimen name="size_object_adapter">80dp</dimen>
     <dimen name="size_object_adapter_image">30dp</dimen>
 

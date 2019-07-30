@@ -2,8 +2,8 @@ package com.example.elecstory.OtherClass;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.elecstory.R;
@@ -17,7 +17,7 @@ public class InformationPopup extends Dialog {
 
     public InformationPopup(Activity activity){
         super(activity, R.style.Theme_AppCompat_DayNight_Dialog);
-        setContentView(R.layout.information_popup);
+        setContentView(R.layout.popup_information);
 
         this.activity = activity;
         this.MessageSaleView = findViewById(R.id.messageSale);

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -34,9 +35,9 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
     private Activity activity;
 
     private static final String PREFS = "PREFS";
-    private static final String PREFS_COIN = "PREFS_COIN";
-    protected static final String PREFS_ENERGY = "PREFS_ENERGY";
+    protected static final String PREFS_COIN = "PREFS_COIN";
     protected static final String PREFS_DIAMOND = "PREFS_DIAMOND";
+    protected static final String PREFS_ENERGYBYCLICK = "PREFS_ENERGYBYCLICK";
     private SharedPreferences sharedPreferences;
     protected NumberFormat numberFormat = NumberFormat.getInstance(java.util.Locale.FRENCH);
 
@@ -58,15 +59,17 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
 
         final Database db = new Database(mContext);
 
-        if(mFactory.get(position).getFactoryLevel() > 0) {
+        if(mFactory.get(position).getFactoryLevel() > 0 && mFactory.get(position).getNbObject() > 0) {
             holder.test.setCardBackgroundColor(Color.parseColor("#56d6e1"));
+            holder.EnergyGenFactorys.setVisibility(View.VISIBLE);
             holder.UpgradePriceFactorys.setText("Next lvl : " + numberFormat.format(mFactory.get(position).getUpgradeCost()));
         } else {
+            holder.test.setCardBackgroundColor(Color.parseColor("#D3D3D3"));
             holder.EnergyGenFactorys.setVisibility(View.INVISIBLE);
             holder.UpgradePriceFactorys.setText("Price : " + numberFormat.format(mFactory.get(position).getPriceFactory()));
         }
 
-        holder.imageFactorys.setImageResource(mFactory.get(position).getSkin());
+        holder.imageFactorys.setImageResource(Integer.parseInt(mFactory.get(position).getSkin()));
 
         holder.nameFactorys.setText(mFactory.get(position).getName());
 
@@ -121,10 +124,8 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
 
     public boolean upgradeFactory(Database db, int position){
         if(mFactory.get(position).getFactoryLevel() > 0) {
-            
             if (sharedPreferences.getLong(PREFS_COIN, 0) >= mFactory.get(position).getUpgradeCost()) {
                 mFactory.get(position).Upgrade(mFactory.get(position), db, activity);
-                Toast.makeText(mContext, mFactory.get(position).getName() + " has been upgrade!", Toast.LENGTH_SHORT).show();
                 return true;
             } else {
                 Toast.makeText(mContext, "Not enough money!", Toast.LENGTH_LONG).show();
@@ -133,7 +134,6 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
         } else {
             if (sharedPreferences.getLong(PREFS_COIN, 0) >= mFactory.get(position).getPriceFactory()) {
                 mFactory.get(position).Upgrade(mFactory.get(position), db, activity);
-                Toast.makeText(mContext, mFactory.get(position).getName() + " has been buying!", Toast.LENGTH_SHORT).show();
                 return true;
             } else {
                 Toast.makeText(mContext, "Not enough money!", Toast.LENGTH_LONG).show();
@@ -146,7 +146,8 @@ public class RecyclerViewAdapterFactory extends RecyclerView.Adapter<RecyclerVie
         if(mFactory.get(position).getFactoryLevel()%5 == 0){
             sharedPreferences
                     .edit()
-                    .putInt(PREFS_DIAMOND, (sharedPreferences.getInt(PREFS_DIAMOND, 0) + 2))
+                    .putLong(PREFS_DIAMOND, (sharedPreferences.getLong(PREFS_DIAMOND, 0) + 2))
+                    .putLong(PREFS_ENERGYBYCLICK, (sharedPreferences.getLong(PREFS_ENERGYBYCLICK, 0) + 1))
                     .apply();
         }
     }

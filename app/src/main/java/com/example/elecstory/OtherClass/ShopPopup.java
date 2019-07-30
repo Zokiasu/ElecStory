@@ -2,10 +2,9 @@ package com.example.elecstory.OtherClass;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.widget.ArrayAdapter;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.elecstory.R;
@@ -25,7 +24,7 @@ public class ShopPopup extends Dialog {
 
     public ShopPopup(Activity activity) {
         super(activity, R.style.Theme_AppCompat_DayNight_Dialog);
-        setContentView(R.layout.shop_select_number_popup);
+        setContentView(R.layout.popup_shop_select_number);
 
         this.activity = activity;
         this.NbObjectBuys = findViewById(R.id.NbObjectBuy);

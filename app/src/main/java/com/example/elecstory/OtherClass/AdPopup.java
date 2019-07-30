@@ -2,16 +2,12 @@ package com.example.elecstory.OtherClass;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.widget.ArrayAdapter;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.elecstory.R;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class AdPopup extends Dialog {
 
@@ -27,7 +23,7 @@ public class AdPopup extends Dialog {
 
     public AdPopup(Activity activity) {
         super(activity, R.style.Theme_AppCompat_DayNight_Dialog);
-        setContentView(R.layout.ad_popup);
+        setContentView(R.layout.popup_ads);
 
         this.activity = activity;
 

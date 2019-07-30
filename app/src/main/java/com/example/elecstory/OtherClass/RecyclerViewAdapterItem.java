@@ -13,7 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.elecstory.Database.Database;
-import com.example.elecstory.Object.EarthObject;
+import com.example.elecstory.Object.Item;
 import com.example.elecstory.R;
 
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public class RecyclerViewAdapterItem extends RecyclerView.Adapter<RecyclerViewAd
 
     private static final String TAG = "RecyclerViewAdapterItem";
 
-    private ArrayList<EarthObject> mEarthObject;
+    private ArrayList<Item> mItem;
     private Context mContext;
     private Activity activity;
 
@@ -33,8 +33,8 @@ public class RecyclerViewAdapterItem extends RecyclerView.Adapter<RecyclerViewAd
     private static final String PREFS_COIN = "PREFS_COIN";
     private SharedPreferences sharedPreferences;
 
-    public RecyclerViewAdapterItem(Context context, ArrayList<EarthObject> mEarthObjects, Activity activitys) {
-        mEarthObject = mEarthObjects;
+    public RecyclerViewAdapterItem(Context context, ArrayList<Item> mItems, Activity activitys) {
+        mItem = mItems;
         mContext = context;
         activity = activitys;
 
@@ -51,35 +51,35 @@ public class RecyclerViewAdapterItem extends RecyclerView.Adapter<RecyclerViewAd
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final Database db = new Database(mContext);
 
-        holder.image.setImageResource(mEarthObject.get(position).getSkin());
+        holder.image.setImageResource(Integer.parseInt(mItem.get(position).getSkin()));
 
-        holder.name.setText(mEarthObject.get(position).getName());
+        holder.name.setText(mItem.get(position).getName());
 
-        holder.nbObject.setText(String.valueOf(mEarthObject.get(position).getNbObject()));
+        holder.nbObject.setText(String.valueOf(mItem.get(position).getNbObject()));
 
         holder.image.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
 
                 final SalePopup salepopups = new SalePopup(activity);
-                salepopups.setMessageSale("You want sale " + mEarthObject.get(position).getName() + " for " + (mEarthObject.get(position).getPriceObject()/2) + " coins!");
-                salepopups.setNameObjectSale("Selling " + mEarthObject.get(position).getName());
+                salepopups.setMessageSale("You want sale " + mItem.get(position).getName() + " for " + (mItem.get(position).getPriceObject()/2) + " coins!");
+                salepopups.setNameObjectSale("Selling " + mItem.get(position).getName());
                 salepopups.getButton1().setText("Confirm");
                 salepopups.getButton2().setText("Cancel");
                 salepopups.getButton1().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(mEarthObject.size() > 0 && mEarthObject.get(position).getNbObject() > 0) {
-                            db.deleteEarthObject(mEarthObject.get(position).getName());
+                        if(mItem.size() > 0 && mItem.get(position).getNbObject() > 0) {
+                            db.deleteItem(mItem.get(position).getName());
                             sharedPreferences
                                     .edit()
-                                    .putLong(PREFS_COIN, (sharedPreferences.getLong(PREFS_COIN, 0) + (int)(mEarthObject.get(position).getPriceObject()/2)))
+                                    .putLong(PREFS_COIN, (sharedPreferences.getLong(PREFS_COIN, 0) + (int)(mItem.get(position).getPriceObject()/2)))
                                     .apply();
                             Toast.makeText(mContext, "This object will be deleted !", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(mContext, "You no longer have this object.", Toast.LENGTH_SHORT).show();
                         }
-                        holder.nbObject.setText(String.valueOf(mEarthObject.get(position).getNbObject()));
+                        holder.nbObject.setText(String.valueOf(mItem.get(position).getNbObject()));
                         salepopups.dismiss();
                     }
                 });
@@ -90,7 +90,7 @@ public class RecyclerViewAdapterItem extends RecyclerView.Adapter<RecyclerViewAd
                         salepopups.dismiss();
                     }
                 });
-                salepopups.getClose().setVisibility(View.INVISIBLE);
+                //salepopups.getClose().setVisibility(View.INVISIBLE);
                 salepopups.build();
                 return true;
             }
@@ -101,7 +101,7 @@ public class RecyclerViewAdapterItem extends RecyclerView.Adapter<RecyclerViewAd
 
     @Override
     public int getItemCount() {
-        return mEarthObject.size();
+        return mItem.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{

@@ -2,34 +2,24 @@ package com.example.elecstory.Database;
 
 public class PlayerData {
 
-    protected int IdPlayer;
     protected String UniqueId;
-    protected String Name;
-    protected int Age;
     protected long Coin;
     protected long EnergyPoint;
     protected int QuestId;
-    protected int Diamond;
+    protected long Diamond;
     protected String LastConnection;
+    protected long EnergyByClick;
+    protected long CoinByClick;
 
-    public PlayerData(int idPlayer, String uniqueId, String name, int age, long coin, long energyPoint, int questId, int diamond, String lastConnection) {
-        IdPlayer = idPlayer;
+    public PlayerData(String uniqueId, long coin, long energyPoint, int questId, long diamond, String lastConnection, long energyByClick, long coinByClick) {
         UniqueId = uniqueId;
-        Name = name;
-        Age = age;
         Coin = coin;
         EnergyPoint = energyPoint;
         QuestId = questId;
         Diamond = diamond;
         LastConnection = lastConnection;
-    }
-
-    public int getIdPlayer() {
-        return IdPlayer;
-    }
-
-    public void setIdPlayer(int idPlayer) {
-        IdPlayer = idPlayer;
+        EnergyByClick = energyByClick;
+        CoinByClick = coinByClick;
     }
 
     public String getUniqueId() {
@@ -38,22 +28,6 @@ public class PlayerData {
 
     public void setUniqueId(String uniqueId) {
         UniqueId = uniqueId;
-    }
-
-    public String getName() {
-        return Name;
-    }
-
-    public void setName(String name) {
-        Name = name;
-    }
-
-    public int getAge() {
-        return Age;
-    }
-
-    public void setAge(int age) {
-        Age = age;
     }
 
     public long getCoin() {
@@ -80,11 +54,11 @@ public class PlayerData {
         QuestId = questId;
     }
 
-    public int getDiamond() {
+    public long getDiamond() {
         return Diamond;
     }
 
-    public void setDiamond(int diamond) {
+    public void setDiamond(long diamond) {
         Diamond = diamond;
     }
 
@@ -94,5 +68,21 @@ public class PlayerData {
 
     public void setLastConnection(String lastConnection) {
         LastConnection = lastConnection;
+    }
+
+    public long getEnergyByClick() {
+        return EnergyByClick;
+    }
+
+    public void setEnergyByClick(long energyByClick) {
+        EnergyByClick = energyByClick;
+    }
+
+    public long getCoinByClick() {
+        return CoinByClick;
+    }
+
+    public void setCoinByClick(long coinByClick) {
+        CoinByClick = coinByClick;
     }
 }

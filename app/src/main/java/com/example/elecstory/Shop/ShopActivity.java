@@ -5,22 +5,18 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.elecstory.Database.Database;
 import com.example.elecstory.MainActivity;
-import com.example.elecstory.Object.EarthObject;
+import com.example.elecstory.Object.Item;
 import com.example.elecstory.OtherClass.ShopPopup;
-import com.example.elecstory.Quest.Quest;
 import com.example.elecstory.R;
-
-import org.w3c.dom.Text;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -40,6 +36,7 @@ public class ShopActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop);
+
         sharedPreferences = getApplicationContext().getSharedPreferences(PREFS, MODE_PRIVATE);
 
         final Database db = new Database(this);
@@ -60,11 +57,11 @@ public class ShopActivity extends AppCompatActivity {
             }
         });
 
-        ArrayList<EarthObject> ListEarthObject = new ArrayList<>();
+        ArrayList<Item> listItem = new ArrayList<>();
 
-        ListEarthObject = db.infoCraft(ListEarthObject);
+        listItem = db.infoCraft(listItem);
 
-        final ArrayList<EarthObject> finalListEarthObject = ListEarthObject;
+        final ArrayList<Item> finalListItem = listItem;
 
         final List<Integer> number = new ArrayList<Integer>();
 
@@ -77,14 +74,14 @@ public class ShopActivity extends AppCompatActivity {
         }
 
         GridView GV = findViewById(R.id.GridCraft);
-        GV.setAdapter(new ShopAdapter(this, ListEarthObject));
+        GV.setAdapter(new ShopAdapter(this, listItem));
 
         GV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 
-                final EarthObject N = finalListEarthObject.get(position);
+                final Item N = finalListItem.get(position);
 
                 if((sharedPreferences.getLong(PREFS_COIN, 0) >= N.getPriceObject()) && ((sharedPreferences.getLong(PREFS_COIN, 0) - N.getPriceObject()) >= 0)) {
                     final ShopPopup shopPopup = new ShopPopup(ShopActivity.this);
@@ -104,7 +101,7 @@ public class ShopActivity extends AppCompatActivity {
                                 RecupNb = 1;
                             }
                             if((sharedPreferences.getLong(PREFS_COIN, 0) >= (N.getPriceObject() * RecupNb)) && ((sharedPreferences.getLong(PREFS_COIN, 0) - (N.getPriceObject() * RecupNb)) >= 0)) {
-                                db.insertEarthObject(N.getNbObject() * RecupNb, N.getName(), N.getCoinWin(), N.getPriceObject(), N.getEnergyCost(), N.getSkin());
+                                db.insertItem(N.getNbObject() * RecupNb, N.getName(), N.getCoinWin(), N.getPriceObject(), N.getEnergyCost(), N.getSkin());
 
                                 sharedPreferences
                                         .edit()

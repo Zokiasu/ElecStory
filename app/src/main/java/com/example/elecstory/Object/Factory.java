@@ -16,15 +16,26 @@ public class Factory {
     protected int FactoryLevel; /*Niveau à laquelle elle est acheter*/
     protected int PriceFactory; /*Coût de son achat*/
     protected long UpgradeCost; /*Coût de l'update de l'usine*/
-    protected int EnergyProd; /*Point générer par l'usine*/
-    protected int OperatingCost; /*Coût d'utilisation hebdomadaire*/
-    protected int PollutionTax; /*Taxe de pollution*/
-    protected int Skin;
+    protected long EnergyProd; /*Point générer par l'usine*/
+    protected long OperatingCost; /*Coût d'utilisation hebdomadaire*/
+    protected long PollutionTax; /*Taxe de pollution*/
+    protected String Skin;
 
     private static final String PREFS = "PREFS";
     private static final String PREFS_COIN = "PREFS_COIN";
     SharedPreferences sharedPreferences;
 
+    public Factory(int nbObject, String name, int factoryLevel, int priceFactory, long upgradeCost, long energyProd, long operatingCost, long pollutionTax, String skin) {
+        NbObject = nbObject;
+        Name = name;
+        FactoryLevel = factoryLevel;
+        PriceFactory = priceFactory;
+        UpgradeCost = upgradeCost;
+        EnergyProd = energyProd;
+        OperatingCost = operatingCost;
+        PollutionTax = pollutionTax;
+        Skin = skin;
+    }
 
     /*Constructeur des centrales préfaites*/
     public Factory(int N){
@@ -33,21 +44,21 @@ public class Factory {
                 this.NbObject = 0;
                 this.Name = "Machine of Gramme";
                 this.FactoryLevel = 0;
-                this.PriceFactory = 250;
+                this.PriceFactory = 50;
                 this.EnergyProd = 1;
-                this.OperatingCost = 4;
-                this.PollutionTax = 2;
-                this.Skin = R.drawable.eclair;
+                this.OperatingCost = 1;
+                this.PollutionTax = 0;
+                this.Skin = String.valueOf(R.drawable.eclair);
                 break;
             case 0 :
                 this.NbObject = 0;
                 this.Name = "Solar Factory";
                 this.FactoryLevel = 0;
-                this.PriceFactory = 1000000;
+                this.PriceFactory = 100000;
                 this.EnergyProd = 20;
                 this.OperatingCost = 5;
                 this.PollutionTax = 2;
-                this.Skin = R.drawable.eclair;
+                this.Skin = String.valueOf(R.drawable.eclair);
                 break;
             case 1 :
                 this.NbObject = 0;
@@ -57,7 +68,7 @@ public class Factory {
                 this.EnergyProd = 20;
                 this.OperatingCost = 15;
                 this.PollutionTax = 5;
-                this.Skin = R.drawable.eclair;
+                this.Skin = String.valueOf(R.drawable.eclair);
                 break;
             case 2 :
                 this.NbObject = 0;
@@ -67,7 +78,7 @@ public class Factory {
                 this.EnergyProd = 20;
                 this.OperatingCost = 25;
                 this.PollutionTax = 5;
-                this.Skin = R.drawable.eclair;
+                this.Skin = String.valueOf(R.drawable.eclair);
                 break;
             case 3 :
                 this.NbObject = 0;
@@ -77,7 +88,7 @@ public class Factory {
                 this.EnergyProd = 100;
                 this.OperatingCost = 35;
                 this.PollutionTax = 10;
-                this.Skin = R.drawable.eclair;
+                this.Skin = String.valueOf(R.drawable.eclair);
                 break;
             case 4 :
                 this.NbObject = 0;
@@ -87,7 +98,7 @@ public class Factory {
                 this.EnergyProd = 150;
                 this.OperatingCost = 50;
                 this.PollutionTax = 15;
-                this.Skin = R.drawable.eclair;
+                this.Skin = String.valueOf(R.drawable.eclair);
                 break;
             case 5 :
                 this.NbObject = 0;
@@ -97,22 +108,10 @@ public class Factory {
                 this.EnergyProd = 200;
                 this.OperatingCost = 150;
                 this.PollutionTax = 50;
-                this.Skin = R.drawable.eclair;
+                this.Skin = String.valueOf(R.drawable.eclair);
                 break;
         }
         this.UpgradeCost = this.PriceFactory/5;
-    }
-
-    public Factory(int NbObjects, String name, int factoryLevel, int priceFactory, long upgradeCost, int energyProd, int operatingCost, int pollutionTax, int skin) {
-        NbObject = NbObjects;
-        Name = name;
-        FactoryLevel = factoryLevel;
-        PriceFactory = priceFactory;
-        UpgradeCost = upgradeCost;
-        EnergyProd = energyProd;
-        OperatingCost = operatingCost;
-        PollutionTax = pollutionTax;
-        Skin = skin;
     }
 
     public Factory Upgrade(Factory Fact, Database db, Activity activitys){
@@ -127,13 +126,13 @@ public class Factory {
 
             sharedPreferences
                     .edit()
-                    .putLong(PREFS_COIN, (sharedPreferences.getLong(PREFS_COIN, 0) - Fact.getPriceFactory()))
+                    .putLong(PREFS_COIN, sharedPreferences.getLong(PREFS_COIN, 0) - Fact.getPriceFactory())
                     .apply();
             
         } else {
             sharedPreferences
                     .edit()
-                    .putLong(PREFS_COIN, (sharedPreferences.getLong(PREFS_COIN, 0) - Fact.getUpgradeCost()))
+                    .putLong(PREFS_COIN, sharedPreferences.getLong(PREFS_COIN, 0) - Fact.getUpgradeCost())
                     .apply();
 
             Fact.setFactoryLevel(Fact.getFactoryLevel() + 1);
@@ -195,35 +194,43 @@ public class Factory {
         UpgradeCost = upgradeCost;
     }
 
-    public int getEnergyProd() {
+    public long getEnergyProd() {
         return EnergyProd;
     }
 
-    public void setEnergyProd(int energyProd) {
+    public void setEnergyProd(long energyProd) {
         EnergyProd = energyProd;
     }
 
-    public int getOperatingCost() {
+    public long getOperatingCost() {
         return OperatingCost;
     }
 
-    public void setOperatingCost(int operatingCost) {
+    public void setOperatingCost(long operatingCost) {
         OperatingCost = operatingCost;
     }
 
-    public int getPollutionTax() {
+    public long getPollutionTax() {
         return PollutionTax;
     }
 
-    public void setPollutionTax(int pollutionTax) {
+    public void setPollutionTax(long pollutionTax) {
         PollutionTax = pollutionTax;
     }
 
-    public int getSkin() {
+    public String getSkin() {
         return Skin;
     }
 
-    public void setSkin(int skin) {
+    public void setSkin(String skin) {
         Skin = skin;
+    }
+
+    public static String getPREFS() {
+        return PREFS;
+    }
+
+    public static String getPrefsCoin() {
+        return PREFS_COIN;
     }
 }

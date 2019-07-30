@@ -135,12 +135,12 @@
             android:layout_height="wrap_content"/>
 
         <android.support.v7.widget.CardView
+            android:id="@+id/diamondStock"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardCornerRadius="15dp">
 
             <android.support.v7.widget.CardView
-                android:id="@+id/diamondStock"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="1px"
@@ -173,174 +173,200 @@
 
     </LinearLayout>
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/request"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_marginHorizontal="10dp"
-        android:padding="10dp"
-        app:cardBackgroundColor="@color/turquoise"
-        app:cardCornerRadius="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/YourItem"
-        app:layout_constraintLeft_toRightOf="@+id/speedAds"
-        app:layout_constraintTop_toBottomOf="@+id/ButtonCraft"
-        app:layout_constraintRight_toRightOf="parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:orientation="horizontal"
-            tools:ignore="InvalidId">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:orientation="vertical">
-
-                <com.example.elecstory.OtherClass.CustomFontTextView
-                    android:id="@+id/requestName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="#fe6e0c"
-                    android:gravity="center"
-                    android:text="UnlockName"
-                    android:textSize="15sp" />
-
-                <ImageView
-                    android:id="@+id/requestImage"
-                    android:layout_width="@dimen/size_unlock_image"
-                    android:layout_height="@dimen/size_unlock_image"
-                    android:layout_gravity="center"
-                    android:background="@color/turquoise"
-                    tools:ignore="MissingConstraints" />
-
-                <com.example.elecstory.OtherClass.CustomFontButton
-                    android:id="@+id/ActionCraft"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Unlock"
-                    android:textAllCaps="false"
-                    android:textSize="@dimen/size_text"
-                    android:background="@drawable/custom_button_unlock" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <com.example.elecstory.OtherClass.CustomFontTextView
-                    android:id="@+id/textView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#fe6e0c"
-                    android:gravity="center"
-                    android:text="Item Requested"
-                    android:textSize="@dimen/size_text" />
-
-                <GridView
-                    android:id="@+id/requestObject"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingVertical="10dp"
-                    android:background="@color/turquoise"
-                    android:columnWidth="60dp"
-                    android:fastScrollEnabled="true"
-                    android:horizontalSpacing="10dp"
-                    android:verticalSpacing="10dp"
-                    android:numColumns="auto_fit">
-
-                </GridView>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </android.support.v7.widget.CardView>
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/YourItem"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="10dp"
-        android:padding="10dp"
-        app:cardCornerRadius="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/body"
-        app:layout_constraintLeft_toRightOf="@+id/speedAds"
-        app:layout_constraintTop_toBottomOf="@+id/request"
-        app:layout_constraintRight_toRightOf="parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <com.example.elecstory.OtherClass.CustomFontTextView
-                android:id="@+id/MyItems"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#fe6e0c"
-                android:gravity="center"
-                android:text="Your Items"
-                android:textColor="#000"
-                android:textSize="@dimen/size_text" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerViewCity"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/turquoise"
-                android:orientation="horizontal"
-                android:padding="5dp">
-
-            </android.support.v7.widget.RecyclerView>
-
-        </LinearLayout>
-
-    </android.support.v7.widget.CardView>
-
-    <ScrollView
-        android:id="@+id/body"
+    <RelativeLayout
+        android:id="@+id/test"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginHorizontal="10dp"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:overScrollMode="always"
         app:layout_constraintBottom_toTopOf="@+id/ListButton"
         app:layout_constraintLeft_toRightOf="@+id/speedAds"
-        app:layout_constraintTop_toBottomOf="@+id/YourItem"
-        app:layout_constraintRight_toRightOf="parent">
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ButtonCraft">
 
-        <LinearLayout
+        <android.support.v7.widget.CardView
+            android:id="@+id/request"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="150dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginHorizontal="10dp"
             android:gravity="center"
-            android:orientation="vertical">
+            android:padding="10dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="10dp">
 
-            <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerViewFactory"
+            <android.support.v7.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:gravity="center"
+                app:cardBackgroundColor="@color/turquoise"
+                app:cardCornerRadius="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="10dp"
+                    tools:ignore="InvalidId">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:orientation="vertical">
+
+                        <com.example.elecstory.OtherClass.CustomFontTextView
+                            android:id="@+id/requestName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:background="#fe6e0c"
+                            android:gravity="center"
+                            android:text="UnlockName"
+                            android:textSize="15sp" />
+
+                        <ImageView
+                            android:id="@+id/requestImage"
+                            android:layout_width="@dimen/size_unlock_image"
+                            android:layout_height="@dimen/size_unlock_image"
+                            android:layout_gravity="center"
+                            android:background="@color/turquoise"
+                            tools:ignore="MissingConstraints" />
+
+                        <com.example.elecstory.OtherClass.CustomFontButton
+                            android:id="@+id/ActionCraft"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/custom_button_unlock"
+                            android:gravity="center"
+                            android:text="Unlock"
+                            android:textAllCaps="false"
+                            android:textSize="@dimen/size_text" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <com.example.elecstory.OtherClass.CustomFontTextView
+                            android:id="@+id/textView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#fe6e0c"
+                            android:gravity="center"
+                            android:text="Item Requested"
+                            android:textSize="@dimen/size_text" />
+
+                        <GridView
+                            android:id="@+id/requestObject"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/turquoise"
+                            android:columnWidth="60dp"
+                            android:fastScrollEnabled="true"
+                            android:horizontalSpacing="10dp"
+                            android:numColumns="auto_fit"
+                            android:paddingVertical="10dp"
+                            android:verticalSpacing="10dp">
+
+                        </GridView>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/YourItem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:overScrollMode="ifContentScrolls"
-            app:layout_constraintBottom_toTopOf="@+id/ListButton"
-            app:layout_constraintLeft_toRightOf="@+id/speedAds"
-            app:layout_constraintTop_toBottomOf="@+id/YourItem"
-            app:layout_constraintRight_toRightOf="parent">
+            android:layout_below="@+id/request"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            app:cardCornerRadius="10dp"
+            app:cardBackgroundColor="@color/white">
 
-        </android.support.v7.widget.RecyclerView>
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:layout_gravity="center"
+                app:cardCornerRadius="10dp">
 
-        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-    </ScrollView>
+                    <com.example.elecstory.OtherClass.CustomFontTextView
+                        android:id="@+id/MyItems"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#fe6e0c"
+                        android:gravity="center"
+                        android:text="Your Items"
+                        android:textColor="#000"
+                        android:textSize="@dimen/size_text" />
+
+                    <GridView
+                        android:id="@+id/recyclerViewCity"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/turquoise"
+                        android:columnWidth="80dp"
+                        android:fastScrollEnabled="true"
+                        android:horizontalSpacing="7dp"
+                        android:verticalSpacing="7dp"
+                        android:numColumns="auto_fit"
+                        android:padding="10dp">
+
+                    </GridView>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+        </android.support.v7.widget.CardView>
+
+        <ScrollView
+            android:id="@+id/body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_below="@+id/request"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:overScrollMode="always">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerViewFactory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:overScrollMode="ifContentScrolls"
+                    app:layout_constraintBottom_toTopOf="@+id/ListButton"
+                    app:layout_constraintLeft_toRightOf="@+id/speedAds"
+                    app:layout_constraintTop_toBottomOf="@+id/YourItem"
+                    app:layout_constraintRight_toRightOf="parent">
+
+                </android.support.v7.widget.RecyclerView>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/ListButton"
@@ -352,7 +378,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/body">
+        app:layout_constraintTop_toBottomOf="@+id/test">
 
         <Space
             android:layout_width="wrap_content"
@@ -389,43 +415,34 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <RelativeLayout
+        <android.support.v7.widget.CardView
+            android:id="@+id/ElecUp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="1px"
+            app:cardCornerRadius="25dp"
+            tools:ignore="MissingConstraints">
 
-            <RelativeLayout
-                android:id="@+id/ContentElecUp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <com.example.elecstory.OtherClass.CustomFontButton
-                    android:id="@+id/ElecUp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Up"
-                    android:textAllCaps="false"
-                    android:textSize="@dimen/size_text"
-                    android:textColor="#fff"
-                    android:background="@drawable/custom_button"/>
-            </RelativeLayout>
-
-            <ImageView
+            <android.support.v7.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/ContentElecUp"
-                android:layout_marginLeft="5dp"
-                android:layout_centerVertical="true"
-                android:background="@drawable/minieclair"/>
+                android:layout_margin="1dp"
+                app:cardCornerRadius="25dp"
+                app:cardBackgroundColor="#f41212"
+                tools:ignore="MissingConstraints">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignRight="@+id/ContentElecUp"
-                android:layout_marginRight="5dp"
-                android:layout_centerVertical="true"
-                android:background="@drawable/minicoin"/>
+                <ImageView
+                    android:layout_width="@dimen/size_up_energy"
+                    android:layout_height="@dimen/size_up_energy"
+                    android:layout_gravity="center"
+                    android:layout_marginVertical="6dp"
+                    android:layout_marginHorizontal="25dp"
+                    app:srcCompat="@drawable/eclair"
+                    tools:ignore="MissingConstraints" />
 
-        </RelativeLayout>
+            </android.support.v7.widget.CardView>
+
+        </android.support.v7.widget.CardView>
 
         <Space
             android:layout_width="wrap_content"
@@ -441,7 +458,7 @@
         android:layout_margin="10dp"
         android:padding="10dp"
         app:cardCornerRadius="50dp"
-        app:layout_constraintBottom_toBottomOf="@+id/body"
+        app:layout_constraintBottom_toBottomOf="@+id/test"
         app:layout_constraintEnd_toEndOf="parent"
         tools:ignore="MissingConstraints">
 
@@ -455,7 +472,7 @@
                 android:id="@+id/coinFreeImage"
                 android:layout_width="@dimen/size_player_image_main"
                 android:layout_height="@dimen/size_player_image_main"
-                app:srcCompat="@drawable/coin"
+                android:src="@drawable/coin"
                 tools:ignore="MissingConstraints" />
 
             <com.example.elecstory.OtherClass.CustomFontTextView
@@ -473,13 +490,49 @@
     </android.support.v7.widget.CardView>
 
     <LinearLayout
-        android:id="@+id/speedAds"
+        android:id="@+id/Inventory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginVertical="5dp"
         android:layout_marginHorizontal="10dp"
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@+id/ButtonCraft"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="50dp">
+
+            <ImageView
+                android:id="@+id/InventoryImage"
+                android:layout_width="@dimen/size_player_image_main"
+                android:layout_height="@dimen/size_player_image_main"
+                app:srcCompat="@drawable/backpack"
+                tools:ignore="MissingConstraints" />
+
+        </android.support.v7.widget.CardView>
+
+        <com.example.elecstory.OtherClass.CustomFontTextView
+            android:id="@+id/InventoryText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:gravity="center"
+            android:text="Inventory"
+            android:textSize="@dimen/size_text_timer" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/speedAds"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="5dp"
+        android:layout_marginHorizontal="10dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/Inventory"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints">
 
@@ -620,7 +673,7 @@
         android:layout_marginVertical="5dp"
         android:layout_marginHorizontal="10dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="@+id/body"
+        app:layout_constraintBottom_toBottomOf="@+id/test"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints">
 

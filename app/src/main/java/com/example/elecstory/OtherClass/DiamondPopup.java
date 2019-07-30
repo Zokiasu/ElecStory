@@ -2,6 +2,7 @@ package com.example.elecstory.OtherClass;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,7 +23,7 @@ public class DiamondPopup extends Dialog {
 
     public DiamondPopup(Activity activity) {
         super(activity, R.style.Theme_AppCompat_DayNight_Dialog);
-        setContentView(R.layout.diamond_popup);
+        setContentView(R.layout.popup_diamond);
 
         this.activity = activity;
 
