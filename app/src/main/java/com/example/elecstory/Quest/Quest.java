@@ -310,6 +310,18 @@ public class Quest {
     public boolean checkQuest(ArrayList<Item> itemLists, Database db){
         if(this.getIdQuest() != 12) {
             if (NbRequestComparator(itemLists)) {
+                for(int i = 0; i < this.getItemRequest().size(); i++){
+                    for (int k = 0; k < itemLists.size(); k++){
+                        if(this.getItemRequest().get(i).getName().equals(itemLists.get(k).getName())){
+                            if(this.getNbRequest().get(i) < itemLists.get(k).getNbObject()){
+                                itemLists.get(k).setNbObject(itemLists.get(k).getNbObject()-this.getNbRequest().get(i));
+                            } else {
+                                itemLists.remove(k);
+                            }
+                            k = itemLists.size();
+                        }
+                    }
+                }
                 db.clearAllItem();
                 Item TmpObject = new Item(this.getIdQuest(), this.getNameReward());
                 itemLists.add(TmpObject); //Ajoute l'objet qui doit être craft dans la liste

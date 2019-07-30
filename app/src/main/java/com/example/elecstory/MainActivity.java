@@ -748,16 +748,19 @@ public class MainActivity extends AppCompatActivity {
             FreeEnergyAd = false;
             CoinFreeImage.setImageResource(R.drawable.coin);
             CoinFree.getBackground().setColorFilter(Color.parseColor("#FFFFFF"), PorterDuff.Mode.DARKEN);
+            CoinFreeText.setText("Coins");
         } else if (nombreAleatoire > 5 && nombreAleatoire <= 21) {
             FreeCoinAd = false;
             FreeEnergyAd = true;
             CoinFreeImage.setImageResource(R.drawable.eclair);
             CoinFree.getBackground().setColorFilter(Color.parseColor("#FFFFFF"), PorterDuff.Mode.DARKEN);
+            CoinFreeText.setText("Energy");
         } else {
             FreeCoinAd = true;
             FreeEnergyAd = false;
             CoinFreeImage.setImageResource(R.drawable.coin);
             CoinFree.getBackground().setColorFilter(Color.parseColor("#0bab08"), PorterDuff.Mode.DARKEN);
+            CoinFreeText.setText("Coins");
         }
 
         CoinFree.setVisibility(View.VISIBLE);
