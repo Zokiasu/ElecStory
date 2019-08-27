@@ -455,6 +455,7 @@ public class MainActivity extends AppCompatActivity {
         UpPoint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i(TAG,"Call UpPoint.onClick");
                 upgradeEnergy();
             }
         });
@@ -698,6 +699,7 @@ public class MainActivity extends AppCompatActivity {
 
     //Fonction du bouton +1
     protected void upgradeEnergy() {
+        Log.i(TAG,"Call upgradeEnergy");
         sharedPreferences
                 .edit()
                 .putLong(PREFS_COIN, (sharedPreferences.getLong(PREFS_COIN, 0) + sharedPreferences.getLong(PREFS_COINBYCLICK, 0)))

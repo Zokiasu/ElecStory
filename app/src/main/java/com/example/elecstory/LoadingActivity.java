@@ -86,19 +86,12 @@ public class LoadingActivity extends AppCompatActivity {
             db.insertFirstItem();
             db.insertAllTimerAds();
             db.fillShopFactory();
-            sharedPreferences.getAll().clear();
-            sharedPreferences.edit().clear().apply();
-            sharedPreferences
-                    .edit()
-                    .putLong(PREFS_COIN, 0)
-                    .putLong(PREFS_ENERGY, 0)
-                    .putLong(PREFS_DIAMOND, 0)
-                    .putLong(PREFS_ENERGYBYCLICK, 1)
-                    .putLong(PREFS_COINBYCLICK, 1)
-                    .apply();
 
             db.close();
         }
+
+        sharedPreferences.getAll().clear();
+        sharedPreferences.edit().clear().apply();
     }
 
     public void progressAnimation(){
