@@ -5,10 +5,8 @@ Le but du jeu est de collecter un maximum d'énergie (ainsi que de la créé) af
 
 Au fil de l'avancé le joueur peut choisir de fournir l'électricité à de plus en plus d'objet/ville/monde, en fonction de l'énergie qu'il produit ainsi que des revenus qu'il génère.
 
-![Screenshot_20200612_203427_com example elecstory](https://user-images.githubusercontent.com/32719751/84536400-130c7980-acee-11ea-9dda-3cdbc1f133fa.jpg)
-![Screenshot_20200612_203614_com example elecstory](https://user-images.githubusercontent.com/32719751/84536403-13a51000-acee-11ea-9299-0970b7ae2dd8.jpg)
-![Screenshot_20200612_204013_com example elecstory](https://user-images.githubusercontent.com/32719751/84536404-13a51000-acee-11ea-8ca4-fb7ae7aea523.jpg)
-![Screenshot_20200612_204159_com example elecstory](https://user-images.githubusercontent.com/32719751/84536405-143da680-acee-11ea-9559-71ff65635d09.jpg)
-![Screenshot_20200612_204210_com example elecstory](https://user-images.githubusercontent.com/32719751/84536406-143da680-acee-11ea-87ef-52d9b6244ecc.jpg)
-![Screenshot_20200612_204635_com example elecstory](https://user-images.githubusercontent.com/32719751/84536407-14d63d00-acee-11ea-99b9-ea877f99fe9a.jpg)
-![Screenshot_20200612_204642_com example elecstory](https://user-images.githubusercontent.com/32719751/84536410-14d63d00-acee-11ea-873a-142d18dfc475.jpg)
+![page1](https://user-images.githubusercontent.com/32719751/84536768-ce351280-acee-11ea-89b8-9aeff0a8249e.jpg =100x200)
+![page2](https://user-images.githubusercontent.com/32719751/84536770-cecda900-acee-11ea-9b0c-92b1cacd20e7.jpg)
+![Page3](https://user-images.githubusercontent.com/32719751/84536773-cf663f80-acee-11ea-844b-af2eb4100d6d.jpg)
+![page4](https://user-images.githubusercontent.com/32719751/84536774-cf663f80-acee-11ea-87a9-d24144df7439.jpg)
+![page5](https://user-images.githubusercontent.com/32719751/84536775-cffed600-acee-11ea-95e5-86bff3e4ae44.jpg)
